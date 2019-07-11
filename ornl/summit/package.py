@@ -18,7 +18,7 @@ class Hpctoolkit(AutotoolsPackage):
     git      = "https://github.com/HPCToolkit/hpctoolkit.git"
 
     version('develop', branch='master')
-    version('gpu', branch='openmp5-gpu')
+    version('gpu', branch='master-gpu')
     version('2018.12.28', commit='8dbf0d543171ffa9885344f32f23cc6f7f6e39bc')
     version('2018.11.05', commit='d0c43e39020e67095b1f1d8bb89b75f22b12aee9')
 
@@ -35,7 +35,7 @@ class Hpctoolkit(AutotoolsPackage):
             description='Build for Blue Gene compute nodes, including '
             'hpcprof-mpi.')
 
-    variant('cuda', default=False, 
+    variant('cuda', default=False,
             description='Support CUDA on NVIDIA GPUs.')
 
     variant('mpi', default=False,
@@ -53,7 +53,7 @@ class Hpctoolkit(AutotoolsPackage):
             'the hardware performance counters.')
 
     boost_libs = '+atomic +graph +regex +serialization'  \
-        '+shared +multithreaded'
+        '+shared +multithreaded visibility=global'
 
     depends_on('binutils+libiberty~nls')
     depends_on('boost' + boost_libs)
@@ -70,10 +70,10 @@ class Hpctoolkit(AutotoolsPackage):
     depends_on('xz')
     depends_on('zlib')
 
-    depends_on('cuda', when='+cuda')
     depends_on('intel-xed', when='target=x86_64')
     depends_on('papi', when='+papi')
     depends_on('libpfm4', when='~papi')
+    depends_on('cuda', when='+cuda')
     depends_on('mpi', when='+mpi')
 
     flag_handler = AutotoolsPackage.build_system_flags
@@ -88,11 +88,11 @@ class Hpctoolkit(AutotoolsPackage):
             '--with-bzip=%s'         % spec['bzip2'].prefix,
             '--with-dyninst=%s'      % spec['dyninst'].prefix,
             '--with-elfutils=%s'     % spec['elfutils'].prefix,
-            '--with-mbedtls=%s'      % spec['mbedtls'].prefix,
             '--with-tbb=%s'          % spec['intel-tbb'].prefix,
             '--with-libdwarf=%s'     % spec['libdwarf'].prefix,
             '--with-libmonitor=%s'   % spec['libmonitor'].prefix,
             '--with-libunwind=%s'    % spec['libunwind'].prefix,
+            '--with-mbedtls=%s'      % spec['mbedtls'].prefix,
             '--with-xerces=%s'       % spec['xerces-c'].prefix,
             '--with-lzma=%s'         % spec['xz'].prefix,
             '--with-zlib=%s'         % spec['zlib'].prefix,
@@ -121,13 +121,11 @@ class Hpctoolkit(AutotoolsPackage):
         elif '+mpi' in spec:
             args.append('MPICXX=%s' % spec['mpi'].mpicxx)
 
+        if '+cuda' in spec:
+            args.append('--with-cuda=%s' % spec['cuda'].prefix)
+            args.append('--with-cupti=%s/extras/CUPTI' % spec['cuda'].prefix)
+
         if '+all-static' in spec:
             args.append('--enable-all-static')
-
-        if '+cuda' in spec:
-            args.extend([
-                '--with-cuda=%s' % spec['cuda'].prefix,
-                '--with-cupti=%s/extras/CUPTI' % spec['cuda'].prefix,
-            ])
 
         return args

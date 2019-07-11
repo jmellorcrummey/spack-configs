@@ -67,24 +67,6 @@ packages:
     variants: +libiberty ~nls
 
 
-  # boost -- used by dyninst and now in hpcstruct cuda support.
-  #
-  # Dyninst requires >= 1.61 but most any recent version is good.
-  #
-  # +atomic, +chrono, etc are for dyninst.
-  # +graph, +regex, etc are for toolkit proper.
-  # ~mpi, ~python, etc are to reduce prereqs.
-  # ~debug is to build release (optimized) variant.
-  #
-  boost:
-    version:  [1.66.0]
-    variants: >
-      +atomic +chrono +date_time +filesystem +system +thread +timer
-      +graph +regex +serialization
-      +shared +multithreaded ~debug
-      ~mpi ~python ~iostreams ~numpy
-
-
   # bzip2 -- used by elfutils to read compressed sections (and copy
   # libs).
   #
