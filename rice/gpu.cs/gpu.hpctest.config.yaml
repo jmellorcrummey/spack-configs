@@ -12,7 +12,12 @@
 
 profile:
   hpctoolkit:
-    path: ~/bin/linux-rhel7-x86_64/gcc-7.3.0/hpctoolkit-develop-vg5tn2l7r4vyyegngrluidc2ug5jlmdo/
+    # path: ~/bin/linux-rhel7-x86_64/gcc-7.3.0/hpctoolkit-develop-vg5tn2l7r4vyyegngrluidc2ug5jlmdo/
+    #   will use whatever hpctoolkit are in the PATH
+    hpcrun params:     "REALTIME@10000"
+    hpcstruct params:  ""  
+    hpcprof params:    ""  
+
 
 config:
 #    batch:
