@@ -1,0 +1,97 @@
+To do a spack install and test for a machine <machine> at site <site>:
+----------------------------------------------------------------------
+1.  Set up a top-level "~/gits/" directory on <machine>, and do all the git clones into it.
+	You can put them wherever you want, but the remainder of these
+	instructions assume everything goes into ~/gits/
+
+2.  Set up the repositories:
+	cd ~/gits
+	git clone https://github.com/jmellorcrummey/spack-configs
+	    That's where this file lives, so you must have already done that!
+        git clone https://github.com/spack/spack.git
+	git clone https://github.com/hpctoolkit/hpctoolkit.git
+	git clone https://github.com/scottkwarren/hpctest
+
+3. Set up your shell to use spack:
+	for bash:
+          vi ~/.bashrc	#Add the following:
+            umask 022 
+            export SPACK_ROOT=~/gits/spack
+            export PATH=${SPACK_ROOT}/bin:${PATH}
+            source ${SPACK_ROOT}/share/spack/setup-env.sh
+	  source ~/.bashrc
+
+4.  Tell spack to use the right gcc:
+	module avail gcc
+	module load gcc.xxx
+            For hptctoolkit, xxx needs to be 4.8 or later, preferably 5.x or later
+        spack compiler find
+
+5.  Go to the spack-configs repo, and prepare the appropriate:
+	<site>/<machine>/<machine>.config.yaml
+		and
+	<site>/<machine>/<machine>.packages.yaml
+		files
+
+	The <machine>.config.yaml file should say where to install its packages and modules
+		Those directories and subdirectories used should be created before the install
+	    Start with the config.yaml in spack/spack/etc/default or the one for
+		in spack-configs for any existing similar <machine>.
+
+	The <machine>.packages.yaml file describes the dependencies for the install.
+	     can start with the one in ~/gits/hpctoolkit/packages.yaml
+		or the one for any existing similar <machine>.
+
+6.  Set up the spack install environment:
+	cd $SPACK_ROOT/etc/spack
+	ln -s .../spack-configs/<site>/<machine>/<machine>.config.yaml config.yaml
+	ln -s .../spack-configs/<site>/<machine>/<machine>.packages.yaml packages.yaml
+
+6.  Do the real install
+	<cmd-to-run> spack install hpctoolkit@<version> <options>
+          <version>
+              @2019.07 -- for the 2019.07 release
+              @develop -- for current bits
+              @gpu -- for GPU versions
+          <options>
+              +mpi
+              +cuda
+              +papi
+              +all-static
+
+    On rzansel and rzmanta, <cmd-to-run> = "lalloc 1"
+
+
+To run hpctest:
+---------------
+Be sure you have run "spack compiler find" before starting.
+
+1.  cd ~/gits/hpctest
+
+2.  Edit config.yaml to point to the hpctoolkit to be tested
+        profile:
+          hpctoolkit:
+            path: null
+	if the path line is commented-out, the user's PATH will be used,
+		which seems like the least error-prone methodology
+
+3.  Set up the bits to test:
+	module avail hpctoolkit
+	module load hpctoolkit@xxxx
+	    xxx representst the bits to test
+
+4.  Initialize: "hpctest init"
+
+5.  Run the full suite:
+	<cmd-to-run> hpctest run
+	    (most tests require MPI launch)
+	<cmd-to-run> hpctest run app/amgmk
+	    the only passing test that does not.
+
+    <cmd-to-run> as above
+
+To build hpctoolkit:
+--------------------
+1.  configure --with-spack=<-spack-install-packages-directory> --prefix=<build.out> --enable-develop
+
+2.  make -j 4 install
