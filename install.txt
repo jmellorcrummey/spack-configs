@@ -59,9 +59,9 @@ To do a spack install and test for a machine <machine> at site <site>:
         git clone https://github.com/spack/spack.git
 	source ~/.bashrc
 
-	-------------------------------------------------------------------
-	IT IS EASY TO SCREW THIS UP, AND WIND UP WITH A BROKEN INSTALLATION
-	-------------------------------------------------------------------
+	--------------------------------------------------------------------------
+	IT IS EASY TO SCREW THIS NEXT STEP, AND WIND UP WITH A BROKEN INSTALLATION
+	--------------------------------------------------------------------------
 	cd $SPACK_ROOT/etc/spack
 	ln -s .../spack-configs/<site>/<machine>/<machine>.config.yaml config.yaml
 	ln -s .../spack-configs/<site>/<machine>/<machine>.packages.yaml packages.yaml
@@ -89,8 +89,10 @@ To do a spack install and test for a machine <machine> at site <site>:
 8.  Do the real install
 	<cmd-to-run> spack install hpctoolkit@<version> <options>
 
-    On LLNL rzansel and rzmanta, <cmd-to-run> = "lalloc 1"
-    On LLNL rzhasgpu (Slurm), <cmd-to-run> = "salloc -N 1 -ppdebug"
+    At LLNL:
+	On rzansel and lassen, <cmd-to-run> = "lalloc 1"
+	On rzmanta and ray, <cmd-to-run> = "lalloc 1"
+	On rzhasgpu and quartz, <cmd-to-run> = "salloc -N 1 -ppdebug"
 
 9.  Install the hpcviewers, where appropriate
 	spack install hpcviewer
@@ -124,8 +126,10 @@ Be sure you have run "spack compiler find" before starting.
 	<cmd-to-run> hpctest run app/amgmk
 	    the only passing test that does not.
 
-    On LLNL rzansel and rzmanta, <cmd-to-run> = "lalloc 1"
-    On LLNL rzhasgpu (Slurm), <cmd-to-run> = "salloc -N 1 -ppdebug"
+    At LLNL:
+	On rzansel and lassen, <cmd-to-run> = "lalloc 1"
+	On rzmanta and ray, <cmd-to-run> = "lalloc 1"
+	On rzhasgpu and quartz, <cmd-to-run> = "salloc -N 1 -ppdebug"
 
 
 To build hpctoolkit:
