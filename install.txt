@@ -10,7 +10,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 	    That's where this file lives, so you must have already done that!
         git clone https://github.com/spack/spack.git
 	git clone https://github.com/hpctoolkit/hpctoolkit.git
-	git clone https://github.com/scottkwarren/hpctest
+	git clone https://github.com/martyitz/hpctest
 
 3. Set up your shell to use spack:
 	for bash:
@@ -27,6 +27,10 @@ To do a spack install and test for a machine <machine> at site <site>:
             For hptctoolkit, xxx needs to be 4.8 or later, preferably 5.x or later
         spack compiler find
 
+5.  Find the right MPI to use.  Run module avail, and find a suitable MPI
+	and load it.  Remember that module name, to put into the packages.yaml
+	in the next step.
+
 5.  Go to the spack-configs repo, and prepare the appropriate:
 	<site>/<machine>/<machine>.config.yaml
 		and
@@ -41,14 +45,33 @@ To do a spack install and test for a machine <machine> at site <site>:
 	The <machine>.packages.yaml file describes the dependencies for the install.
 	     can start with the one in ~/gits/hpctoolkit/packages.yaml
 		or the one for any existing similar <machine>.
+	    Make sure that the openmpi package setting matches the loaded MPI module.
 
 6.  Set up the spack install environment:
+	-------------------------------------------------------------------
+	It's not clear what spack caches, so to be on the safe side, I remove
+	    and re-clone the spack directory, whenever I use a spack that was
+	    previously used on a different machine.  I also remove the output
+	    packages and modules directories, set in the <machine>.config.yaml.
+	-------------------------------------------------------------------
+	cd ~/gits
+	/bin/rm -rf $SPACK_ROOT
+        git clone https://github.com/spack/spack.git
+	source ~/.bashrc
+
+	-------------------------------------------------------------------
+	IT IS EASY TO SCREW THIS UP, AND WIND UP WITH A BROKEN INSTALLATION
+	-------------------------------------------------------------------
 	cd $SPACK_ROOT/etc/spack
 	ln -s .../spack-configs/<site>/<machine>/<machine>.config.yaml config.yaml
 	ln -s .../spack-configs/<site>/<machine>/<machine>.packages.yaml packages.yaml
 
-6.  Do the real install
-	<cmd-to-run> spack install hpctoolkit@<version> <options>
+	Verify that the machine you are on matches <machine> in the directory and
+		the file names of the two symlinks.
+	Look at each of those files, via its symlink name, and confirm they are correct.
+
+7.  Decide the specific version and options you want to build.
+	hpctoolkit@<version> <options>
           <version>
               @2019.07 -- for the 2019.07 release
               @develop -- for current bits
@@ -58,8 +81,21 @@ To do a spack install and test for a machine <machine> at site <site>:
               +cuda
               +papi
               +all-static
+		Multiple options can be concatenated
 
-    On rzansel and rzmanta, <cmd-to-run> = "lalloc 1"
+	You can see what will get built with:
+		spack spec hpctoolkit@<version> <options>
+
+8.  Do the real install
+	<cmd-to-run> spack install hpctoolkit@<version> <options>
+
+    On LLNL rzansel and rzmanta, <cmd-to-run> = "lalloc 1"
+    On LLNL rzhasgpu (Slurm), <cmd-to-run> = "salloc -N 1 -ppdebug"
+
+9.  Install the hpcviewers, where appropriate
+	spack install hpcviewer
+    On IBM Power machines:
+	spack install hpcviewer ^ibm-java
 
 
 To run hpctest:
@@ -68,17 +104,17 @@ Be sure you have run "spack compiler find" before starting.
 
 1.  cd ~/gits/hpctest
 
-2.  Edit config.yaml to point to the hpctoolkit to be tested
+2.  Edit config.yaml to not point to any hpctoolkit
         profile:
           hpctoolkit:
-            path: null
+            # path: whatever
 	if the path line is commented-out, the user's PATH will be used,
 		which seems like the least error-prone methodology
 
 3.  Set up the bits to test:
 	module avail hpctoolkit
 	module load hpctoolkit@xxxx
-	    xxx representst the bits to test
+	    xxxx represents the bits to test
 
 4.  Initialize: "hpctest init"
 
@@ -88,7 +124,9 @@ Be sure you have run "spack compiler find" before starting.
 	<cmd-to-run> hpctest run app/amgmk
 	    the only passing test that does not.
 
-    <cmd-to-run> as above
+    On LLNL rzansel and rzmanta, <cmd-to-run> = "lalloc 1"
+    On LLNL rzhasgpu (Slurm), <cmd-to-run> = "salloc -N 1 -ppdebug"
+
 
 To build hpctoolkit:
 --------------------

@@ -115,7 +115,7 @@ packages:
   #
   openmpi:
     modules:
-      openmpi@3.1.0:  spectrum-mpi/rolling-release 
+      openmpi@3.1.0:  mvapich2/2.3
     buildable: False
 
   #------------------------------------------------------------
