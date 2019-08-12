@@ -17,7 +17,7 @@
 config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  install_tree: /collab/usr/global/tools/hpctoolkit/toss_3_x86_64_ib/2019-07/packages
+  install_tree: /collab/usr/global/tools/hpctoolkit/toss_3_x86_64_ib/2019-08/packages
 
 
   # Locations where templates should be found
@@ -28,12 +28,11 @@ config:
   # Default directory layout
   install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
 
-
   # Locations where different types of modules should be installed.
   module_roots:
-    tcl:    /collab/usr/global/tools/hpctoolkit/toss_3_x86_64_ib/2019-07/modules/tcl
-    lmod:   /collab/usr/global/tools/hpctoolkit/toss_3_x86_64_ib/2019-07/modules/lmod
-    dotkit: /collab/usr/global/tools/hpctoolkit/toss_3_x86_64_ib/2019-07/modules/dotkit
+    lmod:   /collab/usr/global/tools/hpctoolkit/toss_3_x86_64_ib/2019-08/modules/lmod
+    tcl:    /collab/usr/global/tools/hpctoolkit/toss_3_x86_64_ib/2019-08/modules/tcl
+    dotkit: /collab/usr/global/tools/hpctoolkit/toss_3_x86_64_ib/2019-08/modules/dotkit
 
 
   # Temporary locations Spack can try to use for builds.

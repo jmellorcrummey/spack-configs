@@ -9,6 +9,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 	git clone https://github.com/jmellorcrummey/spack-configs
 	    That's where this file lives, so you must have already done that!
         git clone https://github.com/spack/spack.git
+	    First remove ~/gits/spack and ~/.spack to set up for a clean install
 	git clone https://github.com/hpctoolkit/hpctoolkit.git
 	git clone https://github.com/martyitz/hpctest
 
