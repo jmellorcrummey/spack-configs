@@ -113,9 +113,14 @@ packages:
   # gcc/g++ and the same version used to build hpctoolkit (to keep the
   # C++ libraries in sync).
   #
+
+  all:
+    providers:
+      mpi: [openmpi, mpich]
+
   openmpi:
     modules:
-      openmpi@3.1.0:  openmpi/4.0.0
+      openmpi@4.0.0:  openmpi/4.0.0
     buildable: False
 
   #------------------------------------------------------------
