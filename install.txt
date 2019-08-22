@@ -118,10 +118,21 @@ To do a spack install and test for a machine <machine> at site <site>:
 	On rzmanta and ray, <cmd-to-run> = "lalloc 1"
 	On rzhasgpu and quartz, <cmd-to-run> = "salloc -N 1 -ppdebug"
 
+    At LANL:
+	On kodiak, <cmd-to-run> = "salloc -N 1 --qos=interactive"
+
+    At Sandia:
+	?
+
 10.  Install the hpcviewers, where appropriate
-	spack install hpcviewer
+	spack install hpcviewer@<version> <option>
+          <version>
+              @2019.07 -- for the 2019.07 release
+              @2019.08 -- for the 2019.08 release
+
+    On x86 <option> is not needed
     On IBM Power machines:
-	spack install hpcviewer ^ibm-java
+	<option> ="^ibm-java"
 
 
 To run hpctest:
@@ -156,6 +167,12 @@ Be sure you have run "spack compiler find" before starting.
 	On rzansel and lassen, <cmd-to-run> = "lalloc 1"
 	On rzmanta and ray, <cmd-to-run> = "lalloc 1"
 	On rzhasgpu and quartz, <cmd-to-run> = "salloc -N 1 -ppdebug"
+
+    At LANL:
+	On kodiak, <cmd-to-run> = "salloc -N 1 --qos=interactive"
+
+    At Sandia:
+	?
 
 
 To build hpctoolkit:
