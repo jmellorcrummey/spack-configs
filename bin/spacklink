@@ -1,0 +1,107 @@
+#!/bin/sh
+
+#------------------------------------------------------------
+# spacklink:
+#
+#  a script to set up links in etc/spack in a specified 
+#  <spack directory> to configuration files for a <site> 
+#  and a <machine>
+#------------------------------------------------------------
+
+#------------------------------------------------------------
+# usage message
+#------------------------------------------------------------
+
+usage()
+{
+	    cat <<EOF 1>&2
+
+Usage:
+  spacklink [-n] <spack directory> <site> <machine name>
+EOF
+    exit 1
+}
+
+
+#------------------------------------------------------------
+# the script
+#------------------------------------------------------------
+
+spack_config_root_relative=`dirname $0`/..
+spack_config_root=`realpath $spack_config_root_relative`
+
+if [ "$1" == "-n" ]; then
+	echo=echo
+	shift
+else
+	echo=
+fi
+
+# $1 spack directory
+if [ "$1" == "" ]; then
+	usage
+else
+	spack_root=$1
+
+fi
+
+# $2 site 
+if [ "$2" == "" ]; then
+	usage
+else
+	site=$2
+fi
+
+# $3 machine 
+if [ "$3" == "" ]; then
+	usage
+else
+	machine=$3
+fi
+
+#check for valid spack root 
+if test ! -d $spack_root/etc/spack; then
+	echo "spacklink: Invalid spack directory $spack_root"
+	usage
+fi
+
+#check for valid site
+if test ! -d $spack_config_root/$site; then
+	echo "spacklink: Invalid site directory $spack_config_root/$site"
+	usage
+fi
+
+#check for valid machine
+if test ! -d $spack_config_root/$site/$machine; then
+	echo "spacklink: Invalid machine directory $spack_config_root/$site/$machine"
+	usage
+fi
+
+spack_etc=$spack_root/etc/spack
+
+echo Removing current spack configuration settings
+$echo /bin/rm -rf $spack_etc/*.yaml
+
+echo "Configuring $spack_root with spack configuration files for  site=$site machine=$machine"
+
+config=$spack_config_root/$site/$machine/$machine.config.yaml
+modules=$spack_config_root/$site/$machine/$machine.modules.yaml
+packages=$spack_config_root/$site/$machine/$machine.packages.yaml
+
+if test ! -f $config; then
+	echo "No config file $config; skipping"
+else
+	$echo ln  -s $config $spack_etc/config.yaml
+fi
+
+if test ! -f $modules; then
+	echo "No modules file $modules; skipping"
+else
+	$echo ln  -s $modules $spack_etc/modules.yaml
+fi
+
+if test ! -f $packages; then
+	$echo "No packages file $packages; skipping"
+else
+	$echo ln  -s $packages $spack_etc/packages.yaml
+fi
