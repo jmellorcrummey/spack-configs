@@ -130,7 +130,7 @@ packages:
   #
   intel-tbb:
     version:  [2018.6]
-    variants: +shared +tm
+    variants: +shared
 
 
   # intel-xed -- used in various places to parse x86 instructions
