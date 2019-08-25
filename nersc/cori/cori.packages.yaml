@@ -67,6 +67,13 @@ packages:
     variants: +libiberty ~nls
 
 
+  # cuda -- used by hpcrun for GPU programs
+  cuda:
+    modules:
+      cuda@10.1.168:  cuda/10.1.168
+    buildable: False
+
+
   # boost -- used by dyninst and now in hpcstruct cuda support.
   #
   # Dyninst requires >= 1.61 but most any recent version is good.
@@ -130,7 +137,7 @@ packages:
   #
   intel-tbb:
     version:  [2018.6]
-    variants: +shared
+    variants: +shared ~tm
 
 
   # intel-xed -- used in various places to parse x86 instructions
@@ -367,29 +374,8 @@ packages:
   # the rest of the spec and command line.  So, put the version you
   # want to build first.  4.8.4 is really only for Blue Gene.
 
-  gcc:
-    modules:
-      gcc@8.2.0:  gcc/8.2.0
-    buildable: False
-
-
-  #------------------------------------------------------------
-
-
-  # autoconf -- libunwind requires autoconf 2.69
-
-  # Example for a system install.  This example says that autoconf 2.69 
-  # is available at /usr/bin/autoconf.  Note: the 'paths:' entry is the
-  # parent directory of 'bin', not the bin directory itself (similar
-  # to prefix).
-  autoconf:
-    paths:
-      autoconf@2.69:  /usr
-    buildable: False
-
-  # Example for a module.  This example says that autoconf 2.69 is
-  # available from module 'autoconf/2.69'.
-  # autoconf:
+  # gcc:
   #   modules:
-  #     autoconf@2.69:  autoconf/2.69
+  #     gcc@8.2.0:  gcc/8.2.0
   #   buildable: False
+
