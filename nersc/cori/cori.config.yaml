@@ -17,7 +17,7 @@ config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
   # install_tree: $spack/opt/spack
-  install_tree: /global/homes/j/johnmc/spack-pkgs/cori/2019-08
+  install_tree: ${SCRATCH}/spack-pkgs/
 
 
   # Locations where templates should be found
@@ -31,7 +31,7 @@ config:
 
   # Locations where different types of modules should be installed.
   module_roots:
-    tcl:    /global/homes/j/johnmc/spack-pkgs/cori/2019-08/modules
+    tcl:    ${SCRATCH}/spack-pkgs/cori/modules
 
 
   # Temporary locations Spack can try to use for builds.
@@ -47,17 +47,16 @@ config:
   # The build stage can be purged with `spack clean --stage`.
   build_stage:
     - $tempdir
-    - /global/cscratch1/sd/johnmc/spack/cori/stage
 
 
   # Cache directory for already downloaded source tarballs and archived
   # repositories. This can be purged with `spack clean --downloads`.
-  source_cache: /global/cscratch1/sd/johnmc/spack/cori/cache
+  source_cache: $spack/var/spack/cache
 
 
   # Cache directory for miscellaneous files, like the package index.
   # This can be purged with `spack clean --misc-cache`
-  misc_cache: /global/cscratch1/sd/johnmc/spack/cori/misc-cache
+  misc_cache: ~/.spack/cache
 
 
   # If this is false, tools like curl that use SSL will not verify
