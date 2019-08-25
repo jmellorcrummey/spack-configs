@@ -369,7 +369,7 @@ packages:
 
   gcc:
     modules:
-      gcc@7.3.0:  gcc/7.3.0
+      gcc@8.2.0:  gcc/8.2.0
     buildable: False
 
 
