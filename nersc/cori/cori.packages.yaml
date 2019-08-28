@@ -68,9 +68,18 @@ packages:
 
 
   # cuda -- used by hpcrun for GPU programs
+  #
+  # Example for a module.  
+  # cuda:
+  #   modules:
+  #     cuda@10.1.168:  cuda/10.1.168
+  #   buildable: False
+
+
+  # Example for a path.  
   cuda:
-    modules:
-      cuda@10.1.168:  cuda/10.1.168
+    paths:
+      cuda@10.1.168: /usr/common/software/cuda/10.1.168 
     buildable: False
 
 
