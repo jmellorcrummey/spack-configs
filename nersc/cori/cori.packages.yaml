@@ -69,14 +69,10 @@ packages:
 
   # cuda -- used by hpcrun for GPU programs
   #
-  # Example for a module.  
-  # cuda:
-  #   modules:
-  #     cuda@10.1.168:  cuda/10.1.168
-  #   buildable: False
-
-
-  # Example for a path.  
+  # If you want HPCToolkit to be CUDA enabled, you must specify a 
+  # path to the installation of CUDA on your platform. Specifying
+  # a module won't work; a path is required.
+  #
   cuda:
     paths:
       cuda@10.1.168: /usr/common/software/cuda/10.1.168 
