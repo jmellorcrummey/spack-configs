@@ -15,12 +15,12 @@ To do a spack install and test for a machine <machine> at site <site>:
 	The hpctoolkit sources are not needed, but can be gotten by:
 		git clone https://github.com/hpctoolkit/hpctoolkit.git
 
-3. Set up your shell to use spack:
+3. Set up your shell to use spack and the spacklink setup command:
 	for bash:
           vi ~/.bashrc	#Add the following:
             umask 022 
             export SPACK_ROOT=~/gits/spack
-            export PATH=${SPACK_ROOT}/bin:${PATH}
+            export PATH=${SPACK_ROOT}/bin:~gits/spack-configs/bin:${PATH}
             source ${SPACK_ROOT}/share/spack/setup-env.sh
 	    export <PROXIES, as needed for spack usage>
 	  source ~/.bashrc
@@ -30,10 +30,6 @@ To do a spack install and test for a machine <machine> at site <site>:
 	module load gcc.xxx
             For hptctoolkit, xxx needs to be 4.8 or later, preferably 5.x or later
         spack compiler find
-
-	edit the file ~/.spark/linux/compilers.yaml, to find that gcc.xxx entry, and make
-	sure it is for the right architecture.  Add 'gcc/xxxx' in the brackets after module.
-		(I don't know why this is important.)
 
 5.  Go to the spack-configs repo, and prepare the appropriate:
 	<site>/<machine>/<machine>.config.yaml
@@ -60,8 +56,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 		user-friendly modules are constructed below.
 
 	The <machine>.packages.yaml file describes the dependencies for the install.
-	    Start with the one in ~/gits/hpctoolkit/packages.yaml
-		or the one for any existing similar <machine>.
+	    Start with the one for any existing similar <machine>.
 	    You will edit it in step 7, below.
 
 6.  Set up the spack install environment:
@@ -76,16 +71,16 @@ To do a spack install and test for a machine <machine> at site <site>:
         git clone https://github.com/spack/spack.git
 	source ~/.bashrc
 
-	--------------------------------------------------------------------------
-	IT IS EASY TO SCREW THIS NEXT STEP, AND WIND UP WITH A BROKEN INSTALLATION
-	--------------------------------------------------------------------------
-	cd $SPACK_ROOT/etc/spack
-	ln -s .../spack-configs/<site>/<machine>/<machine>.config.yaml config.yaml
-	ln -s .../spack-configs/<site>/<machine>/<machine>.modules.yaml modules.yaml
-	ln -s .../spack-configs/<site>/<machine>/<machine>.packages.yaml packages.yaml
+	Tell spack how to do the install, by doing
+	spacklink <$SPACK_ROOT> <site> <machine>
+		spacklink is in the bin directory in the spack-configs repository
 
-	There is a script, spacklink, which takes two arguments, <site> and <machine>
-	and sets up the links for you.  It is in the top-level spack-configs directory.
+	It does the following
+		cd $SPACK_ROOT/etc/spack
+		rm *.yaml
+		ln -s .../spack-configs/<site>/<machine>/<machine>.config.yaml config.yaml
+		ln -s .../spack-configs/<site>/<machine>/<machine>.modules.yaml modules.yaml
+		ln -s .../spack-configs/<site>/<machine>/<machine>.packages.yaml packages.yaml
 
 	Verify that the machine you are on matches <machine> in the directory and
 		the file names of the three symlinks.
@@ -134,6 +129,8 @@ To do a spack install and test for a machine <machine> at site <site>:
 
     At Sandia:
 	?
+    At ANL:
+    At NERSC:
 
 10.  Install the hpcviewers, where appropriate
 	spack install hpcviewer@<version> <option>
@@ -144,14 +141,48 @@ To do a spack install and test for a machine <machine> at site <site>:
     On IBM Power machines:
 	<option> ="^ibm-java"
 
+11.  Construct a human-readable module to be used by others
+	These files can live in a directory,
+	    <path-to-modulefiles-directory>/{hpctoolkit,hpcviewer}/
+		that is accessible to others.
+	The users would run:
+	    module use <path-to-modulefiles-directory>
+	    module avail hpc
+		to see what versions are available
 
-To run hpctest:
----------------
-Be sure you have run "spack compiler find" before starting.
+	To construct lmod modules,
+	    cd <INSTALL>/modules/lmod
+	    find . -name hpctoolkit
+		It will be a directory; cd to it
+		It will have a *.lua file corresponding to each of the hpctoolkit
+		    installs that your ran.
+	    cp <version>.lua <path-to-modulefiles-directory>/hpctoolkit/<version>.lua
 
-1.  cd ~/gits/hpctest
+	The <path-to-modulefiles-directory> may also have a file named "default", which
+	    should be a symlink to the version that is the default.
+	It also may have a file named "rolling-release", which should be a symlink to
+	    the latest version installed.
 
-2.  If you have cloned the repo, its config.yaml will not point to any hpctoolkit
+	Update those two links, as appropriate.
+
+	Follow the same instructions for hpcviewer.
+
+
+12.  Verify the installation:
+	module use <path-to-modulefiles-directory>
+	module avail hpc
+	For each hpctoolkit <version>:
+	    module load <version>
+	    hpcrun --version
+	Make sure they correspond to the installation as expected
+
+
+13.  Run the hpctest test suite.
+	Be sure you have run "spack compiler find" before starting.
+
+    1.  cd ~/gits/hpctest
+
+    2.  If you have cloned the repo, its config.yaml will not point to any hpctoolkit
 	When you run, the hpctoolkit on your path will be used,
 		which seems like the least error-prone methodology
 
@@ -160,14 +191,14 @@ Be sure you have run "spack compiler find" before starting.
           hpctoolkit:
             path: whatever
 
-3.  Set up the bits to test:
+    3.  Set up the bits to test:
 	module avail hpctoolkit
 	module load hpctoolkit@xxxx
 	    xxxx represents the bits to test
 
-4.  Initialize: "hpctest init"
+    4.  Initialize: "hpctest init"
 
-5.  Run the full suite:
+    5.  Run the full suite:
 	<cmd-to-run> hpctest run
 	    (most tests require MPI launch)
 	<cmd-to-run> hpctest run app/amgmk
@@ -183,6 +214,8 @@ Be sure you have run "spack compiler find" before starting.
 
     At Sandia:
 	?
+    At ANL:
+    At NERSC:
 
 
 To build hpctoolkit:
