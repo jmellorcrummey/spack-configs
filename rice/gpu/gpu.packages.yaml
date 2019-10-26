@@ -18,6 +18,8 @@
 #    https://spack.readthedocs.io/en/latest/build_settings.html
 #
 packages:
+  all:
+    target: ['x86_64']
 
   #------------------------------------------------------------
   # 1 -- HPCToolkit Prerequisite Packages
