@@ -12,7 +12,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 	    First remove ~/gits/spack and ~/.spack to set up for a clean install
 	git clone https://github.com/martyitz/hpctest
 
-	The hpctoolkit sources are not needed, but can be gotten by:
+	The hpctoolkit sources may not be needed, but can be gotten by:
 		git clone https://github.com/hpctoolkit/hpctoolkit.git
 
 3. Set up your shell to use spack and the spacklink setup command:
@@ -29,7 +29,10 @@ To do a spack install and test for a machine <machine> at site <site>:
 	module avail gcc
 	module load gcc.xxx
             For hptctoolkit, xxx needs to be 4.8 or later, preferably 5.x or later
-        spack compiler find
+	  (If you can't find one, tell spack to install one, gcc@7.3.0 is a good choice.
+	    To do so, do a spack compiler find, then spack install gcc@7.3.0,
+	    Then module load the gcc you've built.)
+        spack compiler find  (Again, if you've installed the gcc@7.3.0)
 
 5.  Go to the spack-configs repo, and prepare the appropriate:
 	<site>/<machine>/<machine>.config.yaml
@@ -52,12 +55,14 @@ To do a spack install and test for a machine <machine> at site <site>:
 	The <machine>.modules.yaml file describes the modules to be built.
 	    There are three types of modules, lmod, tcl, and dotkit: the module files in
 		the various subdirectories build all three.
+		dotkit is now obsolete.
 	    The modules built in this step have long, human-hostile names; more
 		user-friendly modules are constructed below.
 
 	The <machine>.packages.yaml file describes the dependencies for the install.
 	    Start with the one for any existing similar <machine>.
 	    You will edit it in step 7, below.
+	    Alternatively, you can start with the version in ~/gits/hpctoolkit/spack/packages.yaml
 
 6.  Set up the spack install environment:
 	-------------------------------------------------------------------
@@ -85,6 +90,8 @@ To do a spack install and test for a machine <machine> at site <site>:
 	Verify that the machine you are on matches <machine> in the directory and
 		the file names of the three symlinks.
 
+	Alternatively, you can copy or link the three files from wherever you choose..
+
 7.  Configure the packages.yaml file, via its symlink, for the system, editing various entries
 	a.  Run module avail mpi, and find a suitable MPI to use.
 	    Edit the entry for openmpi to refer to it
@@ -95,7 +102,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 	c.  Find a suitable perl on the system or in a module
 	    Edit the entry for perl to refer to it
 
-	d.  Find a suitable python on the system or in a modules
+	d.  Find a suitable python on the system or in a module
 	    Edit the entry for python to refer to it
 
 8.  Decide the specific version and options you want to build.
@@ -201,8 +208,10 @@ To do a spack install and test for a machine <machine> at site <site>:
     5.  Run the full suite:
 	<cmd-to-run> hpctest run
 	    (most tests require MPI launch)
+	The first time you run it, it will take a very long time to do spack install of the sources
+	    for the few tests.  After that, it will reuse the builds.
 	<cmd-to-run> hpctest run app/amgmk
-	    the only passing test that does not.
+	    the only passing test that does not require MPI.
 
     At LLNL:
 	On rzansel and lassen, <cmd-to-run> = "lalloc 1"
@@ -222,9 +231,20 @@ To build hpctoolkit:
 --------------------
 1.  Get the sources:
 	git clone https://github.com/hpctoolkit/hpctoolkit.git
+		Pick the branch you want; for the fnbounds branch:
+	git branch fnbounds
+	git checkout fnbounds
+	git branch --set-upstream-to=origin/fnbounds fnbounds
+	git pull	
 
 2.  Run:
 	configure --with-spack=<-spack-install-packages-directory> --prefix=<build.out> --enable-develop
 
 3.  Run:
 	make -j 4 install
+
+If you change any source files, you should only need to rerun the make install
+If you add or delete source files, or make changes to the build, you need to edit
+them into the Makefile.am in the directory where you are making the changes,
+and then remove Makefile.in and Makefile, and run "autogen" in the top-level source directory.
+Then rerun the make install.
