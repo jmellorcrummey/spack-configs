@@ -267,7 +267,7 @@ is "04-hpctoolkit-<app>-measurements" (perhaps with a different number in some r
 It contains the raw data recorded in the run: "<app>-*.hpcrun" and "<app>-*.hpctrace"
 files for each process and thread, and "<app>-*.log" files for each process.
 
-The OUT subdirectory also has a "11-hpctoolkit-<app>-measurements" (again, perhaps with
+The OUT subdirectory also has a "11-hpctoolkit-<app>-database" (again, perhaps with
 a different number in some runs).  It contains the experiment.xml file, and the individual
 trace files, copied from the measurements directory.  It also contains a src subdirectory
 with what appears to be a copy of the raw source, cloned into a subdirectory tree
@@ -276,6 +276,9 @@ mimicing the full path of the subtree of hpctest containing the source.
 To look for stack unwind failures, cd to the study-* directory of interest,
 and run:
 	grep errant */OUT/OUT.yaml
+
+The hpcviewer can be brought up with the name of the "11-hpctoolkit-<app>-database" directory
+in the OUT directory for a test.
 
 
 --------------------
