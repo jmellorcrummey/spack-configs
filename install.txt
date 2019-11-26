@@ -1,3 +1,4 @@
+----------------------------------------------------------------------
 To do a spack install and test for a machine <machine> at site <site>:
 ----------------------------------------------------------------------
 1.  Set up a top-level "~/gits/" directory on <machine>, and do all the git clones into it.
@@ -10,7 +11,6 @@ To do a spack install and test for a machine <machine> at site <site>:
 	    That's where this file lives, so you must have already done that!
         git clone https://github.com/spack/spack.git
 	    First remove ~/gits/spack and ~/.spack to set up for a clean install
-	git clone https://github.com/martyitz/hpctest
 
 	The hpctoolkit sources may not be needed, but can be gotten by:
 		git clone https://github.com/hpctoolkit/hpctoolkit.git
@@ -135,8 +135,10 @@ To do a spack install and test for a machine <machine> at site <site>:
 	On kodiak, <cmd-to-run> = "salloc -N 1 --qos=interactive"
 
     At Sandia:
-	?
+	<cmd-to-run> = "salloc -N1"
+
     At ANL:
+
     At NERSC:
 
 10.  Install the hpcviewers, where appropriate
@@ -184,34 +186,42 @@ To do a spack install and test for a machine <machine> at site <site>:
 	Make sure they correspond to the installation as expected
 
 
-13.  Run the hpctest test suite.
-	Be sure you have run "spack compiler find" before starting.
+-----------------------------
+To run the hpctest test suite
+-----------------------------
+Be sure you have run "spack compiler find" before starting.
+The suite is contains 7 tests, one of which does not compile, and one of which fails in a normal run.
+Of the five remaining tests, four require MPI.
 
-    1.  cd ~/gits/hpctest
+1. Clone the test suite repository
+	git clone https://github.com/martyitz/hpctest ~/gits/hpctest
+	cd ~/gits/hpctest
 
-    2.  If you have cloned the repo, its config.yaml will not point to any hpctoolkit
-	When you run, the hpctoolkit on your path will be used,
-		which seems like the least error-prone methodology
+2.  Initialize: "hpctest init"
+
+3.  Set up the bits to test:
+    If you have cloned the repo, its config.yaml will not point to any hpctoolkit
+    When you run, the hpctoolkit on your path will be used,
+	module avail hpctoolkit
+	module load hpctoolkit@xxxx
+	    xxxx represents the bits to test
 
 	Or you could edit config.yaml to point to an installation
         profile:
           hpctoolkit:
             path: whatever
 
-    3.  Set up the bits to test:
-	module avail hpctoolkit
-	module load hpctoolkit@xxxx
-	    xxxx represents the bits to test
-
-    4.  Initialize: "hpctest init"
-
-    5.  Run the full suite:
+5.  Run the full suite:
 	<cmd-to-run> hpctest run
-	    (most tests require MPI launch)
-	The first time you run it, it will take a very long time to do spack install of the sources
-	    for the few tests.  After that, it will reuse the builds.
-	<cmd-to-run> hpctest run app/amgmk
-	    the only passing test that does not require MPI.
+	NOTE: The first time you run it, it will take a very long time to do spack install of the sources
+	    and the builds for the tests.  After that, it will reuse the builds.
+
+	You can also run a single test, e.g.,
+	  <cmd-to-run> hpctest run app/amgmk
+	      (That's the only passing test that does not require MPI)
+
+    On machines that are powerful enough to run MPI jobs, no <cmd-to-run> is needed; on login-nodes
+    at the various national labs, <cmd-to-run> is needed to run on the compute nodes.
 
     At LLNL:
 	On rzansel and lassen, <cmd-to-run> = "lalloc 1"
@@ -222,28 +232,78 @@ To do a spack install and test for a machine <machine> at site <site>:
 	On kodiak, <cmd-to-run> = "salloc -N 1 --qos=interactive"
 
     At Sandia:
-	?
+	<cmd-to-run> = "salloc -N1"
+
     At ANL:
+
     At NERSC:
 
+To remove previous runs, run "hpctest clean"  It will leave the pre-built executables, but remove all
+recorded data.
 
+Each invocation of hpctest creates a directory in .../hpctest/work with a name of the form
+    study-<date>--<time>
+  where <date> is e.g., "2019-11-25", and <time> is e.g., "15-02-59"
+    in this case, referring to the run started at 3:02:59 PM on November 25, 2019.
+
+Under that directory is a set of subdirectories, one for each test.
+with names like, e.g.,:
+    app--AMG2006:%gcc:-e.REALTIME@10000
+each referring to a single test. During the run, hpctest will say:
+    running test app/AMG2006
+At the end of the test run, result from that test is labelled:
+    APP / AMG2006 with %GCC and -e REALTIME@10000
+	Note the differing capitalization and punctuation in the various usages.
+
+Each of those individual test subdirectories has a link for the executable, pointing into its
+build subdirectory, a build subdirectory which is populated with everything built by
+spack for that test.  Each test subdirectory has an OUT subdirectory.
+
+The OUT subdirectory has an OUT.yaml file, summarizing the execution of the test.
+It also has various other files and two directories, numbered starting 01-<name>, in
+the order with which they were generated during the test.  One of the directories
+is "04-hpctoolkit-<app>-measurements" (perhaps with a different number in some runs).
+(The <app> here is lower-case, despite the test being upper-case.)
+It contains the raw data recorded in the run: "<app>-*.hpcrun" and "<app>-*.hpctrace"
+files for each process and thread, and "<app>-*.log" files for each process.
+
+The OUT subdirectory also has a "11-hpctoolkit-<app>-measurements" (again, perhaps with
+a different number in some runs).  It contains the experiment.xml file, and the individual
+trace files, copied from the measurements directory.  It also contains a src subdirectory
+with what appears to be a copy of the raw source, cloned into a subdirectory tree
+mimicing the full path of the subtree of hpctest containing the source.
+
+To look for stack unwind failures, cd to the study-* directory of interest,
+and run:
+	grep errant */OUT/OUT.yaml
+
+
+--------------------
 To build hpctoolkit:
 --------------------
 1.  Get the sources:
-	git clone https://github.com/hpctoolkit/hpctoolkit.git
-		Pick the branch you want; for the fnbounds branch:
+	git clone https://github.com/hpctoolkit/hpctoolkit.git hpctoolkit
+	cd hpctoolkit
+	    Then, [ick the branch you want; for the fnbounds branch:
 	git branch fnbounds
 	git checkout fnbounds
 	git branch --set-upstream-to=origin/fnbounds fnbounds
 	git pull	
 
-2.  Run:
-	configure --with-spack=<-spack-install-packages-directory> --prefix=<build.out> --enable-develop
+2.  Construct the build area:
+	mkdir hpctoolkit-build
+	cd hpctoolkit-build
 
-3.  Run:
+3.  Configure the build
+	    (in the hpctoolkit-build directory)
+	../configure --with-spack=<-spack-install-packages-directory> --prefix=<build.out> --enable-develop
+
+4.  Run the build:
+	    (in the hpctoolkit-build directory)
 	make -j 4 install
 
 If you change any source files, you should only need to rerun the make install
+
 If you add or delete source files, or make changes to the build, you need to edit
 them into the Makefile.am in the directory where you are making the changes,
 and then remove Makefile.in and Makefile, and run "autogen" in the top-level source directory.
