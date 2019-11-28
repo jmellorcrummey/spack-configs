@@ -33,7 +33,7 @@ config:
   module_roots:
     tcl:    /home/msi3/2019-08/MODULES/modules
     lmod:   /home/msi3/2019-08/MODULES/lmod
-    dotkit: /home/msi3/2019-08/MODULES/dotkit
+#    dotkit: /home/msi3/2019-08/MODULES/dotkit
 
 
   # Temporary locations Spack can try to use for builds.
