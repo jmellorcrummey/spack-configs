@@ -294,11 +294,11 @@ To build hpctoolkit:
 	git pull	
 
 2.  Construct the build area:
-	mkdir hpctoolkit-build
-	cd hpctoolkit-build
+	mkdir BUILD
+	cd BUILD
 
 3.  Configure the build
-	    (in the hpctoolkit-build directory)
+	    (in the BUILD directory)
 	../configure --with-spack=<-spack-install-packages-directory> --prefix=<build.out> --enable-develop
 
 4.  Run the build:
@@ -307,7 +307,9 @@ To build hpctoolkit:
 
 If you change any source files, you should only need to rerun the make install
 
-If you add or delete source files, or make changes to the build, you need to edit
+If you want to add or delete source files, or make changes to the build, you need to edit
 them into the Makefile.am in the directory where you are making the changes,
 and then remove Makefile.in and Makefile, and run "autogen" in the top-level source directory.
+Also, if you are editing a *.in file that is used to build a script, you will need to run
+"autogen" in the top-level source directory.
 Then rerun the make install.
