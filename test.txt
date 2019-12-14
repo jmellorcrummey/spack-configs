@@ -6,8 +6,6 @@ The suite is contains 6 tests, one of which does not test profiling.
 Of the five remaining tests, four require MPI.
 
 1. Clone the test suite repository
-	git clone https://github.com/martyitz/hpctest ~/gits/hpctest
-		-or-
 	git clone https://github.com/scottkwarren/hpctest ~/gits/hpctest
 	cd ~/gits/hpctest
 
