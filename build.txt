@@ -1,0 +1,34 @@
+--------------------
+To build hpctoolkit:
+--------------------
+1.  Get the sources:
+	git clone https://github.com/hpctoolkit/hpctoolkit.git hpctoolkit
+	cd hpctoolkit
+	    Then, [ick the branch you want; for the fnbounds branch:
+	git branch fnbounds
+	git checkout fnbounds
+	git branch --set-upstream-to=origin/fnbounds fnbounds
+	git pull	
+
+2.  Construct the build area:
+	mkdir BUILD
+	cd BUILD
+
+3.  Configure the build
+	    (in the BUILD directory)
+	../configure --with-spack=<-spack-install-packages-directory> --prefix=<build.out> --enable-develop
+
+4.  Run the build:
+	    (in the hpctoolkit-build directory)
+	make -j 4 install
+
+If you change any source files, you should only need to rerun the make install
+
+If you want to add or delete source files, or make changes to the build, you need to edit
+the changes into the Makefile.am in the directory where you are making the changes, and run "autogen".
+
+If you are editing a *.in file that is used to build a script, you will need to run "configure",
+in the top-level source directory.  However, if you run "autogen" in the top-level source directory,
+the next invocation of "make install" will run it automagically..
+
+When in doubt, run "autogen".
