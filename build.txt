@@ -4,7 +4,7 @@ To build hpctoolkit:
 1.  Get the sources:
 	git clone https://github.com/hpctoolkit/hpctoolkit.git hpctoolkit
 	cd hpctoolkit
-	    Then, [ick the branch you want; for the fnbounds branch:
+	    Then, pick the branch you want; for the fnbounds branch:
 	git branch fnbounds
 	git checkout fnbounds
 	git branch --set-upstream-to=origin/fnbounds fnbounds
