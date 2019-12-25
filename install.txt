@@ -2,23 +2,28 @@
 To do a spack install and test for a machine <machine> at site <site>:
 ----------------------------------------------------------------------
 1.  Set up a top-level "~/gits/" directory on <machine>, and do all the git clones into it.
-	You can put them wherever you want, but the remainder of these
+	You can really put them wherever you want, but the remainder of these
 	instructions assume everything goes into ~/gits/
 
 2.  Set up the repositories:
 	cd ~/gits
 	git clone https://github.com/jmellorcrummey/spack-configs
 	    That's where this file lives, so you must have already done that!
-        git clone https://github.com/spack/spack.git
+        git clone https://github.com/spack/spack
 	    First remove ~/gits/spack and ~/.spack to set up for a clean install
 
-	The hpctoolkit sources may not be needed, but can be gotten by:
-		git clone https://github.com/hpctoolkit/hpctoolkit.git
+	FYI:
+	    The hpctoolkit sources may not be needed, but can be gotten by:
+		git clone https://github.com/hpctoolkit/hpctoolkit
+		    See build.txt for more information
+	    The hpctest sources may not be needed, but can be gotten by
+		git clone https://github.com/scottkwarren/hpctest
+		    See text.txt for more information
 
 3. Set up your shell to use spack and the spacklink setup command:
 	for bash:
           vi ~/.bashrc	#Add the following:
-            umask 022 
+            umask 022  or to make everything group-writable
             export SPACK_ROOT=~/gits/spack
             export PATH=${SPACK_ROOT}/bin:~gits/spack-configs/bin:${PATH}
             source ${SPACK_ROOT}/share/spack/setup-env.sh
@@ -26,13 +31,24 @@ To do a spack install and test for a machine <machine> at site <site>:
 	  source ~/.bashrc
 
 4.  Tell spack to use the right gcc:
+    First:
+	which gcc; gcc --version
+    Then:
 	module avail gcc
-	module load gcc.xxx
-            For hptctoolkit, xxx needs to be 4.8 or later, preferably 5.x or later
-	  (If you can't find one, tell spack to install one, gcc@7.3.0 is a good choice.
-	    To do so, do a spack compiler find, then spack install gcc@7.3.0,
-	    Then module load the gcc you've built.)
-        spack compiler find  (Again, if you've installed the gcc@7.3.0)
+    If a module version is later than the one on your path,
+	module load gcc.xxx -- to put that later version on your path
+
+    Run "spack compiler find" to tell spack about those compilers.
+
+    If compiler version is 5.x or later, it's good enough to install hpctoolkit,
+	and you are done with this step.
+    If it is not:
+	Run "spack install gcc@7.3.x"  (or some other version 5.x or later)
+	"module load <the gcc you've just installed>"
+	Run "spack compiler find" again to tell spack about it
+	Run "spack install gcc@7.3.x" again, to have it built with itself,
+	    so all future installs will be in the same directory (the compiler
+	    version is part of the full path name)..
 
 5.  Go to the spack-configs repo, and prepare the appropriate:
 	<site>/<machine>/<machine>.config.yaml
@@ -64,6 +80,9 @@ To do a spack install and test for a machine <machine> at site <site>:
 	    You will edit it in step 7, below.
 	    Alternatively, you can start with the version in ~/gits/hpctoolkit/spack/packages.yaml
 
+	If you do not have a <machine>.packages.yaml file, the spack installation
+	will build all necessary prerequisites.
+
 6.  Set up the spack install environment:
 	-------------------------------------------------------------------
 	It's not clear what spack caches, so to be on the safe side, I remove
@@ -76,9 +95,9 @@ To do a spack install and test for a machine <machine> at site <site>:
         git clone https://github.com/spack/spack.git
 	source ~/.bashrc
 
-	Tell spack how to do the install, by doing
-	spacklink <$SPACK_ROOT> <site> <machine>
-		spacklink is in the bin directory in the spack-configs repository
+	Tell spack how to do the install, using the files you prepared in step 6 above
+	Run "spacklink <$SPACK_ROOT> <site> <machine>"
+		The spacklink script is in the bin directory in the spack-configs repository
 
 	It does the following
 		cd $SPACK_ROOT/etc/spack
@@ -86,23 +105,27 @@ To do a spack install and test for a machine <machine> at site <site>:
 		ln -s .../spack-configs/<site>/<machine>/<machine>.config.yaml config.yaml
 		ln -s .../spack-configs/<site>/<machine>/<machine>.modules.yaml modules.yaml
 		ln -s .../spack-configs/<site>/<machine>/<machine>.packages.yaml packages.yaml
+	note that if any of those files are not present, no link will be made, and the spack
+	    default will be used.
 
 	Verify that the machine you are on matches <machine> in the directory and
-		the file names of the three symlinks.
+		the file names of the symlinks.
 
-	Alternatively, you can copy or link the three files from wherever you choose..
+	Alternatively, you can copy or link those files from wherever you choose..
 
-7.  Configure the packages.yaml file, via its symlink, for the system, editing various entries
-	a.  Run module avail mpi, and find a suitable MPI to use.
+7.  If you have a packages.yaml file, you should configure the packages.yaml file,
+    editing it via its symlink, for the system, editing various entries:
+
+	a.  Run module avail mpi, and find a suitable MPI to use., or install one
 	    Edit the entry for openmpi to refer to it
 
-	b.  Find a suitable cmake on the system or in a module
+	b.  Find a suitable cmake on the system or in a module, or install one
 	    Edit the entry for cmake to refer to it
 
-	c.  Find a suitable perl on the system or in a module
+	c.  Find a suitable perl on the system or in a module, or install one
 	    Edit the entry for perl to refer to it
 
-	d.  Find a suitable python on the system or in a module
+	d.  Find a suitable python on the system or in a module, or install one
 	    Edit the entry for python to refer to it
 
 8.  Decide the specific version and options you want to build.
@@ -140,6 +163,7 @@ To do a spack install and test for a machine <machine> at site <site>:
     At ANL:
 
     At NERSC:
+
 
 10.  Install the hpcviewers, where appropriate
 	spack install hpcviewer@<version> <option>
