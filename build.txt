@@ -4,31 +4,24 @@ To build hpctoolkit:
 
 First, do a spack install, with the latest spack repo, to get the dependencies.
 
-Then make sure you have the right versions of the autotools:
-1.  git clone https://github.com/hpctoolkit/hpctoolkit-devtools
-	mkdir ~/autotools
-	cd hpctoolkit-devtools/autotools
-	./make.sh ~/autotools
-
-	Add to your path:
-	  export PATH=~/autotools/bin:$PATH
-
-2.  Get the sources:
+INITIAL BUILD
+-------------
+1.  Get the sources:
 	git clone https://github.com/hpctoolkit/hpctoolkit.git
 	    or
 	git clone https://github.com/hpctoolkit/hpctoolkit.git -b <branch>
 
     If you already have a repo, and want to switch branches, make sure your repo is clean
-    and then pick the branch you want; for the xyz branch:
+    and then pick the branch you want; .e.g.,for the xyz branch:
 	git branch xyz (If you want to create the branch, not otherwise)
 	git checkout xyz
 	git branch --set-upstream-to=origin/xyz xyz
 	git pull	
 
-3.  Construct the build area:
+2.  Construct the build area:
 	mkdir BUILD
 
-4.  Configure the build (in the BUILD directory)  Run:
+3.  Configure the build (in the BUILD directory):
     cd BUILD
     ../configure --with-spack=<spack-install-packages-directory> --prefix=<build.out> --enable-develop
 
@@ -38,19 +31,46 @@ Then make sure you have the right versions of the autotools:
 	and it is two levels down below the install_tree, at <install-tree>/<OS-spec>/<gcc-version>/
 
       <build.out> is the absolute path to wherever you want the build installed
+	configure does not recognize ~ as your home directory.
 
-5.  Run the build (in the BUILD directory):
+4.  Run the build (in the BUILD directory):
 	cd BUILD
 	make install
+
+
     The non-parallel build is relatively fast, at least compared to a spack install.
     You can run the builds in parallel, but if there's an error, it's harder to see where
 	make -j 4 install 
 
-If you change any source files, you should only need to rerun the make install
 
-If you want to add or delete source files, or make changes to the build, you need to edit
-the changes into the Makefile.am in the directory where you are making the changes,
-and into the configure.ac file in the top-level hpctoolkit directory, and run "autogen".
+MAKING CHANGES
+--------------
+If you only change source file contents, you should only need to rerun the make install
+
+For more serious changes, such as adding files or directories;
+
+1. Ensure you have the right version of autotools:
+	git clone https://github.com/hpctoolkit/hpctoolkit-devtools"
+	mkdir ~/autotools
+	cd hpctoolkit-devtools/autotools
+	./make.sh ~/autotools
+
+    Add to your path in ~/.bashrc:
+	export PATH=~/autotools/bin:$PATH
+	source ~/.bashrc
+
+    This only needs to be done on systems where you are changing the structure of the repo.
+
+2.  Edit configure.ac and any Makefile.am to add the files/directories.
+
+3.  Reconstruct the Makefiles, etc.:
+	cd hpctoolkit
+	autogen
+	/bin/rm -rf BUILD; mkdir BUILD; cd BUILD
+	../configure [as above in 3]
+
+3.  Run the build:1
+	make install [as above  in 4]
 
 If you are editing a *.in file that is used to build a script, you will need to run "configure",
 in the top-level source directory.  However, if you run "autogen" in the top-level source directory,
