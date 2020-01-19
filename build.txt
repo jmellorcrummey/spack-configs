@@ -4,7 +4,16 @@ To build hpctoolkit:
 
 First, do a spack install, with the latest spack repo, to get the dependencies.
 
-1.  Get the sources:
+Then make sure you have the right versions of the autotools:
+1.  git clone https://github.com/hpctoolkit/hpctoolkit-devtools
+	mkdir ~/autotools
+	cd hpctoolkit-devtools/autotools
+	./make.sh ~/autotools
+
+	Add to your path:
+	  export PATH=~/autotools/bin:$PATH
+
+2.  Get the sources:
 	git clone https://github.com/hpctoolkit/hpctoolkit.git
 	    or
 	git clone https://github.com/hpctoolkit/hpctoolkit.git -b <branch>
@@ -16,10 +25,10 @@ First, do a spack install, with the latest spack repo, to get the dependencies.
 	git branch --set-upstream-to=origin/xyz xyz
 	git pull	
 
-2.  Construct the build area:
+3.  Construct the build area:
 	mkdir BUILD
 
-3.  Configure the build (in the BUILD directory)  Run:
+4.  Configure the build (in the BUILD directory)  Run:
     cd BUILD
     ../configure --with-spack=<spack-install-packages-directory> --prefix=<build.out> --enable-develop
 
@@ -30,7 +39,7 @@ First, do a spack install, with the latest spack repo, to get the dependencies.
 
       <build.out> is the absolute path to wherever you want the build installed
 
-4.  Run the build (in the BUILD directory):
+5.  Run the build (in the BUILD directory):
 	cd BUILD
 	make install
     The non-parallel build is relatively fast, at least compared to a spack install.
@@ -40,10 +49,11 @@ First, do a spack install, with the latest spack repo, to get the dependencies.
 If you change any source files, you should only need to rerun the make install
 
 If you want to add or delete source files, or make changes to the build, you need to edit
-the changes into the Makefile.am in the directory where you are making the changes, and run "autogen".
+the changes into the Makefile.am in the directory where you are making the changes,
+and into the configure.ac file in the top-level hpctoolkit directory, and run "autogen".
 
 If you are editing a *.in file that is used to build a script, you will need to run "configure",
 in the top-level source directory.  However, if you run "autogen" in the top-level source directory,
 the next invocation of "make install" will run it automagically..
 
-When in doubt, run "autogen".
+When in doubt, run "autogen", but be sure you have the right autotools.
