@@ -30,12 +30,12 @@ INITIAL BUILD
 	the install_tree setting in the config.yaml file used for the spack
 	install command.  The subdirectoy is the one that contains the packages,
 	and it is two levels down below the install_tree, at <install-tree>/<OS-spec>/<gcc-version>/
+	It is specified as an absolute path, since configure does not recognize ~ as your home directory.
 
       <build.out> is the absolute path to wherever you want the build installed
-	configure does not recognize ~ as your home directory.
 
       <other-options> specify additional options for the build.  They include
-	--with-cuda=/usr/local/cuda (or wherever it is installed.
+	--with-cuda=/usr/local/cuda (or wherever it is installed)
 	--MPICXX=<path to mpi compiler>
 
 4.  Run the build (in the BUILD directory):
@@ -73,7 +73,7 @@ For more serious changes, such as adding files or directories;
 	/bin/rm -rf BUILD; mkdir BUILD; cd BUILD
 	../configure [as in the initial instructions above, in 3]
 
-3.  Run the build:
+4.  Run the build:
 	make install [as in the initial instructions above, in 4]
 
 If you are editing a *.in file that is used to build a script, you will need to run "configure",

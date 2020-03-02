@@ -117,7 +117,8 @@ To do a spack install and test for a machine <machine> at site <site>:
     editing it via its symlink, for the system, editing various entries:
 
 	a.  Run module avail mpi, and find a suitable MPI to use., or install one
-	    Edit the entry for openmpi to refer to it
+	    Edit the entry for openmpi to refer to it.  It is importants to set this
+	    parameter, since the batch systems are aware of MPI and know how to use it.
 
 	b.  Find a suitable cmake on the system or in a module, or install one
 	    Edit the entry for cmake to refer to it
@@ -127,6 +128,12 @@ To do a spack install and test for a machine <machine> at site <site>:
 
 	d.  Find a suitable python on the system or in a module, or install one
 	    Edit the entry for python to refer to it
+
+	e.  If you are installing on x86, set the architecture to use, following the "packages" line:
+		packages:
+		  all:
+		    target: ['x86_64']
+	    Make sure that each line is indented exactly two spaces relative to the one above.
 
 8.  Decide the specific version and options you want to build.
 	hpctoolkit@<version> <options> <compiler>
