@@ -19,6 +19,7 @@ INITIAL BUILD
 	git pull	
 
 2.  Construct the build area:
+	cd hpctoolkit
 	mkdir BUILD
 
 3.  Configure the build (in the BUILD directory):
@@ -41,7 +42,6 @@ INITIAL BUILD
 	cd BUILD
 	make install
 
-
     The non-parallel build is relatively fast, at least compared to a spack install.
     You can run the builds in parallel, but if there's an error, it's harder to see where
 	make -j 4 install 
@@ -49,12 +49,12 @@ INITIAL BUILD
 
 MAKING CHANGES
 --------------
-If you only change source file contents, you should only need to rerun the make install
+If you only change source file contents, you should only need to rerun the make install.
 
 For more serious changes, such as adding files or directories;
 
 1. Ensure you have the right version of autotools:
-	git clone https://github.com/hpctoolkit/hpctoolkit-devtools"
+	git clone https://github.com/hpctoolkit/hpctoolkit-devtools
 	mkdir ~/autotools
 	cd hpctoolkit-devtools/autotools
 	./make.sh ~/autotools
@@ -65,16 +65,16 @@ For more serious changes, such as adding files or directories;
 
     This only needs to be done on systems where you are changing the structure of the repo.
 
-2.  Edit configure.ac and any Makefile.am to add the files/directories.
+2.  Edit configure.ac and any Makefile.am's as appropriate to add the files/directories.
 
 3.  Reconstruct the Makefiles, etc.:
 	cd hpctoolkit
 	autogen
 	/bin/rm -rf BUILD; mkdir BUILD; cd BUILD
-	../configure [as above in 3]
+	../configure [as in the initial instructions above, in 3]
 
-3.  Run the build:1
-	make install [as above  in 4]
+3.  Run the build:
+	make install [as in the initial instructions above, in 4]
 
 If you are editing a *.in file that is used to build a script, you will need to run "configure",
 in the top-level source directory.  However, if you run "autogen" in the top-level source directory,
