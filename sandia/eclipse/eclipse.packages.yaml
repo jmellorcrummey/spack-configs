@@ -395,7 +395,7 @@ packages:
   #
   openmpi:
     modules:
-      openmpi@@4.0.0:  openmpi-GNU/4.0-ucx-1.7.x
+      openmpi@4.0.0:  openmpi-gnu/4.0
     buildable: False
 
   #------------------------------------------------------------

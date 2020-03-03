@@ -17,7 +17,6 @@ modules:
   enable:
     - tcl
     - lmod
-    - dotkit
   prefix_inspections:
     bin:
       - PATH
