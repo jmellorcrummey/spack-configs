@@ -51,8 +51,8 @@ packages:
   # +papi uses papi instead of perfmon.
   #
   hpctoolkit:
-    version:  [develop]
-    variants: +mpi
+    version:  [2020.03.01]
+    variants: +mpi +cuda
 
 
   # binutils -- used by hpcprof and struct simple (for functions and
@@ -63,9 +63,9 @@ packages:
   # +libiberty is needed for xmalloc functions in libbfd.
   # ~nls is needed to avoid linking with libintl from gettext.
   #
-  binutils:
-    version:  [2.31.1]
-    variants: +libiberty ~nls
+  # binutils:
+  #   version:  [2.31.1]
+  #   variants: +libiberty ~nls
 
 
   # boost -- used by dyninst and now in hpcstruct cuda support.
@@ -91,9 +91,9 @@ packages:
   #
   # Bzip2 has stopped development, but 1.0.6 is good.
   #
-  bzip2:
-    version:  [1.0.6]
-    variants: +shared
+  # bzip2:
+  #   version:  [1.0.6]
+  #   variants: +shared
 
 
   # cuda -- Nvidia CUDA
@@ -107,7 +107,7 @@ packages:
   #
   cuda:
     modules:
-      cuda@10.1.168:  cuda/10.1.168
+      cuda@10.1.243:  cuda/10.1.243
     buildable: False
   
 
@@ -121,9 +121,9 @@ packages:
   #
   # +openmp is to support openmp threads in parseapi.
   #
-  dyninst:
-    version:  [10.1.0]
-    variants: +openmp build_type=RelWithDebInfo
+  # dyninst:
+  #   version:  [10.1.0]
+  #   variants: +openmp build_type=RelWithDebInfo
 
 
   # elfutils -- used by dyninst for reading ELF sections.
@@ -134,9 +134,9 @@ packages:
   # +bzip2, +xz are for reading compressed sections.
   # ~nls is needed to avoid linking with libintl from gettext.
   #
-  elfutils:
-    version:  [0.176]
-    variants: +bzip2 +xz ~nls
+  # elfutils:
+  #   version:  [0.176]
+  #   variants: +bzip2 +xz ~nls
 
 
   # intel-tbb -- used by dyninst as part of parallel parsing.
@@ -146,9 +146,9 @@ packages:
   # Note: add ~tm for very old x86 or AMD or KNL systems that don't
   # support transactional memory (no-op on non-x86).
   #
-  intel-tbb:
-    version:  [2019.4]
-    variants: +shared +tm
+  # intel-tbb:
+  #   version:  [2019.4]
+  #   variants: +shared +tm
 
 
   # intel-xed -- used in various places to parse x86 instructions
@@ -159,9 +159,9 @@ packages:
   #
   # +debug adds debug symbols (-g).
   #
-  intel-xed:
-    version:  [2018.02.14]
-    variants: +debug
+  # intel-xed:
+  #   version:  [2018.02.14]
+  #   variants: +debug
 
 
   # libdwarf -- used in fnbounds for access to eh frames (not yet
@@ -170,8 +170,8 @@ packages:
   # Normally want a recent version for best support for output from
   # current compilers.
   #
-  libdwarf:
-    version:  [20180129]
+  # libdwarf:
+  #   version:  [20180129]
 
 
   # libiberty -- needed for dyninst configure (although dyninst 10.x
@@ -181,9 +181,9 @@ packages:
   #
   # +pic is needed to link with dyninst shared library.
   #
-  libiberty:
-    version:  [2.31.1]
-    variants: +pic
+  # libiberty:
+  #   version:  [2.31.1]
+  #   variants: +pic
 
 
   # libmonitor -- used in hpcrun to provide access to an application's
@@ -196,9 +196,9 @@ packages:
   #
   # Note: add +bgq on blue gene/q.
   #
-  libmonitor:
-    version:  [2018.07.18]
-    variants: +hpctoolkit
+  # libmonitor:
+  #   version:  [2018.07.18]
+  #   variants: +hpctoolkit
 
 
   # libpfm4 (perfmon) -- used in hpcrun for access to the hardware
@@ -210,8 +210,8 @@ packages:
   #
   # Normally want the latest version to support recent CPU types.
   #
-  libpfm4:
-    version:  [4.10.1]
+  # libpfm4:
+  #   version:  [4.10.1]
 
 
   # libunwind -- used in hpcrun to help with unwinding.
@@ -221,9 +221,9 @@ packages:
   #
   # +xz is for reading compressed symbol tables.
   #
-  libunwind:
-    version:  [2018.10.12]
-    variants: +xz
+  # libunwind:
+  #   version:  [2018.10.12]
+  #   variants: +xz
 
 
   # papi -- used in hpcrun for access to the hardware performance
@@ -238,8 +238,8 @@ packages:
   # If building, then use version >= 5.6.0 for the installed perfmon
   # headers.
   #
-  papi:
-    version:  [5.7.0]
+  # papi:
+  #   version:  [5.7.0]
 
 
   # xerces -- used in hpcprof to read XML.
@@ -248,9 +248,9 @@ packages:
   #
   # transcoder=iconv is needed to avoid linking with libiconv.
   #
-  xerces-c:
-    version:  [3.2.2]
-    variants: transcoder=iconv
+  # xerces-c:
+  #   version:  [3.2.2]
+  #   variants: transcoder=iconv
 
 
   # xz (lzma) -- used by elfutils and libunwind to read compressed
@@ -258,8 +258,8 @@ packages:
   #
   # Any recent version is good.
   #
-  xz:
-    version:  [5.2.4]
+  # xz:
+  #   version:  [5.2.4]
 
 
   # zlib -- used by binutils, elfutils and libdwarf to read compressed
@@ -270,9 +270,9 @@ packages:
   #
   # +optimize is to add -O2.
   #
-  zlib:
-    version:  [1.2.11]
-    variants: +optimize +shared
+  # zlib:
+  #   version:  [1.2.11]
+  #   variants: +optimize +shared
 
 
   #------------------------------------------------------------
