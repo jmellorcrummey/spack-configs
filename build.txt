@@ -17,6 +17,7 @@ INITIAL BUILD
 	git checkout xyz
 	git branch --set-upstream-to=origin/xyz xyz (only if you have created the branch; harmless otherwise)
 	git pull	
+    Or, perhaps best, is to delete your repo, and clone the branch you want.
 
 2.  Construct the build area:
 	cd hpctoolkit
@@ -35,8 +36,20 @@ INITIAL BUILD
       <build.out> is the absolute path to wherever you want the build installed
 
       <other-options> specify additional options for the build.  They include
-	--with-cuda=/usr/local/cuda (or wherever it is installed)
+	--with-cuda=<path to cuda>  You can find it by loading the module and doing "which nvcc".
+	    You may want --with-cupti=<path to cupti>, but only if you do not want the cupti that comes with cuda
+	    or if with cuda you set does not have a cupti.
 	--MPICXX=<path to mpi compiler>
+
+	To build with branch libunwid-no-dl-iterate, you need to make and install GOTCHA from branch library_filter
+		git clone -b library_filter https://github.com/mxz297/GOTCHA.git
+		cd GOTCHA
+		mkdir build install
+		cd build
+		cmake ../ -DCMAKE_INSTALL_PREFIX=`pwd`/../install
+		make install
+	    and then add the option:
+	--with-gotcha=`pwd`/../../GOTCHA/install
 
 4.  Run the build (in the BUILD directory):
 	cd BUILD
