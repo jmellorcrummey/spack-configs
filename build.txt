@@ -39,7 +39,7 @@ INITIAL BUILD
 	--with-cuda=<path to cuda>  You can find it by loading the module and doing "which nvcc".
 	    You may want --with-cupti=<path to cupti>, but only if you do not want the cupti that comes with cuda
 	    or if with cuda you set does not have a cupti.
-	--MPICXX=<path to mpi compiler>
+	MPICXX=<path to mpi compiler>  ( no -- in the argument)
 
 	To build with branch libunwid-no-dl-iterate, you need to make and install GOTCHA from branch library_filter
 		git clone -b library_filter https://github.com/mxz297/GOTCHA.git
