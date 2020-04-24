@@ -92,3 +92,9 @@ and run:
 The hpcviewer can be brought up with the name of the "11-hpctoolkit-<app>-database" directory
 in the OUT directory for a test.
 
+============================================================================================
+There is also a test directory with some unit tests.  You can get it with
+     git clone https://github.com/HPCToolkit/hpctoolkit-tests
+
+Each subdirectory is a unit test, but they are in varying states.
+catchthrow is current.
