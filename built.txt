@@ -1,0 +1,96 @@
+--------------------
+To build hpctoolkit:
+--------------------
+
+First, do a spack install, with the latest spack repo, to get the dependencies.
+
+INITIAL BUILD
+-------------
+1.  Get the sources:
+	git clone https://github.com/hpctoolkit/hpctoolkit.git
+	    or
+	git clone https://github.com/hpctoolkit/hpctoolkit.git -b <branch>
+
+    If you already have a repo, and want to switch branches, make sure your repo is clean
+    and then pick the branch you want; .e.g.,for the xyz branch:
+	git branch xyz (If you want to create the branch, not otherwise)
+	git checkout xyz
+	git branch --set-upstream-to=origin/xyz xyz (only if you have created the branch; harmless otherwise)
+	git pull	
+    Or, perhaps best, is to delete your repo, and clone the branch you want.
+
+2.  Construct the build area:
+	cd hpctoolkit
+	mkdir BUILD
+
+3.  Configure the build (in the BUILD directory):
+    cd BUILD
+    ../configure --with-spack=<spack-install-packages-directory> --prefix=<build.out> --enable-develop <other-options>
+
+      <spack-install-packages-directory> is a subdirectory of the directory named in
+	the install_tree setting in the config.yaml file used for the spack
+	install command.  The subdirectoy is the one that contains the packages,
+	and it is two levels down below the install_tree, at <install-tree>/<OS-spec>/<gcc-version>/
+	It is specified as an absolute path, since configure does not recognize ~ as your home directory.
+
+      <build.out> is the absolute path to wherever you want the build installed
+
+      <other-options> specify additional options for the build.  They include
+	--with-cuda=<path to cuda>  You can find it by loading the module and doing "which nvcc".
+	    You may want --with-cupti=<path to cupti>, but only if you do not want the cupti that comes with cuda
+	    or if with cuda you set does not have a cupti.
+	MPICXX=<path to mpi compiler>  ( no -- in the argument)
+
+	To build with branch libunwid-no-dl-iterate, you need to make and install GOTCHA from branch library_filter
+		git clone -b library_filter https://github.com/mxz297/GOTCHA.git
+		cd GOTCHA
+		mkdir build install
+		cd build
+		cmake ../ -DCMAKE_INSTALL_PREFIX=`pwd`/../install
+		make install
+	    and then add the option:
+	--with-gotcha=`pwd`/../../GOTCHA/install
+
+4.  Run the build (in the BUILD directory):
+	cd BUILD
+	make install
+
+    The non-parallel build is relatively fast, at least compared to a spack install.
+    You can run the builds in parallel, but if there's an error, it's harder to see where
+	make -j 4 install 
+
+
+MAKING CHANGES
+--------------
+If you only change source file contents, you should only need to rerun the make install.
+
+For more serious changes, such as adding files or directories;
+
+1. Ensure you have the right version of autotools:
+	git clone https://github.com/hpctoolkit/hpctoolkit-devtools
+	mkdir ~/autotools
+	cd hpctoolkit-devtools/autotools
+	./make.sh ~/autotools
+
+    Add to your path in ~/.bashrc:
+	export PATH=~/autotools/bin:$PATH
+	source ~/.bashrc
+
+    This only needs to be done on systems where you are changing the structure of the repo.
+
+2.  Edit configure.ac and any Makefile.am's as appropriate to add the files/directories.
+
+3.  Reconstruct the Makefiles, etc.:
+	cd hpctoolkit
+	autogen
+	/bin/rm -rf BUILD; mkdir BUILD; cd BUILD
+	../configure [as in the initial instructions above, in 3]
+
+4.  Run the build:
+	make install [as in the initial instructions above, in 4]
+
+If you are editing a *.in file that is used to build a script, you will need to run "configure",
+in the top-level source directory.  However, if you run "autogen" in the top-level source directory,
+the next invocation of "make install" will run it automagically..
+
+When in doubt, run "autogen", but be sure you have the right autotools.
