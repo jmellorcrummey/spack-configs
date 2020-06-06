@@ -1,0 +1,41 @@
+# 
+#  packages.yaml
+#       as CUSTOMIZED for msi3 on arm1.cs
+#
+#  This file specifies the versions and variants for HPCToolkit's
+#  dependency packages and serves as a common reference point for how
+#  to build them.  It also specifies the paths or modules for system
+#  build tools (cmake, python, etc) to avoid rebuilding them.
+#
+#  Put this file in one of spack's configuration scope directories,
+#  normally either <spack-root>/etc/spack, or else in its own,
+#  separate directory (and then use 'spack -C dir').
+#
+#  There are two main sections: hpctoolkit dependency specs and system
+#  build tools: cmake, perl, python, MPI and GCC.
+#
+#  See also:
+#    https://spack.readthedocs.io/en/latest/basic_usage.html#specs-dependencies
+#    https://spack.readthedocs.io/en/latest/build_settings.html
+#
+packages:
+
+  # hpctoolkit -- these settings can be specified here or else on the
+  # spack install command line.
+  #
+  # Use version 'develop' for the latest snapshot from master.
+  #
+  # +mpi builds hpcprof-mpi (requires mpi).
+  # +papi uses papi instead of perfmon.
+  
+  # dyninst -- used in hpcstruct for line map info, inline sequences
+  # and loop analysis.
+  #
+  # Need >= 10.0 or develop for best parseapi and CFG support.  On
+  # Blue Gene, with the default gcc 4.4 compilers, use version 9.3.2.
+  #
+  # +openmp is to support openmp threads in parseapi.
+  #
+  dyninst:
+    version:  [develop]
+    variants: +openmp build_type=RelWithDebInfo
