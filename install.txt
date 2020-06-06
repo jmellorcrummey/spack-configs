@@ -23,7 +23,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 3. Set up your shell to use spack and the spacklink setup command:
 	for bash:
           vi ~/.bashrc	#Add the following:
-            umask 022  or to make everything group-writable
+            umask 022 (or 002 to make everything group-writable)
             export SPACK_ROOT=~/gits/spack
             export PATH=${SPACK_ROOT}/bin:~gits/spack-configs/bin:${PATH}
             source ${SPACK_ROOT}/share/spack/setup-env.sh
@@ -138,7 +138,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 8.  Decide the specific version and options you want to build.
 	hpctoolkit@<version> <options> <compiler>
           <version>
-              @2019.08 -- for the 2019.08 release
+              @2020.03.01 -- for the 2020.03.01 rekease
               @develop -- for current bits
               @gpu -- for GPU versions
           <options>
