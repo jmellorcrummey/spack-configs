@@ -1,6 +1,6 @@
 # 
 #  packages.yaml
-#       as CUSTOMIZED for msi3 on llnl.cs
+#       as CUSTOMIZED for msi3 on arm1.cs
 #
 #  This file specifies the versions and variants for HPCToolkit's
 #  dependency packages and serves as a common reference point for how
@@ -20,6 +20,14 @@
 #
 packages:
 
+  # hpctoolkit -- these settings can be specified here or else on the
+  # spack install command line.
+  #
+  # Use version 'develop' for the latest snapshot from master.
+  #
+  # +mpi builds hpcprof-mpi (requires mpi).
+  # +papi uses papi instead of perfmon.
+  
   # dyninst -- used in hpcstruct for line map info, inline sequences
   # and loop analysis.
   #
@@ -27,27 +35,7 @@ packages:
   # Blue Gene, with the default gcc 4.4 compilers, use version 9.3.2.
   #
   # +openmp is to support openmp threads in parseapi.
+  #
   dyninst:
     version:  [develop]
     variants: +openmp build_type=RelWithDebInfo
-
-  # MPI -- hpctoolkit always supports profiling MPI applications.
-  # Adding MPI here is only for building hpcprof-mpi, the MPI version
-  # of hpcprof.
-  #
-  # Normally, you want MPI from a module (mpich, mvapich, openmpi)
-  # that was built for the correct interconnect system for the compute
-  # nodes.  Also, for hpcprof-mpi, MPI should be built with GNU
-  # gcc/g++ and the same version used to build hpctoolkit (to keep the
-  # C++ libraries in sync).
-  #
-  openmpi:
-    modules:
-      openmpi@3.1.0:  spectrum-mpi/rolling-release
-    buildable: True
-
-  # CUDA -- should match the installed version
-  cuda:
-    paths:
-      cuda@10.2: /usr/local/cuda
-    buildable: False
