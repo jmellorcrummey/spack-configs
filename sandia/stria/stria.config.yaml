@@ -19,20 +19,21 @@ config:
   # You can use $spack here to refer to the root of the spack instance.
   install_tree: /projects/hpctoolkit/.install/2020.06.12/packages
 
+  module_roots:
+    lmod:  /projects/hpctoolkit/.install/2020.06.12/modules/lmod
+    tcl:    /projects/hpctoolkit/.install/2020.06.12/modules/tcl
+    # dotkit:  (no longe used)
 
+  #######################################################################
+  # the variables below should normally not need to be customizsed
   # Locations where templates should be found
   template_dirs:
     - $spack/share/spack/templates
-
 
   # Default directory layout
   install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
 
   # Locations where different types of modules should be installed.
-  module_roots:
-    lmod:  /projects/hpctoolkit/.install/2020.06.12/modules/lmod
-    tcl:    /projects/hpctoolkit/.install/2020.06.12/modules/tcl
-    # dotkit:  
 
   # Temporary locations Spack can try to use for builds.
   #
