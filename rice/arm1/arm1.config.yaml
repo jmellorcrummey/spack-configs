@@ -18,7 +18,7 @@ config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
   # install_tree: $spack/opt/spack
-  install_tree: /home/msi3/2020-06
+  install_tree: /home/msi3/2020-07
 
 
   # Locations where templates should be found
@@ -32,8 +32,8 @@ config:
 
   # Locations where different types of modules should be installed.
   module_roots:
-    tcl:    /home/msi3/2020-06/MODULES/modules
-    lmod:   /home/msi3/2020-06/MODULES/lmod
+    tcl:    /home/msi3/2020-07/MODULES/modules
+    lmod:   /home/msi3/2020-07/MODULES/lmod
 
 
   # Temporary locations Spack can try to use for builds.
