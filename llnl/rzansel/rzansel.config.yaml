@@ -17,7 +17,7 @@
 config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  install_tree: /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib_p9/2020-03-01/packages
+  install_tree: /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib_p9/.install/2020-07/packages
 
 
   # Locations where templates should be found
@@ -31,8 +31,8 @@ config:
 
   # Locations where different types of modules should be installed.
   module_roots:
-    tcl:    /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib_p9/2020-03-01/modules/tcl
-    lmod:   /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib_p9/2020-03-01/modules/lmod
+    tcl:    /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib_p9/.install/2020-07/modules/tcl
+    lmod:   /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib_p9/.install/2020-07/modules/lmod
 
 
   # Temporary locations Spack can try to use for builds.
