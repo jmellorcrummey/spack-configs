@@ -65,9 +65,9 @@ packages:
   #
   # +openmp is to support openmp threads in parseapi.
   #
-  dyninst:
-    version:  [develop]
-    variants: +openmp build_type=RelWithDebInfo
+  # dyninst:
+  #   version:  [develop]
+  #   variants: +openmp build_type=RelWithDebInfo
 
   # MPI -- hpctoolkit always supports profiling MPI applications.
   # Adding MPI here is only for building hpcprof-mpi, the MPI version
@@ -97,6 +97,6 @@ packages:
   #
   # +xz is for reading compressed symbol tables.
   #
-  # libunwind:
-  #   version:  [master]
-  # variants: +xz
+  libunwind:
+    version:  [1.5-head]
+    variants: +xz
