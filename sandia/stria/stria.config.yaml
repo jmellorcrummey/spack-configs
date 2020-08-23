@@ -17,12 +17,12 @@
 config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  install_tree: /projects/hpctoolkit/.install/2020.06.12/packages
+  install_tree: /projects/hpctoolkit/.install/2020.08/packages
 
   module_roots:
-    lmod:  /projects/hpctoolkit/.install/2020.06.12/modules/lmod
-    tcl:    /projects/hpctoolkit/.install/2020.06.12/modules/tcl
-    # dotkit:  (no longe used)
+    lmod:  /projects/hpctoolkit/.install/2020.08/modules/lmod
+    tcl:    /projects/hpctoolkit/.install/2020.08/modules/tcl
+    # dotkit:  (no longer used)
 
   #######################################################################
   # the variables below should normally not need to be customizsed
