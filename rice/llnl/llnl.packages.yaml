@@ -28,7 +28,7 @@ packages:
   #
   # +openmp is to support openmp threads in parseapi.
   dyninst:
-    version:  [develop]
+    version:  [10.1.243]
     variants: +openmp build_type=RelWithDebInfo
 
   # CUDA -- should match the installed version
