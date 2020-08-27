@@ -50,7 +50,7 @@ packages:
   # +papi uses papi instead of perfmon.
   #
   hpctoolkit:
-    version:  [2020.03.01]
+    version:  [2020.08.03]
     variants: +cuda +mpi
 
 
@@ -110,7 +110,7 @@ packages:
   #
   cuda:
     modules:
-      cuda@10.1.243:  cuda/10.1.243
+      cuda@11.0.3:  cuda/11.0.3
     buildable: False
 
 
@@ -123,7 +123,7 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [10.1.0]
+    version:  [10.2.0]
     variants: +openmp build_type=RelWithDebInfo
 
 
@@ -198,9 +198,9 @@ packages:
   #
   # Note: add +bgq on blue gene/q.
   #
-  libmonitor:
-    version:  [2018.07.18, master]
-    variants: +hpctoolkit
+  #libmonitor:
+  #  version:  [2018.07.18, master]
+  #  variants: +hpctoolkit
 
 
   # libpfm4 (perfmon) -- used in hpcrun for access to the hardware
