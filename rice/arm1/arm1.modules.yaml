@@ -1,5 +1,6 @@
 # -------------------------------------------------------------------------
 # This is the default configuration for Spack's module file generation.
+#       configured for arm installation from arm1.cs.rice.edu
 #
 # Settings here are versioned with Spack and are intended to provide
 # sensible defaults out of the box. Spack maintainers should edit this
@@ -16,6 +17,7 @@
 modules:
   enable:
     - lmod
+
   prefix_inspections:
     bin:
       - PATH

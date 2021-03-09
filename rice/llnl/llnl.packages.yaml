@@ -1,6 +1,6 @@
-#  CUSTOMIZED for msi3 on gpu.cs
-#
+# 
 #  packages.yaml
+#       as CUSTOMIZED for msi3 on llnl.cs
 #
 #  This file specifies the versions and variants for HPCToolkit's
 #  dependency packages and serves as a common reference point for how
@@ -11,36 +11,28 @@
 #  normally either <spack-root>/etc/spack, or else in its own,
 #  separate directory (and then use 'spack -C dir').
 #
-#  There are two main sections: (1) hpctoolkit dependency specs,
-#  and (2) system build tools: cmake, perl, python, MPI and GCC.
+#  There are two main sections: hpctoolkit dependency specs and system
+#  build tools: cmake, perl, python, MPI and GCC.
 #
 #  See also:
 #    https://spack.readthedocs.io/en/latest/basic_usage.html#specs-dependencies
 #    https://spack.readthedocs.io/en/latest/build_settings.html
 #
 packages:
-  all:
-    target: ['x86_64']
-
-  # If installing here, then use >= 10.1 and check that the cuda
-  # system drivers are installed.
-  #
-  cuda:
-    # modules:
-    #  cuda@10.1:  cuda/10.1
-    #  buildable: False
-    #
-    version:  [10.1.243]
-
 
   # dyninst -- used in hpcstruct for line map info, inline sequences
   # and loop analysis.
   #
-  # Need >= 10.1.0 for full cuda CFG support.
-  # On Blue Gene, with default gcc 4.4 compilers, use version 9.3.2.
+  # Need >= 10.0 or develop for best parseapi and CFG support.  On
+  # Blue Gene, with the default gcc 4.4 compilers, use version 9.3.2.
   #
   # +openmp is to support openmp threads in parseapi.
-  #
-  # dyninst:
-  #   version:  [10.12.0]
-  #   variants: +openmp build_type=RelWithDebInfo
+  dyninst:
+    version:  [10.1.243]
+    variants: +openmp build_type=RelWithDebInfo
+
+  # CUDA -- should match the installed version
+  cuda:
+    paths:
+      cuda@10.2: /usr/local/cuda
+    buildable: False

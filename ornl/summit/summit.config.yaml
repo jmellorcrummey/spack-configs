@@ -16,7 +16,7 @@
 config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  install_tree: /gpfs/alpine/csc322/world-shared/spack-install/packages
+  install_tree: /gpfs/alpine/scratch/xmeng/csc322/hpctoolkit-install/packages 
 
   # Locations where templates should be found
   template_dirs:
@@ -29,10 +29,8 @@ config:
 
   # Locations where different types of modules should be installed.
   module_roots:
-    tcl:     /gpfs/alpine/csc322/world-shared/spack-install/module-roots/modules
-    lmod:   /gpfs/alpine/csc322/world-shared/spack-install/module-roots/lmod
-    dotkit: /gpfs/alpine/csc322/world-shared/spack-install/module-roots/dotkit
-
+    tcl:    /gpfs/alpine/scratch/xmeng/csc322/hpctoolkit-install/modules
+    lmod:   /gpfs/alpine/scratch/xmeng/csc322/hpctoolkit-install/lmod
 
   # Temporary locations Spack can try to use for builds.
   #

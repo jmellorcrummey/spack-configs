@@ -1,0 +1,87 @@
+#  CUSTOMIZED for msi3 on gpu.cs
+#
+#  packages.yaml
+#
+#  This file specifies the versions and variants for HPCToolkit's
+#  dependency packages and serves as a common reference point for how
+#  to build them.  It also specifies the paths or modules for system
+#  build tools (cmake, python, etc) to avoid rebuilding them.
+#
+#  Put this file in one of spack's configuration scope directories,
+#  normally either <spack-root>/etc/spack, or else in its own,
+#  separate directory (and then use 'spack -C dir').
+#
+#  There are two main sections: (1) hpctoolkit dependency specs,
+#  and (2) system build tools: cmake, perl, python, MPI and GCC.
+#
+#  See also:
+#    https://spack.readthedocs.io/en/latest/basic_usage.html#specs-dependencies
+#    https://spack.readthedocs.io/en/latest/build_settings.html
+#
+packages:
+  all:
+    target: ['x86_64']
+
+  #------------------------------------------------------------
+  # 1 -- HPCToolkit Prerequisite Packages
+  #------------------------------------------------------------
+
+  # This section contains hpctoolkit's prerequisites, recommended
+  # versions and necessary variants.  For most packages, the most
+  # recent version will work.
+  #
+  # Note: the following packages have variants that may need changing
+  # for your local system.
+  #
+  #   1. boost -- avoid 1.68.0, it breaks the build in hpctoolkit.
+  #   1.66.0 is good for all dyninst revs.
+  #
+  #   2. dyninst -- use version 9.3.2 for Blue Gene with the default
+  #   gcc 4.4 compilers.  (not recommended)
+  #
+  #   3. elfutils -- 0.176 doesn't build on Blue Gene, use 0.175.
+  #
+  #   4. intel-tbb -- add '~tm' for AMD, Xeon Phi (KNL, etc), and very
+  #   old Intel systems that don't support transactional memory.
+  #
+  #   5. libmonitor -- add '+bgq' on Blue Gene/Q.
+  #
+  #------------------------------------------------------------
+
+
+  #  cuda:
+  #    modules:
+  #    #  cuda@10.1:  cuda/10.1
+  #    buildable: False
+  #    #
+  #    version:  [10.2]
+
+
+  # dyninst -- used in hpcstruct for line map info, inline sequences
+  # and loop analysis.
+  #
+  # Need >= 10.1.0 for full cuda CFG support.
+  # On Blue Gene, with default gcc 4.4 compilers, use version 9.3.2.
+  #
+  # +openmp is to support openmp threads in parseapi.
+  #
+  # dyninst:
+  #   version:  [develop]
+  #   variants: +openmp build_type=RelWithDebInfo
+
+
+
+  # MPI -- hpctoolkit always supports profiling MPI applications.
+  # Adding MPI here is only for building hpcprof-mpi, the MPI version
+  # of hpcprof.
+  #
+  # Normally, you want MPI from a module (mpich, mvapich, openmpi)
+  # that was built for the correct interconnect system for the compute
+  # nodes.  Also, for hpcprof-mpi, MPI should be built with GNU
+  # gcc/g++ and the same version used to build hpctoolkit (to keep the
+  # C++ libraries in sync).
+  #
+  openmpi:
+    modules:
+      openmpi@4.0.0:  openmpi-gnu/4.0
+    buildable: False

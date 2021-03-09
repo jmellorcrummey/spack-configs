@@ -1,6 +1,5 @@
 # -------------------------------------------------------------------------
-# This is the default spack configuration file.
-#       CUSTOMIZED FOR POWER 8 (rzmanta)
+# This is the spack configuration file, CONFIGURED for msi3 on llnl.cs.rice.edu
 #
 # Settings here are versioned with Spack and are intended to provide
 # sensible defaults out of the box. Spack maintainers should edit this
@@ -17,7 +16,8 @@
 config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  install_tree: /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib/.install/2020-08/packages
+  # install_tree: $spack/opt/spack
+  install_tree: /home/msi3/2020-08
 
 
   # Locations where templates should be found
@@ -31,8 +31,8 @@ config:
 
   # Locations where different types of modules should be installed.
   module_roots:
-    tcl:    /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib/.install/2020-08/modules/tcl
-    lmod:   /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib/.install/2020-08/modules/lmod
+    tcl:    /home/msi3/2020-08/MODULES/modules
+    lmod:   /home/msi3/2020-08/MODULES/lmod
 
 
   # Temporary locations Spack can try to use for builds.
@@ -64,12 +64,6 @@ config:
   # If this is false, tools like curl that use SSL will not verify
   # certifiates. (e.g., curl will use use the -k option)
   verify_ssl: true
-
-
-  # If set to true, Spack will attempt to build any compiler on the spec
-  # that is not already available. If set to False, Spack will only use
-  # compilers already configured in compilers.yaml
-  install_missing_compilers: False
 
 
   # If set to true, Spack will always check checksums after downloading

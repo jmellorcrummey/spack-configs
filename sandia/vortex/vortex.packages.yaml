@@ -1,4 +1,4 @@
-#  CUSTOMIZED for msi3 on gpu.cs
+#  CUSTOMIZED for ppc64le at sandia
 #
 #  packages.yaml
 #
@@ -20,17 +20,20 @@
 #
 packages:
   all:
-    target: ['x86_64']
+    target: ['x86_64','ppc64le']
 
+  # cuda -- nvidia cuda, now used in master.
+  #
+  # If there is a pre-built cuda for the system, then it may be better
+  # to use that with a 'paths:' or 'modules:' entry.
+  #
   # If installing here, then use >= 10.1 and check that the cuda
   # system drivers are installed.
   #
   cuda:
-    # modules:
-    #  cuda@10.1:  cuda/10.1
-    #  buildable: False
-    #
-    version:  [10.1.243]
+    modules:
+      cuda@10.1.243:  cuda/10.1.243
+    buildable: False
 
 
   # dyninst -- used in hpcstruct for line map info, inline sequences
@@ -42,5 +45,22 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   # dyninst:
-  #   version:  [10.12.0]
+  #   version:  [develop]
   #   variants: +openmp build_type=RelWithDebInfo
+
+  #------------------------------------------------------------
+
+  # MPI -- hpctoolkit always supports profiling MPI applications.
+  # Adding MPI here is only for building hpcprof-mpi, the MPI version
+  # of hpcprof.
+  #
+  # Normally, you want MPI from a module (mpich, mvapich, openmpi)
+  # that was built for the correct interconnect system for the compute
+  # nodes.  Also, for hpcprof-mpi, MPI should be built with GNU
+  # gcc/g++ and the same version used to build hpctoolkit (to keep the
+  # C++ libraries in sync).
+  #
+  openmpi:
+    modules:
+      openmpi: spectrum-mpi/rolling-release
+    buildable: False

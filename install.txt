@@ -1,112 +1,156 @@
+----------------------------------------------------------------------
 To do a spack install and test for a machine <machine> at site <site>:
 ----------------------------------------------------------------------
 1.  Set up a top-level "~/gits/" directory on <machine>, and do all the git clones into it.
-	You can put them wherever you want, but the remainder of these
+	You can really put them wherever you want, but the remainder of these
 	instructions assume everything goes into ~/gits/
 
 2.  Set up the repositories:
 	cd ~/gits
 	git clone https://github.com/jmellorcrummey/spack-configs
 	    That's where this file lives, so you must have already done that!
-        git clone https://github.com/spack/spack.git
-	    First remove ~/gits/spack and ~/.spack to set up for a clean install
-	git clone https://github.com/martyitz/hpctest
 
-	The hpctoolkit sources are not needed, but can be gotten by:
-		git clone https://github.com/hpctoolkit/hpctoolkit.git
+	# Clean up any previous spack to circumvent any spack caching
+	/bin/rm -rf ~/gits/spack
+        git clone https://github.com/spack/spack
+	/bin/rm -rf ~/.spack
 
-3. Set up your shell to use spack:
+	FYI:
+	    The hpctoolkit sources may not be needed, but can be gotten by:
+		git clone https://github.com/hpctoolkit/hpctoolkit
+		    See build.txt for more information
+	    The hpctest sources may not be needed, but can be gotten by
+		git clone https://github.com/scottkwarren/hpctest
+		    See test.txt for more information
+
+3. Set up your shell to use spack and the spacklink setup command:
 	for bash:
           vi ~/.bashrc	#Add the following:
-            umask 022 
+            umask 022 (or 002 to make everything group-writable)
             export SPACK_ROOT=~/gits/spack
-            export PATH=${SPACK_ROOT}/bin:${PATH}
+            export PATH=${SPACK_ROOT}/bin:~gits/spack-configs/bin:${PATH}
             source ${SPACK_ROOT}/share/spack/setup-env.sh
 	    export <PROXIES, as needed for spack usage>
 	  source ~/.bashrc
 
 4.  Tell spack to use the right gcc:
-	module avail gcc
-	module load gcc.xxx
-            For hptctoolkit, xxx needs to be 4.8 or later, preferably 5.x or later
-        spack compiler find
+    First:
+	which gcc; gcc --version
+    Then:
+	module avail gcc  ( on some systems use module avail gnu )
+    If a module version is later than the one on your path,
+	module load gcc.xxx -- to put that later version on your path
 
-	edit the file ~/.spark/linux/compilers.yaml, to find that gcc.xxx entry, and make
-	sure it is for the right architecture.  Add 'gcc/xxxx' in the brackets after module.
-		(I don't know why this is important.)
+    Run "spack compiler find" to tell spack about those compilers.
 
-5.  Go to the spack-configs repo, and prepare the appropriate:
+    If compiler version is 5.x or later, it's good enough to install hpctoolkit,
+	and you are done with this step.
+    If it is not:
+	Run "spack install gcc@7.3.x"  (or some other version 5.x or later)
+	"module load <the gcc you've just installed>"
+	Run "spack compiler find" again to tell spack about it
+	Run "spack install gcc@7.3.x" again, to have it built with itself,
+	    so all future installs will be in the same directory (the compiler
+	    version is part of the full path name)..
+
+5.  Set up the spack install environment:
+	First, go to the spack-configs repo, and prepare the appropriate files
+	    for installing at <site> on <machine>:
 	<site>/<machine>/<machine>.config.yaml
 	<site>/<machine>/<machine>.modules.yaml
 	<site>/<machine>/<machine>.packages.yaml
-		files
+		The second "<machine>." preface to the files is to maks it easy to
+		ensure the links are for the right machine.
+	Those files may need to be tweaked for the particular installation, which will be done in step 6.
 
-	The <machine>.config.yaml file should say where to install its packages and modules
-	    It seems best to set a top-level directory, <INSTALL> and put the packages in
-		  config:
-		    install_tree: <INSTALL>/packages
-	        and the modules in
-		  module_roots:
-		    lmod: <INSTALL>/modules/lmod
-			etc.
-	    The directories and subdirectories used should be created before the install
-	    Start with the config.yaml in spack/spack/etc/default or the one for
-		in spack-configs for any existing similar <machine>.
+	If <site> or <machine> is not yet there, create the directories, and copy the three files
+	    from the directory for a similar machine.  Besure to set the <machine>.*.yaml names
+	    for the right machine.
+
+	Run "spacklink <$SPACK_ROOT> <site> <machine>"
+	    The spacklink script is in the bin directory in the spack-configs repository
+
+	That script does the following:
+		cd $SPACK_ROOT/etc/spack
+		rm *.yaml
+		ln -s .../spack-configs/<site>/<machine>/<machine>.config.yaml config.yaml
+		ln -s .../spack-configs/<site>/<machine>/<machine>.modules.yaml modules.yaml
+		ln -s .../spack-configs/<site>/<machine>/<machine>.packages.yaml packages.yaml
+	Note that if any of those files are not present, no link will be made, and the spack
+	    default will be used.
+
+	VERIFY that the machine you are on matches <machine> in the directory and
+		the in file names of the symlinks.
 
 	The <machine>.modules.yaml file describes the modules to be built.
 	    There are three types of modules, lmod, tcl, and dotkit: the module files in
 		the various subdirectories build all three.
+		dotkit is now obsolete.
 	    The modules built in this step have long, human-hostile names; more
 		user-friendly modules are constructed below.
 
+6.   Configure the installation
+	The installation configuration is controlled by the three .yaml files referred to above.
+	The syntax of a .yaml file is quite precise; the indentation of any line in is a multiple
+	of two spaces, the ordering and indentation of the lines specify a structure.
+
+	The <machine>.config.yaml says where to install its packages and modules
+	    It seems best to set a top-level directory, <INSTALL> and set up as follows:
+		  config:
+		    install_tree: <INSTALL>/packages
+		  module_roots:
+		    lmod: <INSTALL>/modules/lmod
+		    tcl: <INSTALL>/modules/tcl
+	The rest of the file will probably not need configuration
+
 	The <machine>.packages.yaml file describes the dependencies for the install.
-	    Start with the one in ~/gits/hpctoolkit/packages.yaml
-		or the one for any existing similar <machine>.
-	    You will edit it in step 7, below.
+	    If you do not have a <machine>.packages.yaml file, the spack installation
+	    will build all necessary prerequisites.
 
-6.  Set up the spack install environment:
-	-------------------------------------------------------------------
-	It's not clear what spack caches, so to be on the safe side, I remove
-	    and re-clone the spack directory, whenever I use a spack that was
-	    previously used on a different machine.  I also remove the output
-	    packages and modules directories, set in the <machine>.config.yaml.
-	-------------------------------------------------------------------
-	cd ~/gits
-	/bin/rm -rf $SPACK_ROOT
-        git clone https://github.com/spack/spack.git
-	source ~/.bashrc
+	For many systems, you will need to customize the packages.yaml file, editing it via its symlink,
+	for the specific system, editing various entries:
 
-	--------------------------------------------------------------------------
-	IT IS EASY TO SCREW THIS NEXT STEP, AND WIND UP WITH A BROKEN INSTALLATION
-	--------------------------------------------------------------------------
-	cd $SPACK_ROOT/etc/spack
-	ln -s .../spack-configs/<site>/<machine>/<machine>.config.yaml config.yaml
-	ln -s .../spack-configs/<site>/<machine>/<machine>.modules.yaml modules.yaml
-	ln -s .../spack-configs/<site>/<machine>/<machine>.packages.yaml packages.yaml
+	  a.  Run module avail mpi, and find a suitable MPI to use., or install one
+	    Edit the entry for openmpi to refer to it.  It is importants to set this
+	    parameter, since the batch systems are aware of MPI and know how to use it.
 
-	There is a script, spacklink, which takes two arguments, <site> and <machine>
-	and sets up the links for you.  It is in the top-level spack-configs directory.
+	    This is crucial on systems with a head node and compute nodes, since most
+	    such systems have specific interactions with job submission and the MPI is use.
 
-	Verify that the machine you are on matches <machine> in the directory and
-		the file names of the three symlinks.
+	  b.  Find the installed CUDA on the system, and define it in the packages.yaml file
+	    This is essential for GPU support, since the specific CUDA for HPCT must match
+	    the one with the kernel drivers installed.
 
-7.  Configure the packages.yaml file, via its symlink, for the system, editing various entries
-	a.  Run module avail mpi, and find a suitable MPI to use.
-	    Edit the entry for openmpi to refer to it
+	  c.  If you are installing on x86, set the architecture to use, following the "packages" line:
+		packages:
+		  all:
+		    target: ['x86_64','ppc64le','aarch64']
+	    That tells spack to compile for a generic x86/ppc/arm machine, rather than the specific machine
+	    on which you are doing the install.
 
-	b.  Find a suitable cmake on the system or in a module
-	    Edit the entry for cmake to refer to it
+	  d.  [For current 2020.06.12 release] Set up dyninst 
+	      dyninst:
+		version: [develop]
+		variants: +openmp build_type=RelWithDebInfo
 
-	c.  Find a suitable perl on the system or in a module
-	    Edit the entry for perl to refer to it
+	If you want, you can also:
 
-	d.  Find a suitable python on the system or in a modules
+	  a.  Find a suitable python on the system or in a module, or install one
 	    Edit the entry for python to refer to it
 
-8.  Decide the specific version and options you want to build.
+	  b.  Find a suitable cmake on the system or in a module, or install one
+	    Edit the entry for cmake to refer to it
+
+	  c.  Find a suitable perl on the system or in a module, or install one
+	    Edit the entry for perl to refer to it
+
+    If you don't do those, the spack install will build them anyway, and that will take more install time.
+
+8.  Do the install of hpctoolkit
+    Decide the specific version and options you want to build.
 	hpctoolkit@<version> <options> <compiler>
           <version>
-              @2019.08 -- for the 2019.08 release
+		the default is the latest release @2020.06.12
               @develop -- for current bits
               @gpu -- for GPU versions
           <options>
@@ -116,13 +160,16 @@ To do a spack install and test for a machine <machine> at site <site>:
               +all-static
 		Multiple options can be concatenated
 	  <compiler>
-	      %gcc@<version> -- needed if the default is not good enough
+	      %gcc@<version> -- only needed if the spack default is not appropriate
 
-	You can see what will get built with:
-		spack spec hpctoolkit@<version> <options> <compiler>
+    You can see what will get built with:
+	spack spec hpctoolkit@<version> <options> <compiler>
 
-9.  Do the real install
-	<cmd-to-run> spack install hpctoolkit@<version> <options>
+    Then execute the spack install command:
+	<cmd-to-run> spack [-k] install hpctoolkit@<version><options><compiler>
+	   The -k turns off security checking, and may be needed on systems requiring network proxies.
+
+    On non-compute node machines, <cmd-to-run> is not needed.
 
     At LLNL:
 	On rzansel and lassen, <cmd-to-run> = "lalloc 1"
@@ -133,65 +180,58 @@ To do a spack install and test for a machine <machine> at site <site>:
 	On kodiak, <cmd-to-run> = "salloc -N 1 --qos=interactive"
 
     At Sandia:
-	?
+	On vortex, <cmd-to-run> = "lalloc 1"
+	On eclipse, <cmd-to-run> = "salloc -N1"
+	On stria, <cmd-to-run> = "lalloc 1"
 
-10.  Install the hpcviewers, where appropriate
+    At ANL:
+
+    At NERSC:
+
+
+9.  Install the hpcviewer, where appropriate
 	spack install hpcviewer@<version> <option>
           <version>
-              @2019.08 -- for the 2019.08 release
+		the default is the latest release, @2020.05
+	    For consistency the module name for it should be made to match the hpctoolkit release, @2020.06.12,
+		rather than match the installed name.
 
     On x86 <option> is not needed
     On IBM Power machines:
 	<option> ="^ibm-java"
+    On arm machines, the viewers are not supported
+
+10.  Construct a human-readable module to be used by others
+	These files can live in a directory,
+	    <path-to-modulefiles-directory>/{hpctoolkit,hpcviewer}/
+		that is accessible to others.
+	The users would run:
+	    module use <path-to-modulefiles-directory>
+	    module avail hpc
+		to see what versions are available
+
+	To construct lmod modules,
+	    cd <INSTALL>/modules/lmod
+	    find . -name hpctoolkit
+		It will be a directory; cd to it
+		It will have a <version>.lua file corresponding to each of the hpctoolkit
+		    installs that you ran.
+	    cp <version>.lua <path-to-modulefiles-directory>/hpctoolkit/<version>.lua
+
+	The <path-to-modulefiles-directory> may also have a file named "default", which
+	    should be a symlink to the version that is the default.
+	It also may have a file named "rolling-release", which should be a symlink to
+	    the latest version installed.
+
+	Update those two links, as appropriate.
+
+	Follow the same instructions for hpcviewer.
 
 
-To run hpctest:
----------------
-Be sure you have run "spack compiler find" before starting.
-
-1.  cd ~/gits/hpctest
-
-2.  If you have cloned the repo, its config.yaml will not point to any hpctoolkit
-	When you run, the hpctoolkit on your path will be used,
-		which seems like the least error-prone methodology
-
-	Or you could edit config.yaml to point to an installation
-        profile:
-          hpctoolkit:
-            path: whatever
-
-3.  Set up the bits to test:
-	module avail hpctoolkit
-	module load hpctoolkit@xxxx
-	    xxxx represents the bits to test
-
-4.  Initialize: "hpctest init"
-
-5.  Run the full suite:
-	<cmd-to-run> hpctest run
-	    (most tests require MPI launch)
-	<cmd-to-run> hpctest run app/amgmk
-	    the only passing test that does not.
-
-    At LLNL:
-	On rzansel and lassen, <cmd-to-run> = "lalloc 1"
-	On rzmanta and ray, <cmd-to-run> = "lalloc 1"
-	On rzhasgpu and quartz, <cmd-to-run> = "salloc -N 1 -ppdebug"
-
-    At LANL:
-	On kodiak, <cmd-to-run> = "salloc -N 1 --qos=interactive"
-
-    At Sandia:
-	?
-
-
-To build hpctoolkit:
---------------------
-1.  Get the sources:
-	git clone https://github.com/hpctoolkit/hpctoolkit.git
-
-2.  Run:
-	configure --with-spack=<-spack-install-packages-directory> --prefix=<build.out> --enable-develop
-
-3.  Run:
-	make -j 4 install
+11.  Verify the installation:
+	module use <path-to-modulefiles-directory>
+	module avail hpc
+	For each hpctoolkit <version>:
+	    module load <version>
+	    hpcrun --version
+	Make sure they correspond to the installation as expected

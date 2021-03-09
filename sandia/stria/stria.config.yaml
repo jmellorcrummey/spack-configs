@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------
-# This is the default spack configuration file.
-#       CUSTOMIZED FOR POWER 8 (rzmanta)
+# This is the spack configuration file.
+#       CUSTOMIZED for a aarch64 installation at Sandia
 #
 # Settings here are versioned with Spack and are intended to provide
 # sensible defaults out of the box. Spack maintainers should edit this
@@ -17,23 +17,23 @@
 config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  install_tree: /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib/.install/2020-08/packages
+  install_tree: /projects/hpctoolkit/.install/2020.08/packages
 
+  module_roots:
+    lmod:  /projects/hpctoolkit/.install/2020.08/modules/lmod
+    tcl:    /projects/hpctoolkit/.install/2020.08/modules/tcl
+    # dotkit:  (no longer used)
 
+  #######################################################################
+  # the variables below should normally not need to be customizsed
   # Locations where templates should be found
   template_dirs:
     - $spack/share/spack/templates
 
-
   # Default directory layout
   install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
 
-
   # Locations where different types of modules should be installed.
-  module_roots:
-    tcl:    /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib/.install/2020-08/modules/tcl
-    lmod:   /collab/usr/global/tools/hpctoolkit/blueos_3_ppc64le_ib/.install/2020-08/modules/lmod
-
 
   # Temporary locations Spack can try to use for builds.
   #
