@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------
 To do a spack install and test for a machine <machine> at site <site>:
-----------------------------------------------------------------------
+
 1.  Set up a top-level "~/gits/" directory on <machine>, and do all the git clones into it.
 	You can really put them wherever you want, but the remainder of these
 	instructions assume everything goes into ~/gits/
@@ -26,7 +26,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 3. Set up your shell to use spack and the spacklink setup command:
 	for bash:
           vi ~/.bashrc	#Add the following:
-            umask 022 (or 002 to make everything group-writable)
+            umask 002 (or 022 to make everything NOT group-writable)
             export SPACK_ROOT=~/gits/spack
             export PATH=${SPACK_ROOT}/bin:~gits/spack-configs/bin:${PATH}
             source ${SPACK_ROOT}/share/spack/setup-env.sh
@@ -59,7 +59,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 	<site>/<machine>/<machine>.config.yaml
 	<site>/<machine>/<machine>.modules.yaml
 	<site>/<machine>/<machine>.packages.yaml
-		The second "<machine>." preface to the files is to maks it easy to
+		The second "<machine>." preface to the files is to make it easy to
 		ensure the links are for the right machine.
 	Those files may need to be tweaked for the particular installation, which will be done in step 6.
 
@@ -107,12 +107,20 @@ To do a spack install and test for a machine <machine> at site <site>:
 	    If you do not have a <machine>.packages.yaml file, the spack installation
 	    will build all necessary prerequisites.
 
+	There is a subtle difference between having a packages.yaml file specifying all
+	the prerequisites and not specifying things, but letting spack build them.
+	If you specify the prerequisites, you will get the named versions; if not,
+	spack may build a difference version.  It is best to start with the packages.yaml
+	file that is in the hpctoolkit repository as .../spack/packages.yaml, and make
+	changes against it.
+
 	For many systems, you will need to customize the packages.yaml file, editing it via its symlink,
 	for the specific system, editing various entries:
 
 	  a.  Run module avail mpi, and find a suitable MPI to use., or install one
 	    Edit the entry for openmpi to refer to it.  It is importants to set this
 	    parameter, since the batch systems are aware of MPI and know how to use it.
+	    Note that the module name is case-sensitive.
 
 	    This is crucial on systems with a head node and compute nodes, since most
 	    such systems have specific interactions with job submission and the MPI is use.
@@ -127,11 +135,6 @@ To do a spack install and test for a machine <machine> at site <site>:
 		    target: ['x86_64','ppc64le','aarch64']
 	    That tells spack to compile for a generic x86/ppc/arm machine, rather than the specific machine
 	    on which you are doing the install.
-
-	  d.  [For current 2020.06.12 release] Set up dyninst 
-	      dyninst:
-		version: [develop]
-		variants: +openmp build_type=RelWithDebInfo
 
 	If you want, you can also:
 
@@ -150,9 +153,8 @@ To do a spack install and test for a machine <machine> at site <site>:
     Decide the specific version and options you want to build.
 	hpctoolkit@<version> <options> <compiler>
           <version>
-		the default is the latest release @2020.06.12
+		the default is the latest release @2021.03.01
               @develop -- for current bits
-              @gpu -- for GPU versions
           <options>
               +mpi
               +cuda
@@ -226,6 +228,9 @@ To do a spack install and test for a machine <machine> at site <site>:
 	Update those two links, as appropriate.
 
 	Follow the same instructions for hpcviewer.
+
+	If desired, you can merge the the "prepend-path PATH" from the hpcviewer module
+	into the hpctoolkit module, so that loading it will also load the viewer.
 
 
 11.  Verify the installation:
