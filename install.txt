@@ -184,7 +184,8 @@ To do a spack install and test for a machine <machine> at site <site>:
     At Sandia:
 	On vortex, <cmd-to-run> = "lalloc 1"
 	On eclipse, <cmd-to-run> = "salloc -N1"
-	On stria, <cmd-to-run> = "lalloc 1"
+	On stria, <cmd-to-run> = "salloc -N1"
+	On doom, <cmd-to-run> = "salloc -N1"
 
     At ANL:
 
@@ -194,14 +195,11 @@ To do a spack install and test for a machine <machine> at site <site>:
 9.  Install the hpcviewer, where appropriate
 	spack install hpcviewer@<version> <option>
           <version>
-		the default is the latest release, @2020.05
-	    For consistency the module name for it should be made to match the hpctoolkit release, @2020.06.12,
+		the default is the latest release, @2021.03
+	    For consistency the module name for it should be made to match the hpctoolkit release, @2021.03.01,
 		rather than match the installed name.
 
-    On x86 <option> is not needed
-    On IBM Power machines:
-	<option> ="^ibm-java"
-    On arm machines, the viewers are not supported
+    On all supported machines <option> is not needed
 
 10.  Construct a human-readable module to be used by others
 	These files can live in a directory,
