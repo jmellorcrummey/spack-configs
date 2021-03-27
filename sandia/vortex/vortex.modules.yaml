@@ -1,5 +1,6 @@
 # -------------------------------------------------------------------------
 # This is the default configuration for Spack's module file generation.
+#       configured for Power 9 installation from rzansel
 #
 # Settings here are versioned with Spack and are intended to provide
 # sensible defaults out of the box. Spack maintainers should edit this
@@ -17,6 +18,7 @@ modules:
   enable:
     - tcl
     - lmod
+
   prefix_inspections:
     bin:
       - PATH

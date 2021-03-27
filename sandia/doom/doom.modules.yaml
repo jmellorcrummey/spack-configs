@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------
 # This is the default configuration for Spack's module file generation.
-#       configured for Power 8 installation from rzmanta
+#       configured for TOSS3 installation at Sandia (doom)
 #
 # Settings here are versioned with Spack and are intended to provide
 # sensible defaults out of the box. Spack maintainers should edit this
@@ -16,6 +16,7 @@
 # -------------------------------------------------------------------------
 modules:
   enable:
+    - tcl
     - lmod
 
   prefix_inspections:

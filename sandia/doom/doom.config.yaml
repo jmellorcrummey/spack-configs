@@ -1,5 +1,6 @@
 # -------------------------------------------------------------------------
-# This is the spack configuration file, CONFIGURED for msi3 on gpu.cs.rice.edu
+# This is the spack configuration file.
+#       CUSTOMIZED for a aarch64 installation at Sandia
 #
 # Settings here are versioned with Spack and are intended to provide
 # sensible defaults out of the box. Spack maintainers should edit this
@@ -16,23 +17,23 @@
 config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  # install_tree: $spack/opt/spack
-  install_tree: ${SCRATCH}/spack-pkgs/
+  install_tree: /projects/hpctoolkit/.install/2021.03/packages
 
+  module_roots:
+    lmod:  /projects/hpctoolkit/.install/2021.03/modules/lmod
+    tcl:    /projects/hpctoolkit/.install/2021.03/modules/tcl
+    # dotkit:  (no longer used)
 
+  #######################################################################
+  # the variables below should normally not need to be customizsed
   # Locations where templates should be found
   template_dirs:
     - $spack/share/spack/templates
 
-
   # Default directory layout
   install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
 
-
   # Locations where different types of modules should be installed.
-  module_roots:
-    tcl:    ${SCRATCH}/spack-pkgs/cori/modules
-
 
   # Temporary locations Spack can try to use for builds.
   #
@@ -47,6 +48,7 @@ config:
   # The build stage can be purged with `spack clean --stage`.
   build_stage:
     - $tempdir
+    - $spack/var/spack/stage
 
 
   # Cache directory for already downloaded source tarballs and archived
@@ -62,6 +64,12 @@ config:
   # If this is false, tools like curl that use SSL will not verify
   # certifiates. (e.g., curl will use use the -k option)
   verify_ssl: true
+
+
+  # If set to true, Spack will attempt to build any compiler on the spec
+  # that is not already available. If set to False, Spack will only use
+  # compilers already configured in compilers.yaml
+  install_missing_compilers: False
 
 
   # If set to true, Spack will always check checksums after downloading
@@ -94,7 +102,7 @@ config:
   # The default number of jobs to use when running `make` in parallel.
   # If set to 4, for example, `spack install` will run `make -j4`.
   # If not set, all available cores are used by default.
-  # build_jobs: 1
+  # build_jobs: 4
 
 
   # If set to true, Spack will use ccache to cache C compiles.
