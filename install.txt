@@ -103,6 +103,11 @@ To do a spack install and test for a machine <machine> at site <site>:
 		    tcl: <INSTALL>/modules/tcl
 	The rest of the file will probably not need configuration
 
+	The top-level directory in spack-configs contains a file hpctoolkit.fixed.packages.yaml
+	    It contains the packages.yaml file from the current hpctoolkit git repo, with
+	    the changes needed to install the latest release.
+		For 2021.5.15, it sets dyninst@master and elfutils@0.185
+
 	The <machine>.packages.yaml file describes the dependencies for the install.
 	    If you do not have a <machine>.packages.yaml file, the spack installation
 	    will build all necessary prerequisites.
@@ -110,8 +115,9 @@ To do a spack install and test for a machine <machine> at site <site>:
 	There is a subtle difference between having a packages.yaml file specifying all
 	the prerequisites and not specifying things, but letting spack build them.
 	If you specify the prerequisites, you will get the named versions; if not,
-	spack may build a difference version.  It is best to start with the packages.yaml
-	file that is in the hpctoolkit repository as .../spack/packages.yaml, and make
+	spack may build a different version.  It is best to start with the packages.yaml
+	file that is in the hpctoolkit repository as .../spack/packages.yaml, or the copy
+	in the top-level directory which has fixes for the latest release, and make
 	changes against it.
 
 	For many systems, you will need to customize the packages.yaml file, editing it via its symlink,
@@ -132,7 +138,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 	  c.  If you are installing on x86, set the architecture to use, following the "packages" line:
 		packages:
 		  all:
-		    target: ['x86_64','ppc64le','aarch64']
+		    target: ['x86_64','ppc64','ppc64le','aarch64']
 	    That tells spack to compile for a generic x86/ppc/arm machine, rather than the specific machine
 	    on which you are doing the install.
 
