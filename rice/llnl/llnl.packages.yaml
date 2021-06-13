@@ -19,7 +19,7 @@
 #    https://spack.readthedocs.io/en/latest/configuration.html
 #    https://spack.readthedocs.io/en/latest/build_settings.html
 #
-#  Last revised: February 9, 2021.
+#  Last revised: May 28, 2021.
 #
 packages:
 
@@ -27,11 +27,17 @@ packages:
   # all builds, then you can set those here.  For example, a generic
   # target might be useful for a shared install acrosss multiple
   # machine types.
+  #
   # generic families: aarch64, ppc64, ppc64le, x86_64
   #
+  # Selecting a specific provider for a virtual package (eg, openmpi
+  # for mpi) also goes here under 'all'.
+  #
   all:
-    target: ['x86_64','ppc64le','aarch64']
+    target: [x86_64,'ppc64','ppc64le','aarch64']
   #   compiler: [gcc@8.3.1]
+  #   providers:
+  #     mpi: [openmpi]
 
 
   #------------------------------------------------------------
@@ -69,10 +75,12 @@ packages:
   #
   # +mpi builds hpcprof-mpi (requires mpi).
   # +papi uses papi instead of perfmon (now default).
+  # +viewer also installs hpcviewer (default).
+  # +cuda, +rocm for GPU support.
   #
   # hpctoolkit:
-  #   version:  [2021.03.01, master]
-  #   variants: +mpi +papi
+  #   version:  [2021.05.15, master]
+  #   variants: +mpi +papi +viewer
 
 
   # binutils -- used by hpcprof and struct simple (for functions and
@@ -86,7 +94,7 @@ packages:
   # ~nls is used to avoid building gettext.
   #
   binutils:
-    version:  [2.34]
+    version:  [2.36.1]
     variants: +libiberty ~nls
 
 
@@ -127,8 +135,11 @@ packages:
   # and Dyninst issues releases infrequently, so sometimes it's
   # necessary to use master for the best results.
   #
-  # Need >= 10.2.0 for important bug fixes and features.
-  # Need >= 10.1.0 for full cuda CFG support.
+  # Latest hpctoolkit needs > 11.0.0. several problems with were
+  # discovered in dyninst 11.0.0 that caused failures in 
+  # HPCToolkit's hpcstruct. Until there is a new release of dyninst,
+  # we recommend building hpctoolkit atop dyninst master. 
+  #
   # On Blue Gene, with default gcc 4.4 compilers, use version 9.3.2.
   #
   # +openmp is to support openmp threads in parseapi.
@@ -148,7 +159,7 @@ packages:
   # ~nls is used to avoid building gettext.
   #
   elfutils:
-    version:  [0.182]
+    version:  [0.185]
     variants: +bzip2 +xz ~nls
 
 
@@ -323,8 +334,17 @@ packages:
 
   # cuda -- nvidia cuda, now in master
   #
-  # Requires: 10.x or later, 11.x preferred.
+  # Requires: 10.x or later, 11.1 preferred. 
+  # Note: 11.2 uses a different format for line maps that is not yet
+  #       supported by elfutils, dyninst, and hpctoolkit 
   #
+  # cuda:
+  #   version: [11.1.0]
+  #
+  # cuda:
+  #   externals:
+  #   - spec: cuda@11.1
+  #     prefix: /path/to/cuda-11.1/directory
   cuda:
     version: [11.0]
 
@@ -386,6 +406,13 @@ packages:
   # gcc/g++ and the same version used to build hpctoolkit (to keep the
   # C++ libraries in sync).
   #
+  # openmpi:
+  #   externals:
+  #   - spec: openmpi@3.1.6
+  #     modules:
+  #     - OpenMPI/3.1.6
+  #   buildable: False
+  #------------------------------------------------------------
   openmpi:
     externals:
     - spec: openmpi@3.1.6
@@ -394,6 +421,7 @@ packages:
       # - OpenMPI/3.1.6
       # - OpenMPI/3.1.6
     buildable: False
+
 
 
   #------------------------------------------------------------
