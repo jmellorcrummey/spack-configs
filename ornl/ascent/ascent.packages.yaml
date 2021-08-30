@@ -19,7 +19,7 @@
 #    https://spack.readthedocs.io/en/latest/configuration.html
 #    https://spack.readthedocs.io/en/latest/build_settings.html
 #
-#  Last revised: June 12, 2021. by msi
+#  Last revised: June 9, 2021.
 #
 packages:
 
@@ -34,10 +34,10 @@ packages:
   # for mpi) also goes here under 'all'.
   #
   all:
-    target: [x86_64,'ppc64','ppc64le','aarch64']
-  #   compiler: [gcc@8.3.1]
-  #   providers:
-  #     mpi: [openmpi]
+    target: [power9]
+    compiler: [gcc@8.3.1]
+    providers:
+      mpi: [spectrum-mpi]
 
 
   #------------------------------------------------------------
@@ -78,9 +78,9 @@ packages:
   # +viewer also installs hpcviewer (default).
   # +cuda, +rocm for GPU support.
   #
-  # hpctoolkit:
-  #   version:  [2021.05.15, master]
-  #   variants: +mpi +papi +viewer
+  hpctoolkit:
+    version:  [master]
+    variants: +mpi +papi +cuda +viewer
 
 
   # binutils -- used by hpcprof and struct simple (for functions and
@@ -140,27 +140,30 @@ packages:
   # HPCToolkit's hpcstruct. Until there is a new release of dyninst,
   # we recommend building hpctoolkit atop dyninst master. 
   #
-  # On Blue Gene, with default gcc 4.4 compilers, use version 9.3.2.
-  #
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [11.0.1]
-    variants: +openmp build_type=RelWithDebInfo
+    externals:
+    - spec: dyninst@master +openmp build_type=RelWithDebInfo
+      prefix:  /ccsopen/proj/gen161/.hpctoolkit-install/spack/opt/spack/linux-rhel7-ppc64le/gcc-7.4.0/dyninst-master-3wliu34udm6eqmhekecddt7mijrewmk2
+    buildable: False
 
 
   # elfutils -- used by dyninst for reading ELF sections.
   #
   # Dyninst requires >= 0.173 and we want a recent version for best
-  # support for output from current compilers.  On Blue Gene, 0.176
-  # doesn't build, so use 0.175.
+  # support for output from current compilers.
+  # 0.184 fixes a bug in binaries compiled with gcc 11.x.
   #
   # +bzip2, +xz are for reading compressed sections.
   # ~nls is used to avoid building gettext.
   #
+  #
   elfutils:
-    version:  [0.185]
-    variants: +bzip2 +xz ~nls
+    externals:
+    - spec: elfutils@0.185 +bzip2 +xz ~nls
+      prefix: /ccsopen/proj/gen161/.hpctoolkit-install/elfutils/elfutils-install
+    buildable: False
 
 
   # gotcha -- used in hpcrun to assist libunwind
@@ -341,10 +344,12 @@ packages:
   # cuda:
   #   version: [11.1.0]
   #
-  # cuda:
-  #   externals:
-  #   - spec: cuda@11.1
-  #     prefix: /path/to/cuda-11.1/directory
+  cuda:
+    externals:
+    - spec: cuda@11.2.0
+      modules:
+      - cuda/11.2.0
+    buildable: False
 
   #------------------------------------------------------------
 
@@ -405,11 +410,15 @@ packages:
   #     modules:
   #     - OpenMPI/3.1.6
   #   buildable: False
-
-  openmpi:
-    modules:
-      openmpi@4.0.0:  openmpi4/4.0.5
+  #
+  spectrum-mpi:
+    externals:
+    - spec: spectrum-mpi@10.3.1.2
+      modules:
+      -  spectrum-mpi/10.3.1.2-20200121
     buildable: False
+
+
 
 
   #------------------------------------------------------------
@@ -456,12 +465,12 @@ packages:
   # Example for a module.  This example says that cmake 3.7.2 is
   # available from module 'CMake/3.7.2'.  You may specify multiple
   # modules, if needed.
-  # cmake:
-  #   externals:
-  #   - spec: cmake@3.7.2
-  #     modules:
-  #     - CMake/3.7.2
-  #   buildable: False
+  cmake:
+    externals:
+    - spec: cmake@3.18.2
+      modules:
+      -  cmake/3.18.2
+    buildable: False
 
   # Example spec to build cmake from scratch.
   # +ownlibs, ~qt and ~openssl are to reduce prerequisites.
@@ -521,5 +530,5 @@ packages:
   # Spack handles compilers specially with the compilers.yaml file.
   # This example is only for building a more recent compiler.
 
-  # gcc:
-  #   version:  [7.4.0, 8.4.0]
+  gcc:
+    version:  [7.4.0]
