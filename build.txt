@@ -8,12 +8,10 @@ INITIAL BUILD
 -------------
 1.  Get the sources:
     To create a new branch:
-      First, create the branch using the field shown when pulling down the branch menu at the top
-	    of the Code entry for github.com/hpctoolkit/hpctoolkit on the github web site
 	git clone https://github.com/hpctoolkit/hpctoolkit.git
-?	git branch xyz (If you want to create the branch, not otherwise)
+	git branch xyz (If you want to create the branch, not otherwise)
 	git checkout xyz
-	git branch --set-upstream-to=origin/xyz xyz
+	git push --set-upstream origin xyz
 	git pull	
 
     To use an existing branch:
