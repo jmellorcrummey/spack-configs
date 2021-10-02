@@ -27,7 +27,7 @@ INITIAL BUILD
 
       <spack-install-packages-directory> is a subdirectory of the directory named in
 	the install_tree setting in the config.yaml file used for the spack
-	install command.  The subdirectoy is the one that contains the packages,
+	install command.  The subdirectory is the one that contains the packages,
 	and it is two levels down below the install_tree, at <install-tree>/<OS-spec>/<gcc-version>/
 	It is specified as an absolute path, since configure does not recognize ~ as your home directory.
 
@@ -35,9 +35,13 @@ INITIAL BUILD
 
       <other-options> specify additional options for the build.  They include
 	--with-cuda=<path to cuda>  You can find it by loading the module and doing "which nvcc".
+	    The <path to cuda> is "which nvcc", with bin/nvcc removed from it.
+
 	    You may want --with-cupti=<path to cupti>, but only if you do not want the cupti that comes with cuda
 	    or if with cuda you set does not have a cupti.
+
 	--without-cuda  -- needed currently for hpclink to work
+
 	MPICXX=<path to mpi compiler>  ( no -- in the argument)
 
 4.  Run the build (in the BUILD directory):
