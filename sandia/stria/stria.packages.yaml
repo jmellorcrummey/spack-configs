@@ -303,10 +303,6 @@ packages:
   # cuda:
   #   version: [11.1.0]
   #
-  # cuda:
-  #   externals:
-  #   - spec: cuda@11.1
-  #     prefix: /path/to/cuda-11.1/directory
 
   #------------------------------------------------------------
 
