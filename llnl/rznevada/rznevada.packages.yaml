@@ -54,7 +54,7 @@ packages:
   #
   hpctoolkit:
     version: [2021.10.15, master]
-    variants: +mpi +papi +viewer
+    variants: +mpi +papi +viewer +rocm
 
 
   # binutils -- used by hpcprof and struct simple (for functions and
