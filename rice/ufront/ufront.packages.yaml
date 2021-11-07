@@ -82,9 +82,9 @@ packages:
   # +viewer also installs hpcviewer (default).
   # +cuda, +rocm for GPU support.
   #
-  # hpctoolkit:
-  #   version:  [2021.05.15, master]
-  #   variants: +mpi +papi +viewer
+  hpctoolkit:
+    version:  [2021.10.15, master]
+    variants: +mpi +papi +viewer +cuda
 
 
   # binutils -- used by hpcprof and struct simple (for functions and

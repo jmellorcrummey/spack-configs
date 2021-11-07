@@ -1,0 +1,21 @@
+This program spins for a few seconds, then prints out the arguments with
+which it was invoked, then spins another few seconds, prints out the
+environment with which it was invoked, and then spins a few more seconds.
+
+It can be built with any gcc, and invoking "make hpct" will run the
+program, collecting CPUTIME, and then run hpcstruct on the measurements
+directory, and then run hpcprof on that directory, writing a database
+directory that can be brought up with hpcviewer.
+
+In the trace view, there are three separate and approximately equal
+pieces representing the functions that do the spinning.  Between them
+are very narrow areas where the printing of the arguments and environment
+takes place.  Those areas may or may not have profiling ticks.
+
+The first piece should show callstacks with cputime0() as the leaf
+function; the second piece should show callstacks with cputime2()
+as the leaf function; the third piece should show callstacks with
+cputime1() calling cputime2(), which is the leaf.
+
+If that's what you see, the end-to-end test of hpctoolkit for
+a simple CPU program is working correctly.
