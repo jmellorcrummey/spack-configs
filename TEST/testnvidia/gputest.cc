@@ -47,8 +47,10 @@ main(int argc, char *argv[], char **envp)
   /* If still running on CPU, GPU must not be available */
   if (runningOnGPU != 0) {
     printf("### gputest is unable to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device() = %d\n", idev, runningOnGPU);
+    exit(1);
   } else {
     printf("### gputest is able to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device()\n", idev);
+    printf("-- launching omp target loops on two CPU threads\n", idev);
   }
 
 #ifdef USE_MPI

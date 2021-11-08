@@ -42,6 +42,7 @@ clean:
 	-/bin/rm -rf meas.*
 	-/bin/rm -rf dbase.*
 	-/bin/rm -f TESTS.log
+	-/bin/rm -f *core*
 
 clobber: clean
 	-/bin/rm -rf *.o gputest
