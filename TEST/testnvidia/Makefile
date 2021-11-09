@@ -5,14 +5,19 @@ default all: $(TARGET)
 
 # ARCHFLAGS := -mcpu=pwr9 -mtune=pwr9
 
-OMPFLAGS = -g -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
-export OMP_NUM_THREADS=2
+# This version is built with GCC; ../llvm contains the version built with LLVM
+CXX = g++
+OMPFLAGS = -g -fopenmp -foffload=nvptx-none="-Ofast -lm -misa=sm_35"
 
-CXX = clang++
-# CXX = g++
+export OMP_NUM_THREADS=2
 
 gputest: ${SRCS}
 	$(CXX) $(OMPFLAGS) -o gputest gputest.cc
+
+run: gputest
+	echo "Running gputest"
+	echo ""
+	time gputest
 
 hpct: gputest
 	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
