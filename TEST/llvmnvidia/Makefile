@@ -3,9 +3,9 @@ TARGET	= gputest
 
 default all: $(TARGET)
 
-# This version is built with GCC; ../llvm contains the version built with LLVM
-CXX = g++
-OMPFLAGS = -g -fopenmp -foffload=nvptx-none="-Ofast -lm -misa=sm_35"
+# This version is built with LLVM; ../testnvidia contains the version built with GCC
+CXX = clang++
+OMPFLAGS = -g -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
 export OMP_NUM_THREADS=2
 
