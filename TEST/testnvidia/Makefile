@@ -3,7 +3,7 @@ TARGET	= gputest
 
 default all: $(TARGET)
 
-# This version is built with GCC; ../llvm contains the version built with LLVM
+# This version is built with GCC; ../llvmnvidia contains the version built with LLVM
 CXX = g++
 OMPFLAGS = -g -fopenmp -foffload=nvptx-none="-Ofast -lm -misa=sm_35"
 
