@@ -334,12 +334,9 @@ packages:
   #       supported by elfutils, dyninst, and hpctoolkit 
   #
   cuda:
-    version: [11.1.0]
-  #
-  # cuda:
-  #   externals:
-  #   - spec: cuda@11.1
-  #     prefix: /path/to/cuda-11.1/directory
+    externals:
+    - spec: cuda@11.0
+      prefix: /usr/local/cuda
 
   #------------------------------------------------------------
 
