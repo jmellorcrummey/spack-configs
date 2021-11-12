@@ -116,3 +116,9 @@ config:
   # anticipates that a significant delay indicates that the lock attempt will
   # never succeed.
   package_lock_timeout: null
+
+  # Whether to set the terminal title to display status information during
+  # building and installing packages. This gives information about Spack's 
+  # current progress as well as the current and total number of packages.
+  terminal_title: true
+

@@ -1,0 +1,803 @@
+#!/bin/sh
+# Copyright (c) 2004, 2017, Oracle and/or its affiliates. All rights reserved.
+#
+# perftools_whichami.ver.sh 2014/06/24
+#
+
+##########################################################################
+# Define system commands used (don't rely on search paths)
+AWK=/bin/awk
+BASENAME=/bin/basename
+CAT=/bin/cat
+CUT=/usr/bin/cut
+DIRNAME=/usr/bin/dirname
+EGREP=/bin/egrep
+GREP=/bin/grep
+HEAD=/usr/bin/head
+HOSTNAME_EXE=/bin/hostname
+HOSTNAME_STR=`${HOSTNAME_EXE}`
+RM=/bin/rm
+SED=/bin/sed
+TAIL=/usr/bin/tail
+UNAME=/bin/uname
+WC=/usr/bin/wc
+WHICH=/usr/bin/which
+
+##########################################################################
+#
+# Usage
+#
+Usage()
+{
+    scriptname=`${BASENAME} $0`
+
+    echo "${scriptname}: Determine the machine name and OS version, etc."
+    echo " "
+    echo "USAGE: ${scriptname} [-a] [-o] [-m] [-s] [-O] [-c] [-h] [-V]"
+    echo "      default       Print extended machine name, including os"
+    echo "      -a            Print all versions of the strings"
+    echo "      -o            Print operating system version <os>"
+    echo "      -m            Print cpu type"
+    echo "      -s            Print string with all info type"
+    echo "      -O            Print user-friendly operating system version <os>"
+    echo "      -c            Print cpu count"
+    echo "      -t            Print the tools archictecture {intel,sparc}-{S2,Linux}"
+    echo "      -k            Print the kernel release string"
+    echo "      -g            Print the gcc/g++/glibs release strings"
+    echo "      -h            Print this help message and exit"
+    echo "      -V            Print a version string and exit"
+    echo "      -D            Print debug info, -a output, and exit"
+    echo " Exit status:"
+    echo "    0 - ok"
+    echo "    1 - unrecognized OS"
+}
+
+#
+# Get the code name corresponding to the specified cpu type 
+#
+GetCodeName()
+{
+    if [ $# -lt 1 ]; then
+        return; # cpu type is not specified
+    fi
+    cputype=$1
+
+    known=`echo ${cputype} | ${GREP} 'Platinum 8176' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Skylake"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'Gold 6130' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Skylake"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'E5-2697A' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Broadwell"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'E5-2699 v4' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Broadwell-EP"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'E5-2699' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Haswell-E/EP"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'i7-4700HQ' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Haswell"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'E5-2697' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Ivy Bridge-EP"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'i7-3770' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Ivy Bridge"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'E5-2680' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Sandy Bridge-EP"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'E5-2660' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Sandy Bridge-EP"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'i7-2820QM' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Sandy Bridge"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'i5-2500' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Sandy Bridge"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'X5670' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Westmere"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'E5620' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Westmere"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'X5570' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Nehalem"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'L5520' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Nehalem"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'X5460' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Harpertown"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'E5440' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Penryn"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} '5160' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Woodcrest"
+        return;
+    fi
+    # Try to look at IMPLEMENTATION
+    known=`echo "${IMPLEMENTATION}" | ${GREP} 'Intel Arch PerfMon v3 on Family 6 Model 45' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Sandy Bridge"
+        return;
+    fi
+    # AMD systems
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 22' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Santa Rosa"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 234' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Barcelona"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 235' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Barcelona"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 236' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Barcelona"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 23' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Shanghai"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 834' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Barcelona"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 835' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Barcelona"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 836' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Barcelona"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 83' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Shanghai"
+        return;
+    fi
+    known=`echo ${cputype} | ${GREP} 'AMD Opteron(tm) Processor 84' | ${WC} -l`
+    if [ ${known} -eq 1 ]; then
+	echo "Istanbul"
+        return;
+    fi
+    echo ${cputype}
+}
+
+#
+# Adjust the IMPLEMENTATION string
+#
+AdjustIMPLEMENTATION()
+{
+    if [ $# -lt 1 ]; then
+        return; # cpu type is not specified
+    fi
+    cputype=$1
+    if [ "${OS_SUFFIX}" = "-XEN-" ]; then
+        if [ "${FLAVOR}" = "SunOS" ]; then
+            known=`echo ${cputype} | ${GREP} 'L5520' | ${WC} -l`
+            if [ ${known} -eq 1 ]; then
+                IMPLEMENTATION="Intel Arch PerfMon v3 on Family 6 Model 26"
+            fi
+        fi
+    fi
+}
+
+# This string is here for the 'version' command:
+# It gets sed'ed in at build-time:
+# PRODVER="@(#)RELEASE VERSION Studio 12.6 Performance Analyzer 12.6 Linux_x64 2017/05/24"
+
+# resolve symlinks to find directory of this script
+#
+
+PRG=$0
+while [ -h "${PRG}" ]; do
+    ls=`ls -ld "${PRG}"`
+    link=`expr "${ls}" : '^.*-> \(.*\)$' 2>/dev/null`
+    if expr "${link}" : '^/' > /dev/null 2>/dev/null; then
+	PRG="${link}"
+    else
+	PRG="`${DIRNAME} ${PRG}`/${link}"
+    fi
+done
+
+progdir=`${DIRNAME} ${PRG}`
+fdhome="${progdir}/.."
+
+osmode=0
+debug=0
+
+while getopts aoOcmstkghDV option
+do
+    case ${option} in
+	a) osmode=-1;;
+	o) osmode=1;;
+	O) osmode=2;;
+	c) osmode=3;;
+	m) osmode=4;;
+	s) osmode=5;;
+	t) osmode=6;;
+	k) osmode=7;;
+	g) osmode=8;;
+	h) Usage
+	    exit 0;;
+	D) debug=1;;
+	V) echo `${BASENAME} ${PRG}`: "Studio 12.6 Performance Analyzer 12.6 Linux_x64 2017/05/24"; exit 0;;
+	\?) echo "Unknown option"
+	    exit 1;;
+    esac
+done
+
+if [ ${debug} -eq 1 ]; then
+    if [ -r nvidia-smi ]; then
+	echo"Nvidia GPU information"
+	nvidia-smi
+    else
+	echo "No Nvidia GPUs accessible"
+    fi
+    echo
+    if [ -r rocm-smi ]; then
+	echo"ROCM GPU information"
+	rocm-smi
+    else
+	echo "No ROCM GPUs accessible"
+    fi
+    exit
+    echo
+    echo "${CAT} /etc/release:"
+    ${CAT} /etc/release 2>/dev/null
+    echo
+    echo "${CAT} /etc/SuSE-release:"
+    ${CAT} /etc/SuSE-release 2>/dev/null
+    echo
+    echo "${CAT} /etc/sun-release:"
+    ${CAT} /etc/sun-release 2>/dev/null
+    echo
+    echo "${CAT} /etc/oracle-release:"
+    ${CAT} /etc/oracle-release 2>/dev/null
+    echo
+    echo "${CAT} /etc/enterprise-release:"
+    ${CAT} /etc/enterprise-release 2>/dev/null
+    echo
+    echo "${CAT} /etc/redhat-release:"
+    ${CAT} /etc/redhat-release 2>/dev/null
+    echo
+    echo "${CAT} /etc/lsb-release:"
+    ${CAT} /etc/lsb-release 2>/dev/null
+    echo
+    echo "${UNAME} -a"
+    ${UNAME} -a
+    echo
+    echo "${UNAME} -s"
+    ${UNAME} -s
+    echo
+    echo "${UNAME} -r"
+    ${UNAME} -r
+    echo
+    echo "${UNAME} -v"
+    ${UNAME} -v
+    echo
+    echo "${UNAME} -m"
+    ${UNAME} -m
+    echo
+    echo "${UNAME} -p"
+    ${UNAME} -p
+    echo
+    echo "${UNAME} -i"
+    ${UNAME} -i
+    echo
+    echo "${UNAME} -o"
+    ${UNAME} -o
+    echo
+    echo "${HOSTNAME_EXE} -s"
+    ${HOSTNAME_EXE} -s
+    echo
+    echo "${HOSTNAME_EXE}"
+    ${HOSTNAME_EXE}
+    echo
+    echo "${CAT} /proc/cpuinfo"
+    ${CAT} /proc/cpuinfo
+    echo
+    echo
+    osmode=-1;
+fi
+
+OSNAME=UNKNOWN
+OSARCH=UNKNOWN
+HOSTNAME=
+OS=
+IMPLEMENTATION=
+FLAVOR=`${UNAME} -a | ${CUT} -d" " -f1`
+BITS=32-bit
+
+if [ "${FLAVOR}" = "SunOS" ]; then
+		if [ ${debug} -eq 1 ]; then
+		    echo "taking SunOS path"
+		fi
+    OSARCH=SunOS
+    HOSTNAME=${HOSTNAME_STR}
+    HOSTNAME=`echo ${HOSTNAME} | ${CUT} -d"." -f1`
+    OS_SUFFIX=""
+    if [ -r /usr/sbin/virtinfo ]; then
+        VIRTINFO=`/usr/sbin/virtinfo 2>&1`
+        VIRTINFOT=`/usr/sbin/virtinfo -t 2>&1`
+	if [ "`echo "${VIRTINFO}" | ${GREP} current| ${AWK} '{ print $1 }'| ${GREP} xen`" != "" ]; then
+            OS_SUFFIX="-XEN-"
+        elif [ "`echo "${VIRTINFO}"`" = "virtinfo can only be run from the global zone" ]; then
+            OS_SUFFIX="-ZONE-"
+        elif [ "`echo "${VIRTINFO}" | ${GREP} current| ${GREP} non-global-zone`" != "" ]; then
+            if [ "`echo "${VIRTINFO}" | ${GREP} parent| ${GREP} kernel-zone`" != "" ]; then
+		OS_SUFFIX="-ZONE_KZONE-"
+            elif [ "`echo "${VIRTINFO}" | ${GREP} parent| ${GREP} logical-domain`" != "" ]; then
+                OS_SUFFIX="-ZONE_LDOM-"
+            else
+                OS_SUFFIX="-ZONE-"
+            fi
+        elif [ "`echo "${VIRTINFO}" | ${GREP} current| ${GREP} kernel-zone`" != "" ]; then
+            if [ "`echo "${VIRTINFO}" | ${GREP} parent| ${GREP} logical-domain`" != "" ]; then
+                OS_SUFFIX="-KZONE_LDOM-"
+            else
+                OS_SUFFIX="-KZONE-"
+            fi
+        elif [ "`echo "${VIRTINFOT}" | ${GREP} LDoms| ${GREP} guest`" != "" ]; then
+            OS_SUFFIX="-LDOM-"
+	fi
+    else
+	if [ "`/usr/sbin/prtconf -v 2>&1 | ${GREP} xen`" != "" ]; then
+            OS_SUFFIX="-XEN-"
+        fi
+        if [ "`/usr/bin/zonename| ${GREP} global`" = "" ]; then
+	    OS_SUFFIX="-ZONE-"
+	fi
+    fi
+    if [ -r /usr/sbin/smbios ]; then 
+	if [ "`/usr/sbin/smbios -t SMB_TYPE_SYSTEM 2>&1| ${GREP} VirtualBox`" != "" ]; then
+	    OS_SUFFIX="-VBOX-"
+        fi
+    fi
+    OS=`${UNAME} -r`
+    MACHINE="${HOSTNAME}_`${UNAME} -p`_${OS}"
+    ISAINFO=`/bin/isainfo`
+    if [ "`echo ${ISAINFO} | ${GREP} sparcv9`" != "" ]; then
+	BITS=64-bit
+    elif [ "`echo ${ISAINFO} | ${GREP} amd64`" != "" ];  then
+	BITS=64-bit
+    fi
+    NCPUS=`LC_ALL=C /usr/sbin/psrinfo | ${WC} -l | ${SED} 's/^ *//'`
+    OSNAME="SunOS ${OS}"
+    CPUTYPE=`LC_ALL=C /usr/bin/cputrack -h 2>&1 | ${GREP}  "CPU performance counter interface" | ${CUT} -d":" -f2`
+    if [ -z "${CPUTYPE}" ]; then
+        CPUTYPE=`LC_ALL=C /usr/sbin/prtconf -v 2>&1 | ${SED} -n '/brand-string/{n;p;q;}' | ${SED} 's/.*='"'//" | ${SED} "s/'"'$//'`
+    fi
+    if [ -z "${CPUTYPE}" ]; then
+        CPUTYPE=`/bin/kstat | ${GREP} brand | ${HEAD} -1 | ${SED} -e 's/brand//'`
+        CPUTYPE=`echo ${CPUTYPE}`  # remove spaces
+    fi
+    if [ "${CPUTYPE}" = " SPARC M5" ]; then
+        M=`LC_ALL=C /usr/sbin/psrinfo -vp | ${GREP} -i sparc | ${SED} -e 's/(.*//g' | ${HEAD} -1`
+        M=`echo ${M}` # remove spaces
+        if [ "${M}" = "SPARC-M6" ]; then
+            CPUTYPE=" SPARC M6"
+        fi
+    fi
+    IMPLEMENTATION="${CPUTYPE}"
+    VERSION=`${UNAME} -r`
+    if [ "`echo ${ISAINFO} | ${GREP} sparc`" != "" ]; then
+	TOOLSARCH=sparc-S2
+        CPUSPEED=`LC_ALL=C /usr/sbin/psrinfo -v | ${GREP} "processor operates" | ${HEAD} -1 | ${SED} -e 's/sparcv9//g' -e 's/[a-zA-Z].//g'`;
+        CPUSPEED=`echo ${CPUSPEED}` # remove spaces
+        if [ -z "${CPUSPEED}" ]; then
+            CPUSPEED=`/bin/kstat | ${GREP} "clock_MHz" | ${HEAD} -1 | ${SED} -e 's/clock_MHz//'`;
+        fi
+        GHZ=`expr ${CPUSPEED} / 1000` # GHz
+        MHZ=`expr ${CPUSPEED} % 1000` # MHz
+        MHZ=`expr ${MHZ} / 10` # MHz
+        GHZ=`echo ${GHZ}` # remove spaces
+        MHZ=`echo ${MHZ}` # remove spaces
+        CPUTYPE="${CPUTYPE} @ ${GHZ}.${MHZ} GHz"
+    else
+	TOOLSARCH=intel-S2
+        KSTAT1=`/bin/kstat -m cpu_info -s brand | ${GREP} brand | ${HEAD} -1`
+        nl=`echo ${KSTAT1} | ${GREP} 'brand ' | ${WC} -l`
+        if [ ${nl} -eq 1 ]; then
+            CPUTYPE=`echo ${KSTAT1} | ${SED} -e 's/brand //'`
+        fi
+    fi
+    #KERNEL_VERSION=`${UNAME} -r`
+    SUNOSVER=`${CAT} /etc/release | ${GREP} Solaris | ${TAIL} -1 | ${SED} s/\ \ //g | ${SED} s/\ *Oracle\ //g`
+    IS11=`echo $SUNOSVER | ${GREP} "Solaris 11" | ${WC} -l`
+    PKG="/bin/pkg"
+    PKG_LIST="/tmp/pkg.list.$$"
+    ( PATH=/bin:$PATH ${PKG} list > ${PKG_LIST} 2>&1 ; )
+    if [ $IS11 -eq 1 ]; then # get build number from installed packages
+        BN=`${CAT} ${PKG_LIST} | ${GREP} '^entire' | ${HEAD} -1 | ${SED} -e 's/.*0.5.11-/5.11-/' | ${SED} -e 's/ .*//'`
+        if [ ! -n "${BN}" ]; then
+            BN=`${CAT} ${PKG_LIST} | ${GREP} 'group/system/solaris' | ${HEAD} -1 | ${SED} -e 's/.*0.5.11-/5.11-/' | ${SED} -e 's/ .*//'`
+        fi
+        SUNOSVER="$SUNOSVER ${BN}"
+    fi
+    IS12=`echo $SUNOSVER | ${GREP} "Solaris 12" | ${WC} -l`
+    if [ $IS12 -eq 1 ]; then # get build number from installed packages
+        BN=`${CAT} ${PKG_LIST} | ${GREP} '^entire' | ${HEAD} -1 | ${SED} -e 's/.*5.12-/5.12-/' | ${SED} -e 's/ .*//'`
+        if [ ! -n "${BN}" ]; then
+            BN=`${CAT} ${PKG_LIST} | ${GREP} 'group/system/solaris' | ${HEAD} -1 | ${SED} -e 's/.*5.12-/5.12-/' | ${SED} -e 's/ .*//'`
+        fi
+        SUNOSVER="$SUNOSVER ${BN}"
+    fi
+    ${RM} ${PKG_LIST}
+    KERNEL_VERSION=${SUNOSVER}
+
+elif [ "${FLAVOR}" = "Linux" ]; then
+		if [ ${debug} -eq 1 ]; then
+		    echo "taking generic Linux path"
+		fi
+  # Generic code for all Linux flavors
+  OSARCH=Linux
+  if [ -n "`${UNAME} -m  | ${GREP} 64`" ]; then
+	BITS=64-bit
+  fi
+  if [ -n "`${UNAME} -m | ${GREP} sparc`" ]; then
+    TOOLSARCH=sparc-Linux
+  else
+    TOOLSARCH=intel-Linux
+  fi
+  NCPUS=`${CAT} /proc/cpuinfo | ${GREP} processor | ${WC} -l | ${SED} 's/^ *//'`
+  if [ "${NCPUS}" = "0" ]; then
+    NCPUS=`${CAT} /proc/cpuinfo | ${GREP} CPU | ${WC} -l | ${SED} 's/^ *//'`
+  fi
+  # CPUTYPE=`${CAT} /proc/cpuinfo  | ${EGREP} "model name" | ${HEAD} -1 | ${CUT} -d" " -f3-`
+  MODEL_NAMES=`${CAT} /proc/cpuinfo | ${EGREP} "model name"`
+  CPUTYPE=`echo ${MODEL_NAMES} | ${SED} -e 's/ model name .*//' -e 's/model name.*: //'`
+  if [ -z "${CPUTYPE}" ]; then
+    CPUTYPE=`${CAT} /proc/cpuinfo  | ${GREP} "cpu	" | ${CUT} -d":" -f2`
+  fi
+
+  # check for a xen kernel
+  OS_SUFFIX=""
+  if [ "`${UNAME} -r | ${GREP} xen`" != "" ]; then
+    OS_SUFFIX="-XEN"
+  elif [ "`${CAT} /proc/scsi/scsi 2>&1| ${GREP} VBOX`" != "" ]; then
+      OS_SUFFIX="-VBOX-"
+  fi
+
+  if [ -r /etc/SuSE-release ]; then
+    # this code is for any SuSE release
+		if [ ${debug} -eq 1 ]; then
+		    echo "taking SuSE path"
+		fi
+    MAJOR_V=`${GREP} VERSION /etc/SuSE-release | ${CUT} -d" " -f3`
+    MINOR_V=`${GREP} PATCHLEVEL /etc/SuSE-release | ${CUT} -d" " -f3`
+    OPENSUSE=`${GREP} openSUSE /etc/SuSE-release`
+    if [ -z "${MINOR_V}" ]; then
+	VERSION=${MAJOR_V}
+    else
+	VERSION=${MAJOR_V}.${MINOR_V}
+    fi
+
+    HOSTNAME=`${HOSTNAME_EXE} -s`
+    if [ "${HOSTNAME}" = "localhost" ]; then
+	HOSTNAME=${HOSTNAME_STR}
+    fi
+
+    if [ -r /etc/sun-release ]; then
+	# distinguish Sun Desktop and Sun Java Desktop
+		if [ ${debug} -eq 1 ]; then
+		    echo "taking sun-release path"
+		fi
+	J=`${GREP} "Sun Java" /etc/sun-release`
+	if [ -n "${J}" ]; then
+	    if [ "${VERSION}" == "9" ]; then
+		VER2=`${GREP} Release /etc/sun-release | ${CUT} -d" " -f6`
+	    fi
+	    if [ -n "${VER2}" ]; then
+		VERSION=${VER2}
+	    fi
+	    OS="JDS_${VERSION}"
+	else
+	    OS="SDS_${VERSION}"
+	fi
+    else
+	if [ -z "${OPENSUSE}" ]; then
+	    OS="SLES_${VERSION}"
+	else
+	    OS="openSUSE_${VERSION}"
+	fi
+    fi
+    # end of SuSE release handling
+    MACHINE="${HOSTNAME}_`${UNAME} -m`_${OS}"
+    OSNAME="Linux ${OS}"
+  fi
+
+  if [ -r /etc/oracle-release ]; then
+		if [ ${debug} -eq 1 ]; then
+		    echo "taking oracle-release path"
+		fi
+    HOSTNAME=`${HOSTNAME_EXE} -s`
+    if [ "${HOSTNAME}" = "localhost" ]; then
+	HOSTNAME=${HOSTNAME_STR}
+    fi
+    VERSION=`${CUT} -d" " -f5 /etc/oracle-release`
+    if [ -r /sys/hypervisor/type ]; then
+       OS_SUFFIX=`${CAT}  /sys/hypervisor/type`
+       if [ "${OS_SUFFIX}" = "xen" ]; then
+	   OS_SUFFIX="-XEN-"
+       fi
+    fi
+    OS="OL_UEK_${VERSION}"
+
+    # Correct OS if necessary
+    KERNEL_VERSION=`${UNAME} -r`
+    uek=`echo "${KERNEL_VERSION}" | ${GREP} uek | ${WC} -l`  # is it uek
+    if [ ${uek} -eq 0 ]; then  # no, it is not uek
+        el=`echo "${KERNEL_VERSION}" | ${GREP} "el5" | ${WC} -l`  # is it el5
+        if [ ${el} -eq 0 ]; then  # no, it is not el5
+	        OS="OL_RHCK_${VERSION}"
+        else  # yes, it is el5
+            ker=`echo "${KERNEL_VERSION}" | ${GREP} "2.6.32-" | ${WC} -l`  # is it 2.6.32-...
+            if [ ${ker} -eq 0 ]; then  # not 2.6.32-... - change to OL_RHCK
+	        OS="OL_RHCK_${VERSION}"
+            fi  # 2.6.32-... check
+        fi  # el5 check
+    fi
+
+    MACHINE="${HOSTNAME}_`${UNAME} -m`_${OS}"
+    OSNAME="Linux ${OS}"
+
+  elif [ -r /etc/redhat-release ]; then
+		if [ ${debug} -eq 1 ]; then
+		    echo "taking redhat-release path"
+		fi
+    HOSTNAME=`${HOSTNAME_EXE} -s`
+    if [ "${HOSTNAME}" = "localhost" ]; then
+	HOSTNAME=${HOSTNAME_STR}
+    fi
+    XFLAVOR=`${CUT} -d" " -f3 /etc/redhat-release`
+    if [ "${XFLAVOR}" = "Enterprise" ]; then
+	VERSION=`${CUT} -d" " -f7 /etc/redhat-release`
+	if [ -r /etc/enterprise-release ]; then
+	    OS="OL_RHCK_${VERSION}"
+	else
+	    OS="RHEL_${VERSION}"
+	fi
+    elif [ "${XFLAVOR}" = "Linux" ]; then
+	VERSION=`${CUT} -d" " -f5 /etc/redhat-release`
+	OS="RHEL_${VERSION}"
+
+    else
+	if [ "`${CUT} -d" " -f1 /etc/redhat-release`" = "Fedora" ]; then
+	    VERSION=`${CUT} -d" " -f3 /etc/redhat-release`
+	    OS="Fedora_${VERSION}"
+	elif [ "`${CUT} -d" " -f1 /etc/redhat-release`" = "CentOS" ]; then
+	    VERSION=`${CUT} -d" " -f3 /etc/redhat-release`
+	    # VERSION=`rpm -qa '*release*' | ${GREP} centos-release-notes | ${CUT} -d "-" -f 4 | ${CUT} -d "." -f 1-2`
+	    OS="CentOS_${VERSION}"
+	elif [ "`${CUT} -d" " -f1 /etc/redhat-release`" = "Mandriva" ]; then
+	    VERSION=`${CUT} -d" " -f4 /etc/redhat-release`
+	    OS="Mandriva_${VERSION}"
+	else
+	    VERSION=_UNK
+	    OS="RH_UNK"
+	    if [ ${osmode} -eq 2 ]; then
+		echo "Unknown Redhat Linux version" >&2
+		${CAT} /etc/redhat-release >&2
+	    fi
+	fi
+    fi
+    # Correct OS if necessary
+    KERNEL_VERSION=`${UNAME} -r`
+    uek=`echo "${KERNEL_VERSION}" | ${GREP} uek | ${WC} -l`  # is it uek
+    if [ ${uek} -eq 1 ]; then  # yes, it is uek
+	OS="OL_UEK_${VERSION}"
+    fi
+    MACHINE="${HOSTNAME}_`${UNAME} -m`_${OS}"
+    OSNAME="Linux-${BITS}, ${NCPUS} CPUs, ${OS}"
+    OSNAME="Linux ${OS}"
+  fi
+
+  if [ -r /etc/debian_version ]; then
+		if [ ${debug} -eq 1 ]; then
+		    echo "taking debian_version path"
+		fi
+    HOSTNAME=${HOSTNAME_STR}
+    if [ -r /etc/lsb-release ]; then
+	VERSION=`${CAT}  /etc/lsb-release  | ${GREP} "DISTRIB_RELEASE" | ${CUT} -d"=" -f2`
+	OS=`${CAT}  /etc/lsb-release  | ${GREP} "DISTRIB_ID" | ${CUT} -d"=" -f2`_${VERSION}
+    else
+	VERSION=`${UNAME} -r`
+	OS="Debian_`${CAT} /etc/debian_version`"
+    fi
+    MACHINE="${HOSTNAME}_`${UNAME} -m`_${OS}"
+    OSNAME="Linux ${OS}"
+  fi
+
+  if [ -r /etc/lsb-release ]; then
+		if [ ${debug} -eq 1 ]; then
+		    echo "taking lsb-release path"
+		fi
+    HOSTNAME=${HOSTNAME_STR}
+    if [ "OS" = "" ]; then
+	VERSION=`${CAT}  /etc/lsb-release  | ${GREP} "DISTRIB_RELEASE" | ${CUT} -d"=" -f2`
+	OS=`${CAT}  /etc/lsb-release  | ${GREP} "DISTRIB_ID" | ${CUT} -d"=" -f2`_${VERSION}
+    fi
+    MACHINE="${HOSTNAME}_`${UNAME} -m`_${OS}"
+    OSNAME="Linux ${OS}"
+  fi
+
+  # have we figured out the hostname yet?
+  # if not, it must be some other unknown Linux
+  if [ -z "${HOSTNAME}" ]; then
+		if [ ${debug} -eq 1 ]; then
+		    echo "taking HOSTNAME not found path"
+		fi
+    HOSTNAME=${HOSTNAME_STR}
+    NCPUS=`${CAT} /proc/cpuinfo | ${GREP} CPU | ${WC} -l | ${SED} 's/^ *//'`
+    OS=`${UNAME} -r`
+    OSNAME="Linux ${OS}"
+    MACHINE="${HOSTNAME}_`${UNAME} -m`_${OS}"
+    VERSION=`${UNAME} -r`
+    if [ ${osmode} -eq 2 ]; then
+	echo "Unknown Linux version" >&2
+	for i in /etc/*release* ; do
+	    echo "  ${i}: `${CAT} ${i}`" >&2
+	done
+    fi
+  fi
+  IMPLEMENTATION="${CPUTYPE}"
+  KERNEL_VERSION=`${UNAME} -r`
+
+else
+    OSARCH="UNKNOWN"
+    OS=`${UNAME} -r`
+    HOSTNAME=${HOSTNAME_STR}
+    MACHINE="${HOSTNAME}_`${UNAME} -m`_${OS}"
+    OSNAME="UNKNOWN ${OS}"
+    KERNEL_VERSION=`${UNAME} -r`
+fi
+
+CODENAME=`GetCodeName "${CPUTYPE}"`
+if [ -n "${CODENAME}" ]; then
+    CPUTYPE="${CODENAME} ${CPUTYPE}"
+fi
+
+AdjustIMPLEMENTATION "${CPUTYPE}"  # This may be needed for virtual systems
+
+#if [ ${osmode} -eq 7 ]; then
+#    KERNEL_VERSION=`${UNAME} -r`
+#fi
+if [ ${osmode} -eq 8 -o ${osmode} -eq -1 ] ; then
+    if [ -x `${WHICH} gcc` ]; then
+	GCC=`${WHICH} gcc`
+	GPLUSPLUS=`${WHICH} g++`
+	GCC_VERSION=`${GCC} --version | ${GREP} GCC`
+	GPLUSPLUS_VERSION=`${GPLUSPLUS} --version | ${GREP} GCC`
+	GLIBC_VERSION="<?>"
+	if [ "${BITS}" = "64-bit" ]; then
+	    GLIBC64_VERSION="<?>"
+	else
+	    GLIBC64_VERSION="<not applicable>"
+	fi
+    else
+	GCC_VERSION="<none found on path>"
+	GPLUSPLUS_VERSION="<none found on path>"
+	GLIBC_VERSION="<none found>"
+	if [ "${BITS}" = "64-bit" ]; then
+	    GLIBC64_VERSION="<none found>"
+	else
+	    GLIBC64_VERSION="<not applicable>"
+	fi
+    fi
+fi
+
+# Add kernel version to OSNAME
+if [ "${OS_SUFFIX}" != "" ]; then
+      OS_SUFFIX=" ${OS_SUFFIX}"
+fi
+OSNAME="${OSNAME} (${KERNEL_VERSION})${OS_SUFFIX}"
+
+if [ "${OSARCH}" = "UNKNOWN" ]; then
+    echo "-->${HOSTNAME_STR} has an unrecognized OS"
+    exit 1
+else
+    if [ ${osmode} -eq -1 ]; then
+	echo "MACHINE: ${MACHINE}"
+	echo "HOSTNAME: ${HOSTNAME}"
+	echo "OS: ${OS}"
+	echo "OSARCH: ${OSARCH}"
+	echo "OSNAME: ${OSNAME}"
+	echo "NCPUs: ${NCPUS}"
+	echo "CPUTYPE: ${CPUTYPE}"
+	echo "IMPLEMENTATION: ${IMPLEMENTATION}"
+	echo "FLAVOR: ${FLAVOR}"
+	echo "VERSION: ${VERSION}"
+	if [ -z "${CPUTYPE}" ]; then
+	    echo "SYSTEM: ${OSNAME}"
+	else
+	    echo "SYSTEM: ${OSNAME} ${CPUTYPE}"
+	fi
+	echo "TOOLSARCH: ${TOOLSARCH}"
+	echo "KERNEL_VERSION: ${KERNEL_VERSION}"
+	echo "GCC_VERSION: ${GCC_VERSION}"
+	echo "GPLUSPLUS_VERSION: ${GPLUSPLUS_VERSION}"
+	echo "GNU_libc_VERSION: ${GLIBC_VERSION}"
+	echo "GNU_libc64_VERSION: ${GLIBC64_VERSION}"
+
+    elif [ ${osmode} -eq 1 ]; then
+	echo "${OS}"
+    elif [ ${osmode} -eq 2 ]; then
+	echo "${OSNAME}"
+    elif [ ${osmode} -eq 3 ]; then
+	echo "${NCPUS}"
+    elif [ ${osmode} -eq 4 ]; then
+	echo "${CPUTYPE}"
+    elif [ ${osmode} -eq 5 ]; then
+        if [ -z "${CPUTYPE}" ]; then
+            echo "${OSNAME}"
+        else
+            echo "${OSNAME} ${CPUTYPE}"
+        fi
+    elif [ ${osmode} -eq 6 ]; then
+	echo "${TOOLSARCH}"
+    elif [ ${osmode} -eq 7 ]; then
+	echo "KERNEL_VERSION: ${KERNEL_VERSION}"
+    elif [ ${osmode} -eq 8 ]; then
+	echo "GCC_VERSION: ${GCC_VERSION}"
+	echo "GPLUSPLUS_VERSION version: ${GPLUSPLUS_VERSION}"
+	echo "GNU_libc_VERSION: ${GLIBC_VERSION}"
+	echo "GNU_libc64_VERSION: ${GLIBC64_VERSION}"
+    else
+	echo "${MACHINE}"
+    fi
+fi

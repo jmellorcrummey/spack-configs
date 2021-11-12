@@ -1,26 +1,27 @@
 SRCS	= gputest.cc
-TARGET	= gputest
+TARGET	= gcc.gputest
 
 default all: $(TARGET)
 
-# This version is built with GCC; ../llvm contains the version built with LLVM
+# This version is built with GCC; ../llvmnvidia contains the version built with LLVM
 CXX = g++
 OMPFLAGS = -g -fopenmp -foffload=nvptx-none="-Ofast -lm -misa=sm_35"
+OMPFLAGS = -g -O2 -fopenmp -foffload=nvptx-none="-O2 -misa=sm_35"
 
 export OMP_NUM_THREADS=2
 
-gputest: ${SRCS}
-	$(CXX) $(OMPFLAGS) -o gputest gputest.cc
+gcc.gputest: ${SRCS}
+	$(CXX) $(OMPFLAGS) -o gcc.gputest gputest.cc
 
-run: gputest
-	echo "Running gputest"
+run: gcc.gputest
+	echo "Running gcc.gputest"
 	echo ""
-	time gputest
+	time gcc.gputest
 
-hpct: gputest
+hpct: gcc.gputest
 	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t gputest
+	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t gcc.gputest
 	echo ""
 	time hpcstruct meas.c.g.t
 	echo ""
@@ -29,10 +30,10 @@ hpct: gputest
 	echo "============================================"
 	echo ""
 
-hpctpc: gputest
+hpctpc: gcc.gputest
 	echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t gputest
+	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t gcc.gputest
 	echo ""
 	time hpcstruct meas.c.gp.t
 	echo ""
@@ -48,4 +49,4 @@ clean:
 	-/bin/rm -f *core*
 
 clobber: clean
-	-/bin/rm -rf *.o gputest
+	-/bin/rm -rf *.o gcc.gputest

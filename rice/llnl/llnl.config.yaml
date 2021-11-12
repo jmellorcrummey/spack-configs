@@ -17,7 +17,7 @@ config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
   # install_tree: $spack/opt/spack
-  install_tree: /home/msi3/my.install/2021-03
+  install_tree: /home/msi3/my.install/2021-10
 
 
   # Locations where templates should be found
@@ -31,8 +31,8 @@ config:
 
   # Locations where different types of modules should be installed.
   module_roots:
-    tcl:    /home/msi3/my.install/2021-03/MODULES/modules
-    lmod:   /home/msi3/my.install/2021-03/MODULES/lmod
+    tcl:    /home/msi3/my.install/2021-10/MODULES/modules
+    lmod:   /home/msi3/my.install/2021-10/MODULES/lmod
 
 
   # Temporary locations Spack can try to use for builds.
@@ -116,3 +116,14 @@ config:
   # anticipates that a significant delay indicates that the lock attempt will
   # never succeed.
   package_lock_timeout: null
+
+  # Timeout in seconds used for downloading sources etc. This only applies
+  # to the connection phase and can be increased for slow connections or
+  # servers. 0 means no timeout.
+  connect_timeout: 10
+
+
+  # Whether to set the terminal title to display status information during
+  # building and installing packages. This gives information about Spack's
+  # current progress as well as the current and total number of packages.
+  terminal_title: true
