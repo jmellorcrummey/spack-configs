@@ -1,5 +1,5 @@
 SRCS	= gputest.cc
-TARGET	= gputest
+TARGET	= amd.gputest
 
 default all: $(TARGET)
 
@@ -9,18 +9,18 @@ OMPFLAGS = -g -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn
 
 export OMP_NUM_THREADS=2
 
-gputest: ${SRCS}
-	$(CXX) $(OMPFLAGS) -o gputest gputest.cc
+amd.gputest: ${SRCS}
+	$(CXX) $(OMPFLAGS) -o amd.gputest gputest.cc
 
-run: gputest
-	echo "Running gputest"
+run: amd.gputest
+	echo "Running amd.gputest"
 	echo ""
-	time gputest
+	time amd.gputest
 
-hpct: gputest
-	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+hpct: amd.gputest
+	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t ./gputest
+	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t ./amd.gputest
 	echo ""
 	time hpcstruct meas.c.g.t
 	echo ""
@@ -29,10 +29,10 @@ hpct: gputest
 	echo "============================================"
 	echo ""
 
-hpctpc: gputest
-	echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
+hpctpc: amd.gputest
+	echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=amd,pc -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t ./gputest
+	time hpcrun -e CPUTIME -e gpu=amd,pc -o meas.c.gp.t -t ./amd.gputest
 	echo ""
 	time hpcstruct meas.c.gp.t
 	echo ""
@@ -48,4 +48,4 @@ clean:
 	-/bin/rm -f *core*
 
 clobber: clean
-	-/bin/rm -rf *.o gputest
+	-/bin/rm -rf *.o amd.gputest
