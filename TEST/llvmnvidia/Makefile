@@ -1,26 +1,26 @@
 SRCS	= gputest.cc
-TARGET	= gputest
+TARGET	= llvm.gputest
 
 default all: $(TARGET)
 
 # This version is built with LLVM; ../testnvidia contains the version built with GCC
 CXX = clang++
-OMPFLAGS = -g -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
+OMPFLAGS = -g -O2 -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
 export OMP_NUM_THREADS=2
 
-gputest: ${SRCS}
-	$(CXX) $(OMPFLAGS) -o gputest gputest.cc
+llvm.gputest: ${SRCS}
+	$(CXX) $(OMPFLAGS) -o llvm.gputest gputest.cc
 
-run: gputest
-	echo "Running gputest"
+run: llvm.gputest
+	echo "Running llvm.gputest"
 	echo ""
-	time gputest
+	time llvm.gputest
 
-hpct: gputest
+hpct: llvm.gputest
 	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t gputest
+	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t llvm.gputest
 	echo ""
 	time hpcstruct meas.c.g.t
 	echo ""
@@ -29,10 +29,10 @@ hpct: gputest
 	echo "============================================"
 	echo ""
 
-hpctpc: gputest
+hpctpc: llvm.gputest
 	echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t gputest
+	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t llvm.gputest
 	echo ""
 	time hpcstruct meas.c.gp.t
 	echo ""
@@ -48,4 +48,4 @@ clean:
 	-/bin/rm -f *core*
 
 clobber: clean
-	-/bin/rm -rf *.o gputest
+	-/bin/rm -rf *.o llvm.gputest
