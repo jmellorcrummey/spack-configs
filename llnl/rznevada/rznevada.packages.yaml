@@ -353,12 +353,8 @@ packages:
   # C++ libraries in sync).
   #
   openmpi:
-  #   externals:
-  #   - spec: openmpi@3.1.6
-    buildable: false
-
-
     externals:
-    - spec: openmpi@4.1.0
+    - spec: openmpi@4.1.1
       modules:
-      - openmpi/4.1.0
+      - openmpi-gnu/4.1
+    buildable: false
