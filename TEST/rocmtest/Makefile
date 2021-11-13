@@ -26,8 +26,11 @@ test: $(EXECUTABLE)
 	$(EXECUTABLE)
 
 
-clean:
+clean: clobber
 	rm -f $(EXECUTABLE)
-	rm -f $(OBJECTS)
-	rm -f $(HIP_PATH)/src/*.o
+
+clobber:
+	-rm -f $(OBJECTS)
+	-rm -f $(HIP_PATH)/src/*.o
+	-rm -rf dbase* meas*
 
