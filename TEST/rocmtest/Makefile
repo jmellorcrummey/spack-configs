@@ -12,16 +12,13 @@ OBJECTS = $(SOURCES:.cpp=.o)
 
 EXECUTABLE=./HelloWorld
 
-.PHONY: test
-
-
-all: $(EXECUTABLE) test
+all: $(EXECUTABLE)
 
 CXXFLAGS =-g
 CXX=$(HIPCC)
 
-
 $(EXECUTABLE): $(OBJECTS)
+	echo "HIPCC = ${HIPCC}"
 	$(HIPCC) $(OBJECTS) -o $@
 
 

@@ -84,7 +84,7 @@ packages:
   #
   hpctoolkit:
     version:  [2021.10.15, master]
-    variants: +mpi +papi +viewer +cuda
+    variants: +mpi +papi +viewer +cuda +rocm
 
 
   # binutils -- used by hpcprof and struct simple (for functions and
@@ -358,33 +358,33 @@ packages:
   # available, then use that.  If not, then build hip, rocm-dbgapi and
   # roctracer-dev with spack.
   #
-  # hip:
-  #   version: [4.0.0]
-  #
-  # rocm-dbgapi:
-  #   version: [4.0.0]
-  #
-  # roctracer-dev:
-  #   version: [4.0.0]
+  hip:
+    version: [4.3.1]
+ 
+  rocm-dbgapi:
+    version: [4.3.1]
+  
+  roctracer-dev:
+    version: [4.3.1]
 
   # Second, specify the three packages with an externals prefix, even
-  # if you built them with spack.  For example, with /opt/rocm-4.0.0,
+  # if you built them with spack.  For example, with /opt/rocm-4.3.1,
   # use:
   #
-  # hip:
-  #   externals:
-  #   - spec: hip@4.0.0
-  #     prefix: /opt/rocm-4.0.0/hip
-  #
-  #   rocm-dbgapi:
-  #     externals:
-  #     - spec: rocm-dbgapi@4.0.0
-  #       prefix: /opt/rocm-4.0.0
-  #
-  #   roctracer-dev:
-  #     externals:
-  #     - spec: roctracer-dev@4.0.0
-  #       prefix: /opt/rocm-4.0.0
+  hip:
+    externals:
+    - spec: hip@4.3.1
+      prefix: /opt/rocm-4.3.1/hip
+
+  rocm-dbgapi:
+    externals:
+    - spec: rocm-dbgapi@4.3.1
+      prefix: /opt/rocm-4.3.1
+
+  roctracer-dev:
+    externals:
+    - spec: roctracer-dev@4.3.1
+      prefix: /opt/rocm-4.3.1
   #
   # Note: for /opt/rocm, the hip prefix is the hip subdirectory,
   # for the other two, it is the /opt/rocm directory.
