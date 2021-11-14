@@ -5,8 +5,10 @@ default all: $(TARGET)
 
 # This version is built with GCC; ../llvmnvidia contains the version built with LLVM
 CXX = g++
+OMPFLAGS = -g -O2 -fopenmp -lm
 OMPFLAGS = -g -O2 -fopenmp -foffload=nvptx-none="-O2 -lm -misa=sm_35"
 
+export OMP_NUM_THREADS=1
 export OMP_NUM_THREADS=2
 
 gcc.gputest: ${SRCS}
@@ -22,7 +24,7 @@ hpct: gcc.gputest
 	echo ""
 	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t gcc.gputest
 	echo ""
-	time hpcstruct meas.c.g.t
+	time hpcstruct --gpucfg "yes" meas.c.g.t
 	echo ""
 	time hpcprof -o dbase.c.g.t meas.c.g.t
 	echo ""
@@ -34,7 +36,7 @@ hpctpc: gcc.gputest
 	echo ""
 	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t gcc.gputest
 	echo ""
-	time hpcstruct meas.c.gp.t
+	time hpcstruct --gpucfg "yes" meas.c.gp.t
 	echo ""
 	time hpcprof -o dbase.c.gp.t meas.c.gp.t
 	echo ""

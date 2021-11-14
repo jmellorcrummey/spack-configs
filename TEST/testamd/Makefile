@@ -5,7 +5,7 @@ default all: $(TARGET)
 
 ROCMPATH=/home/johnmc/rocm/aomp/bin
 CXX = $(ROCMPATH)/clang++
-OMPFLAGS = -g -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx906  
+OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx906  
 
 export OMP_NUM_THREADS=2
 

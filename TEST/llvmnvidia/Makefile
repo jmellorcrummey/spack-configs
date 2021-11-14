@@ -5,8 +5,9 @@ default all: $(TARGET)
 
 # This version is built with LLVM; ../testnvidia contains the version built with GCC
 CXX = clang++
-OMPFLAGS = -g -O2 -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
+OMPFLAGS = -g -O2 -lm -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
+export OMP_NUM_THREADS=1
 export OMP_NUM_THREADS=2
 
 llvm.gputest: ${SRCS}
