@@ -9,7 +9,6 @@
 
 #define	N 10000000
 #define	NITER 3
-#define	INNERITER 2
 
 void output(double *p, size_t size, const char *label);
 void init(double *p, size_t size);
@@ -113,10 +112,8 @@ t1work()
         {
           #pragma omp distribute parallel for
           for (size_t i = 0; i < nn; ++i) {
-	    for (int j = 0; j < INNERITER; j++ ) {
-              p1[i] = sqrt( exp( log (l1[i]*l1[i]) ) + exp( log (r1[i]*r1[i]) ) /
-                exp( log(l2[i]*l2[i]) ) + exp( log( (r2[i]*r2[i]) )) );
-	    }
+            p1[i] = sqrt( exp( log (l1[i]*l1[i]) ) + exp( log (r1[i]*r1[i]) ) /
+              exp( log(l1[i]*r1[i]) ) + exp( log( (l1[i]*r1[i]) )) );
           }
         }
         }
@@ -132,8 +129,8 @@ t2work()
         {
           #pragma omp distribute parallel for
           for (size_t i = 0; i < nn; ++i) {
-            p2[i] = sqrt( exp( log (l1[i]*l1[i]) ) + exp( log (r1[i]*r1[i])) ) /
-              sqrt( exp( log(l2[i]*l2[i]) ) + exp( log( (r2[i]*r2[i]) )) );
+            p2[i] = sqrt( exp( log (l2[i]*l2[i]) ) + exp( log (r2[i]*r2[i]) ) /
+              exp( log(l2[i]*r2[i]) ) + exp( log( (l2[i]*r2[i]) )) );
           }
         }
         }
