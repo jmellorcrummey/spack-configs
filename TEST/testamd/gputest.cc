@@ -1,26 +1,30 @@
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
 #include <omp.h>
 
 #ifdef USE_MPI
 #include <mpi.h>
 #endif
 
-#define	N 160000
-#define	NITER 1000
+#define	N 40000000
+#define	NITER 3
 
 void output(double *p, size_t size, const char *label);
 void init(double *p, size_t size);
+void t1work();
+void t2work();
+
+double l1[N], l2[N];
+double r1[N], r2[N];
+double p1[N], p2[N];
+size_t nn = N;
+int niter = NITER;
+int omp_num_t;
 
 int
 main(int argc, char *argv[], char **envp)
 {
-  size_t nn = N;
-  int niter = NITER;
-
-  double l1[N], l2[N];
-  double r1[N], r2[N];
-  double p1[N], p2[N];
 
   printf ("main entered N = %ld\n", nn);
   init(l1, nn);
@@ -45,12 +49,13 @@ main(int argc, char *argv[], char **envp)
   }
 
   /* If still running on CPU, GPU must not be available */
-  if (0 && runningOnGPU != 0) {
+  if (runningOnGPU != 0) {
     printf("### gputest is unable to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device() = %d\n", idev, runningOnGPU);
     exit(1);
   } else {
     printf("### gputest is able to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device()\n", idev );
-    printf("-- launching omp target loops on two CPU threads\n" );
+    omp_num_t = omp_get_max_threads();
+    printf("-- launching omp target loops on %d CPU thread%s\n", omp_num_t, omp_num_t ==1? "":"s" );
   }
 
 #ifdef USE_MPI
@@ -64,32 +69,17 @@ main(int argc, char *argv[], char **envp)
     #pragma omp parallel
     {
       if (omp_get_thread_num() == 0) {
-        #pragma omp target data map(to:l1[0:nn], r1[0:nn]) map(tofrom: p1[0:nn])
-        {
-        #pragma omp target
-        #pragma omp teams num_teams(4) thread_limit(64)
-        {
-          #pragma omp distribute parallel for
-          for (size_t i = 0; i < nn; ++i) {
-            p1[i] = l1[i] + r1[i];
-          }
-        }
-        }
+        t1work();
       } else if (omp_get_thread_num() == 1) {
-        #pragma omp target data map(to:l2[0:nn], r2[0:nn]) map(tofrom: p2[0:nn])
-        {
-        #pragma omp target
-        #pragma omp teams distribute parallel for num_teams(4) thread_limit(64)
-          for (size_t i = 0; i < nn; ++i) {
-            p2[i] = l2[i] + r2[i];
-          }
-        }
+        t2work();
       }
-
     }
+
   }
   output(p1, nn, "p1");
-  output(p2, nn, "p2");
+  if ( omp_num_t != 1) {
+    output(p2, nn, "p2");
+  }
 
 #ifdef USE_MPI
   MPI_Finalize();
@@ -110,4 +100,38 @@ output(double *p, size_t size, const char *label)
 {
   size_t i = size -1;
   printf("%s -- index %zu: %g\n", label, i, p[i]);
+}
+
+void
+t1work()
+{
+        #pragma omp target data map(to:l1[0:nn], r1[0:nn]) map(tofrom: p1[0:nn])
+        {
+        #pragma omp target
+        #pragma omp teams num_teams(4) thread_limit(64)
+        {
+          #pragma omp distribute parallel for
+          for (size_t i = 0; i < nn; ++i) {
+            p1[i] = sqrt( exp( log (l1[i]*l1[i]) ) + exp( log (r1[i]*r1[i]) ) /
+              exp( log(l1[i]*r1[i]) ) + exp( log( (l1[i]*r1[i]) )) );
+          }
+        }
+        }
+}
+
+void
+t2work()
+{
+        #pragma omp target data map(to:l2[0:nn], r2[0:nn]) map(tofrom: p2[0:nn])
+        {
+        #pragma omp target
+        #pragma omp teams num_teams(4) thread_limit(64)
+        {
+          #pragma omp distribute parallel for
+          for (size_t i = 0; i < nn; ++i) {
+            p2[i] = sqrt( exp( log (l2[i]*l2[i]) ) + exp( log (r2[i]*r2[i]) ) /
+              exp( log(l2[i]*r2[i]) ) + exp( log( (l2[i]*r2[i]) )) );
+          }
+        }
+        }
 }

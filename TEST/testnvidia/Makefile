@@ -8,8 +8,8 @@ CXX = g++
 OMPFLAGS = -g -O2 -fopenmp -lm
 OMPFLAGS = -g -O2 -fopenmp -foffload=nvptx-none="-O2 -lm -misa=sm_35"
 
-export OMP_NUM_THREADS=1
 export OMP_NUM_THREADS=2
+export OMP_NUM_THREADS=1
 
 gcc.gputest: ${SRCS}
 	$(CXX) $(OMPFLAGS) -o gcc.gputest gputest.cc

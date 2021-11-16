@@ -1,13 +1,13 @@
 #include <cstdio>
 #include <cstdlib>
-#include <math.h>
+#include <cmath>
 #include <omp.h>
 
 #ifdef USE_MPI
 #include <mpi.h>
 #endif
 
-#define	N 10000000
+#define	N 40000000
 #define	NITER 3
 
 void output(double *p, size_t size, const char *label);
