@@ -1,16 +1,24 @@
-This directory contains a set of simple end-to-end tests for hpctoolkit.
+This directory contains a two subdirectories, each of which has subdirectories for
+simple end-to-end tests for hpctoolkit.
+
 The set of tests contained here is not by any means a stress test;
 rather it is closer to a smoke test.  The user should be able to scan
 each test and verify that the data is plausible, and matches the expected behavior.
 
-Each directory contains one or more source files, and a Makefile for a simple program.
-Those simple programs do a relatively few operations and are intended to allow a user
-to understand their behavior, and predict the performance measurements expected.
+The test are based on simple programs that do relatively few operations and are intended
+to allow a user to understand their behavior, and predict the performance measurements expected.
 
-Each directory also contains a README file describing the behavior of the simple program, the
-output expected, and what one can expect to see in hpcviewer on an experiment on that program.
+The two top-level subdirectories are "cpu" and "gpu".
 
-The Makefile in each directory has a number of targets, with behavior as described below:
+"cpu" contains a README, a source file, and subdirectories for testcpu and hwccpu.
+The README file describes the behavior of the simple program, the output expected,
+and what one can expect to see in hpcviewer on an experiment on that program.
+
+"gpu" contains a README, a source file, and subdirectories for gccnvidia, llvmnvidia, and aompamd.
+The README file describes the behavior of the simple program, the output expected,
+and what one can expect to see in hpcviewer on an experiment on that program.
+
+The Makefile in each subdirectory of both "cpu" and "gpu" has a number of targets:
 
 	"make" : build the simple program.
 
@@ -22,9 +30,11 @@ The Makefile in each directory has a number of targets, with behavior as describ
 
 	"make clean" : remove everything except the built program.
 
-	"make clobber" : remove everything, leaving only the sources, Makefile, and README.
+	"make clobber" : remove everything, leaving only the sources, Makefile, and README, if any.
 
-Some Makefile's have other targets for end-to-end runs with different options.
+The gpu/*nvidia Makefile's have an additional target:
+
+	"make hpctpc" : run the program and collect gpu data with PC sampling.
 
 If you add additional directories with tests, please follow these conventions.
 

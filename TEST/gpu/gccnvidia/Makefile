@@ -1,4 +1,4 @@
-SRCS	= gputest.cc
+SRCS	= ../gputest.cc
 TARGET	= gcc.gputest
 
 default all: $(TARGET)
@@ -12,7 +12,7 @@ export OMP_NUM_THREADS=1
 export OMP_NUM_THREADS=2
 
 gcc.gputest: ${SRCS}
-	$(CXX) $(OMPFLAGS) -o gcc.gputest gputest.cc
+	$(CXX) $(OMPFLAGS) -o gcc.gputest ${SRCS}
 
 run: gcc.gputest
 	echo "Running gcc.gputest"

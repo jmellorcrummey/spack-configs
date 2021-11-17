@@ -1,18 +1,18 @@
-SRCS	= gputest.cc
+SRCS	= ../gputest.cc
 TARGET	= amd.gputest
 
 default all: $(TARGET)
 
-# ROCMPATH=/home/johnmc/rocm/aomp/bin
-# CXX = $(ROCMPATH)/clang++
 CXX = clang++
+ROCMPATH=/home/johnmc/rocm/aomp/bin
+CXX = $(ROCMPATH)/clang++
 OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx906  
 
 export OMP_NUM_THREADS=1
 export OMP_NUM_THREADS=2
 
 amd.gputest: ${SRCS}
-	$(CXX) $(OMPFLAGS) -o amd.gputest gputest.cc
+	$(CXX) $(OMPFLAGS) -o amd.gputest ${SRCS}
 
 run: amd.gputest
 	echo "Running amd.gputest"

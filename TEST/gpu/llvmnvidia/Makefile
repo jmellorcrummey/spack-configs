@@ -1,4 +1,4 @@
-SRCS	= gputest.cc
+SRCS	= ../gputest.cc
 TARGET	= llvm.gputest
 
 default all: $(TARGET)
@@ -11,7 +11,7 @@ export OMP_NUM_THREADS=1
 export OMP_NUM_THREADS=2
 
 llvm.gputest: ${SRCS}
-	$(CXX) $(OMPFLAGS) -o llvm.gputest gputest.cc
+	$(CXX) $(OMPFLAGS) -o llvm.gputest ${SRCS}
 
 run: llvm.gputest
 	echo "Running llvm.gputest"

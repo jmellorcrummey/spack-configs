@@ -19,16 +19,20 @@ OPTS		= $(OFLAGS) $(ARCH)
 TARGETS= testcpu
 
 SRCS=  \
-	testcpu.c \
+	../testcpu.c \
 	$(NULL)
 
 default all: $(TARGETS)
 
-testcpu: testcpu.c
-	$(CC) $(OPTS) -o testcpu testcpu.c $(LLDLIBS)
+testcpu: ${SRCS}
+	$(CC) $(OPTS) -o testcpu ${SRCS} $(LLDLIBS)
+
+run: testcpu
+	time testcpu
+	echo ""
 
 hpct: testcpu
-	time hpcrun -o meas.testcpu -t ./testcpu
+	time hpcrun -e PERF_COUNT_HW_CPU_CYCLES -o meas.testcpu -t testcpu
 	echo ""
 	time hpcstruct meas.testcpu
 	echo ""
