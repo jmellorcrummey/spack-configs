@@ -1,0 +1,19 @@
+gputext.cc is a simple program that does the following:
+First, it initializes four quite large arrays of doubles with each element set to its index.
+
+It first ensures that either 1 or 2 CPU thread are specified; if not, it exits.
+
+It then determines the number of GPU devices, and whether or not is its able to run
+on a GPU [omp_is_initial_device() != 0 ].  If not, it exits.
+
+It them iterates over the number or specified iterations (currently 3) and in each iteration,
+thread 0 calls "t0work()" amd thread 1 calls "t1work()".
+
+The two work functions are the same, and do a remarkably pointless computation resulting
+in the value "1".  If two threads are specified, both should print the 1; if only
+one is specified, it will print the "1".
+
+In hpcviewer, you should see two CPU threads, although sometime a third thread with no
+events appears, and one or two GPU threads.  llvm jobs use two GPU threads, which can
+run in parallel; the gcc version only uses one GPU thread, and conseuqently rund
+longer.

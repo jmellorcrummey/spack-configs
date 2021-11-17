@@ -12,8 +12,8 @@
 
 void output(double *p, size_t size, const char *label);
 void init(double *p, size_t size);
+void t0work();
 void t1work();
-void t2work();
 
 double l1[N], l2[N];
 double r1[N], r2[N];
@@ -36,9 +36,15 @@ main(int argc, char *argv[], char **envp)
   init(r2, nn);
   printf ("init of r2 done\n");
 
-  /* Test if GPU is available using OpenMP4.5 */
+  /* determine maximum thread count; if not 1 0r 2, exit */
   int	numdev = omp_get_num_devices();
   printf ("Machine has %d GPU device%s\n", numdev, (numdev==1 ? "" : "s") );
+  if ( (numdev != 1) && (numdev !=2) ) {
+    printf ("gputest is suppored for either 1 or 2 threads; this run sete %d threads\n", numdev);
+    exit (1);
+  }
+
+  /* Test if GPU is available */
   int	idev = omp_is_initial_device();
 
   int runningOnGPU = -1;
@@ -50,7 +56,7 @@ main(int argc, char *argv[], char **envp)
 
   /* If still running on CPU, GPU must not be available */
   if (runningOnGPU != 0) {
-    printf("### gputest is unable to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device() = %d\n", idev, runningOnGPU);
+    printf("### gputest is unable to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device() = %d; exiting\n", idev, runningOnGPU);
     exit(1);
   } else {
     printf("### gputest is able to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device()\n", idev );
@@ -69,9 +75,9 @@ main(int argc, char *argv[], char **envp)
     #pragma omp parallel
     {
       if (omp_get_thread_num() == 0) {
-        t1work();
+        t0work();
       } else if (omp_get_thread_num() == 1) {
-        t2work();
+        t1work();
       }
     }
 
@@ -103,35 +109,35 @@ output(double *p, size_t size, const char *label)
 }
 
 void
-t1work()
+t0work()
 {
         #pragma omp target data map(to:l1[0:nn], r1[0:nn]) map(tofrom: p1[0:nn])
         {
-        #pragma omp target
-        #pragma omp teams num_teams(4) thread_limit(64)
-        {
-          #pragma omp distribute parallel for
-          for (size_t i = 0; i < nn; ++i) {
-            p1[i] = sqrt( exp( log (l1[i]*l1[i]) ) + exp( log (r1[i]*r1[i]) ) /
-              exp( log(l1[i]*r1[i]) ) + exp( log( (l1[i]*r1[i]) )) );
+          #pragma omp target
+          #pragma omp teams num_teams(4) thread_limit(64)
+          {
+            #pragma omp distribute parallel for
+            for (size_t i = 0; i < nn; ++i) {
+              p1[i] = (sqrt( exp( log (l1[i]*l1[i]) ) + exp( log (r1[i]*r1[i]) ) ) ) /
+                ( sqrt (exp( log(l1[i]*r1[i]) ) + exp( log( (l1[i]*r1[i]) )) ) );
+            }
           }
-        }
         }
 }
 
 void
-t2work()
+t1work()
 {
         #pragma omp target data map(to:l2[0:nn], r2[0:nn]) map(tofrom: p2[0:nn])
         {
-        #pragma omp target
-        #pragma omp teams num_teams(4) thread_limit(64)
-        {
-          #pragma omp distribute parallel for
-          for (size_t i = 0; i < nn; ++i) {
-            p2[i] = sqrt( exp( log (l2[i]*l2[i]) ) + exp( log (r2[i]*r2[i]) ) /
-              exp( log(l2[i]*r2[i]) ) + exp( log( (l2[i]*r2[i]) )) );
+          #pragma omp target
+          #pragma omp teams num_teams(4) thread_limit(64)
+          {
+            #pragma omp distribute parallel for
+            for (size_t i = 0; i < nn; ++i) {
+              p2[i] = (sqrt( exp( log (l2[i]*l2[i]) ) + exp( log (r2[i]*r2[i]) ) ) ) /
+                ( sqrt (exp( log(l2[i]*r2[i]) ) + exp( log( (l2[i]*r2[i]) )) ) );
+            }
           }
-        }
         }
 }
