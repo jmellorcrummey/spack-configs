@@ -28,21 +28,17 @@ testcpu: testcpu.c
 	$(CC) $(OPTS) -o testcpu testcpu.c $(LLDLIBS)
 
 hpct: testcpu
-	time hpcrun -t ./testcpu
+	time hpcrun -o meas.testcpu -t ./testcpu
 	echo ""
-	time hpcstruct ./hpctoolkit-testcpu-measurements
+	time hpcstruct meas.testcpu
 	echo ""
-	time hpcprof ./hpctoolkit-testcpu-measurements
+	time hpcprof -o dbase.testcpu meas.testcpu
 	echo ""
 
 clobber: clean
 	-rm -f $(TARGETS)
 
 clean:
-	-rm -rf hpctoolkit*
-	-rm -f core* ipc_log
-	-rm -f hs_err*.log
-	-rm -f *binstrdata*
-	-rm -f *.binstr
-	-rm -f out
-	-rm -f core.* javacore.* jitdump.* Snap.*
+	-rm -rf meas.*
+	-rm -rf dbase.*
+	-rm -f *core*
