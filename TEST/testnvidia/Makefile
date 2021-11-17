@@ -8,8 +8,8 @@ CXX = g++
 OMPFLAGS = -g -O2 -fopenmp -lm
 OMPFLAGS = -g -O2 -fopenmp -foffload=nvptx-none="-O2 -lm -misa=sm_35"
 
-export OMP_NUM_THREADS=2
 export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=2
 
 gcc.gputest: ${SRCS}
 	$(CXX) $(OMPFLAGS) -o gcc.gputest gputest.cc
@@ -24,7 +24,7 @@ hpct: gcc.gputest
 	echo ""
 	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t gcc.gputest
 	echo ""
-	time hpcstruct --gpucfg "yes" meas.c.g.t
+	time hpcstruct meas.c.g.t
 	echo ""
 	time hpcprof -o dbase.c.g.t meas.c.g.t
 	echo ""
@@ -46,7 +46,6 @@ hpctpc: gcc.gputest
 clean:
 	-/bin/rm -rf meas.*
 	-/bin/rm -rf dbase.*
-	-/bin/rm -f TESTS.log
 	-/bin/rm -f *core*
 
 clobber: clean
