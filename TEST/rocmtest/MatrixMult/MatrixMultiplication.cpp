@@ -23,6 +23,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "../include/HIPUtil.hpp"
 
 #define SAMPLE_VERSION "HIP-Examples-Application-v1.0"
+#define NITER 3
 
 using namespace appsdk;
 
@@ -641,6 +642,28 @@ MatrixMultiplication::cleanup()
     return SDK_SUCCESS;
 }
 
+void
+__attribute__ ((noinline))
+cputime0(int k)
+{
+        int     i;      /* temp value for loop */
+        int     j;      /* temp value for loop */
+        volatile float  x;      /* temp variable for f.p. calculation */
+
+	sleep(1);
+
+        if(k == 0) {
+                k = 50;
+        }
+        for (i = 0; i < k; i ++) {
+                x = 0.0;
+                for(j=0; j<1000000; j++) {
+                        x = x + 1.0;
+                }
+        }
+        return;
+}
+
 int
 main(int argc, char * argv[])
 {
@@ -657,7 +680,11 @@ main(int argc, char * argv[])
         return SDK_FAILURE;
     }
 
-    {
+    for (int kk=0; kk< NITER; kk++)
+      {
+	std::cout<<"Begin iteration\n" << std::endl;
+	cputime0(0);
+
         // Setup
         if(hipMatrixMultiplication.setup() != SDK_SUCCESS)
         {
@@ -682,4 +709,5 @@ main(int argc, char * argv[])
         }
 
         hipMatrixMultiplication.printStats();
-    }
+      }
+}

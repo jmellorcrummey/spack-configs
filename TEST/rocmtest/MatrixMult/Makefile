@@ -10,26 +10,43 @@ TARGET=hcc
 SOURCES = MatrixMultiplication.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
+MAKE_INCLUDE = ..
+
+
 EXECUTABLE=./MatrixMultiplication
 
-.PHONY: test
-
-
-all: $(EXECUTABLE) test
+all: $(EXECUTABLE)
 
 CXXFLAGS =-g
 CXX=$(HIPCC)
 
 
 $(EXECUTABLE): $(OBJECTS)
-	$(HIPCC) $(OBJECTS) -o $@
+	$(HIPCC) -I ${MAKE_INCLUDE} $(OBJECTS) -o $@
 
 
-test: $(EXECUTABLE)
-	$(EXECUTABLE)
+run: $(EXECUTABLE)
+	time $(EXECUTABLE)
+	echo ""
 
+hpct:  $(EXECUTABLE)
+	# echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
+	echo ""
+	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t $(EXECUTABLE)
+	echo ""
+	time hpcstruct meas.c.g.t
+	echo ""
+	time hpcprof -o dbase.c.g.t meas.c.g.t
+	echo ""
+	echo "============================================"
+	echo ""
 
 clean:
-	rm -f $(EXECUTABLE)
 	rm -f $(OBJECTS)
-	rm -f $(HIP_PATH)/src/*.o
+	-/bin/rm -rf meas.*
+	-/bin/rm -rf dbase.*
+	-/bin/rm -f *core*
+
+clobber: clean
+	rm -f $(EXECUTABLE)
+
