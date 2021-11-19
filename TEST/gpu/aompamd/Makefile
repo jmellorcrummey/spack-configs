@@ -4,9 +4,7 @@ TARGET	= amd.gputest
 default all: $(TARGET)
 
 CXX = clang++
-ROCMPATH=/home/johnmc/rocm/aomp/bin
-CXX = $(ROCMPATH)/clang++
-OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx906  
+OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx908  
 
 export OMP_NUM_THREADS=1
 export OMP_NUM_THREADS=2

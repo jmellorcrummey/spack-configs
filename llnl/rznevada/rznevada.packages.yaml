@@ -318,20 +318,22 @@ packages:
   # externals in packages.yaml.  For example, with /opt/rocm-4.0.0,
   # use:
   #
-  #   hip:
-  #     externals:
-  #     - spec: hip@4.0.0
-  #       prefix: /opt/rocm-4.0.0/hip
-  #
-  #   rocm-dbgapi:
-  #     externals:
-  #     - spec: rocm-dbgapi@4.0.0
-  #       prefix: /opt/rocm-4.0.0
-  #
-  #   roctracer-dev:
-  #     externals:
-  #     - spec: roctracer-dev@4.0.0
-  #       prefix: /opt/rocm-4.0.0
+  hip:
+    version: [4.3.1]
+    externals:
+    - spec: hip@4.3.1
+      prefix: /opt/rocm-4.3.1/hip
+
+  rocm-dbgapi:
+    version: [4.3.1]
+    externals:
+    - spec: rocm-dbgapi@4.3.1
+      prefix: /opt/rocm-4.3.1
+
+  roctracer-dev:
+    externals:
+    - spec: roctracer-dev@4.3.1
+      prefix: /opt/rocm-4.3.1
   #
   # Note: for /opt/rocm, the hip prefix is the hip subdirectory,
   # for the other two, it is the /opt/rocm directory.
