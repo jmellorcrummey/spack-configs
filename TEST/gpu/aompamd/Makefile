@@ -17,7 +17,7 @@ amd.gputest: ${SRCS}
 run: amd.gputest
 	echo "Running amd.gputest"
 	echo ""
-	time amd.gputest
+	time ./amd.gputest
 
 hpct: amd.gputest
 	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""

@@ -16,12 +16,12 @@ llvm.gputest: ${SRCS}
 run: llvm.gputest
 	echo "Running llvm.gputest"
 	echo ""
-	time llvm.gputest
+	time ./llvm.gputest
 
 hpct: llvm.gputest
 	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t llvm.gputest
+	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t ./llvm.gputest
 	echo ""
 	time hpcstruct meas.c.g.t
 	echo ""
@@ -33,7 +33,7 @@ hpct: llvm.gputest
 hpctpc: llvm.gputest
 	echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t llvm.gputest
+	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t ./llvm.gputest
 	echo ""
 	time hpcstruct meas.c.gp.t
 	echo ""

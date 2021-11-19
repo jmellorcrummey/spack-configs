@@ -17,12 +17,12 @@ gcc.gputest: ${SRCS}
 run: gcc.gputest
 	echo "Running gcc.gputest"
 	echo ""
-	time gcc.gputest
+	time ./gcc.gputest
 
 hpct: gcc.gputest
 	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t gcc.gputest
+	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t ./gcc.gputest
 	echo ""
 	time hpcstruct meas.c.g.t
 	echo ""
@@ -34,7 +34,7 @@ hpct: gcc.gputest
 hpctpc: gcc.gputest
 	echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t gcc.gputest
+	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t ./gcc.gputest
 	echo ""
 	time hpcstruct --gpucfg "yes" meas.c.gp.t
 	echo ""
