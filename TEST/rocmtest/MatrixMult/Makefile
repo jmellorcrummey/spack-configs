@@ -5,24 +5,16 @@ endif
 
 HIPCC=$(HIP_PATH)/bin/hipcc
 
-TARGET=hcc
-
 SOURCES = MatrixMultiplication.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
 
 MAKE_INCLUDE = ..
-
 
 EXECUTABLE=./MatrixMultiplication
 
 all: $(EXECUTABLE)
 
-CXXFLAGS =-g
-CXX=$(HIPCC)
-
-
-$(EXECUTABLE): $(OBJECTS)
-	$(HIPCC) -I ${MAKE_INCLUDE} $(OBJECTS) -o $@
+$(EXECUTABLE): $(SOURCES)
+	$(HIPCC) -g -I ${MAKE_INCLUDE} $(SOURCES) -o $@
 
 
 run: $(EXECUTABLE)
@@ -42,7 +34,6 @@ hpct:  $(EXECUTABLE)
 	echo ""
 
 clean:
-	rm -f $(OBJECTS)
 	-/bin/rm -rf meas.*
 	-/bin/rm -rf dbase.*
 	-/bin/rm -f *core*

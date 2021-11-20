@@ -4,13 +4,13 @@ TARGET	= amd.gputest
 default all: $(TARGET)
 
 CXX = clang++
-OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx908  
+OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx906
 
 export OMP_NUM_THREADS=1
 export OMP_NUM_THREADS=2
 
 amd.gputest: ${SRCS}
-	$(CXX) $(OMPFLAGS) -o amd.gputest ${SRCS}
+	$(CXX) -DIGNORE_BAD_INITIAL_DEVICE $(OMPFLAGS) -o amd.gputest ${SRCS}
 
 run: amd.gputest
 	echo "Running amd.gputest"
