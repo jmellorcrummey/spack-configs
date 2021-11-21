@@ -8,29 +8,36 @@ HIPCC=$(HIP_PATH)/bin/hipcc
 TARGET=hcc
 
 SOURCES = HelloWorld.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
 
 EXECUTABLE=./HelloWorld
 
 all: $(EXECUTABLE)
 
-CXXFLAGS =-g
 CXX=$(HIPCC)
 
-$(EXECUTABLE): $(OBJECTS)
+$(EXECUTABLE): $(SOURCES)
 	echo "HIPCC = ${HIPCC}"
-	$(HIPCC) $(OBJECTS) -o $@
+	$(HIPCC) -g $(SOURCES) -o $@
 
 
-test: $(EXECUTABLE)
-	$(EXECUTABLE)
+run: $(EXECUTABLE)
+	time $(EXECUTABLE)
+	echo ""
+
+hpct: $(EXECUTABLE)
+	time hpcrun -e CPUTIME -e gpu=amd -o meas.HelloWorld -t $(EXECUTABLE)
+	echo ""
+	time hpcstruct meas.HelloWorld
+	echo ""
+	time hpcprof -o dbase.HelloWorld meas.HelloWorld
+	echo ""
+	echo "============================================"
+	echo ""
 
 
 clean: clobber
 	rm -f $(EXECUTABLE)
 
 clobber:
-	-rm -f $(OBJECTS)
-	-rm -f $(HIP_PATH)/src/*.o
 	-rm -rf dbase* meas*
 
