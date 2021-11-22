@@ -8,9 +8,6 @@ CXX = g++
 OMPFLAGS = -g -O2 -fopenmp -lm
 OMPFLAGS = -g -O2 -fopenmp -foffload=nvptx-none="-O2 -lm -misa=sm_35"
 
-export OMP_NUM_THREADS=1
-export OMP_NUM_THREADS=2
-
 gcc.gputest: ${SRCS}
 	$(CXX) $(OMPFLAGS) -o gcc.gputest ${SRCS}
 
@@ -19,14 +16,28 @@ run: gcc.gputest
 	echo ""
 	time ./gcc.gputest
 
-hpct: gcc.gputest
-	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+hpct: hpct1 hpct2
+
+hpct1: gcc.gputest
+	echo "Starting \"hpct.1.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t ./gcc.gputest
+	time export OMP_NUM_THREADS=1; hpcrun -e CPUTIME -e gpu=nvidia -o meas.1.c.g.t -t ./gcc.gputest
 	echo ""
-	time hpcstruct meas.c.g.t
+	time hpcstruct meas.1.c.g.t
 	echo ""
-	time hpcprof -o dbase.c.g.t meas.c.g.t
+	time hpcprof -o dbase.1.c.g.t meas.1.c.g.t
+	echo ""
+	echo "============================================"
+	echo ""
+
+hpct2: gcc.gputest
+	echo "Starting \"hpct.2.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+	echo ""
+	time export OMP_NUM_THREADS=2; hpcrun -e CPUTIME -e gpu=nvidia -o meas.2.c.g.t -t ./gcc.gputest
+	echo ""
+	time hpcstruct meas.2.c.g.t
+	echo ""
+	time hpcprof -o dbase.2.c.g.t meas.2.c.g.t
 	echo ""
 	echo "============================================"
 	echo ""
