@@ -18,9 +18,9 @@ run: llvm.gputest
 hpct: hpct1 hpct2
 
 hpct1: llvm.gputest
-	echo "Starting \"hpct.1.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+	echo "Starting \"hpct.1.c.g.t: -e CPUTIME -e gpu=nvidia -t\""
 	echo ""
-	time export OMP_NUM_THREADS=1; hpcrun -e CPUTIME -e gpu=nvidia -o meas.1.c.g.t -t ./llvm.gputest
+	export OMP_NUM_THREADS=1; time hpcrun -e CPUTIME -e gpu=nvidia -o meas.1.c.g.t -t ./llvm.gputest
 	echo ""
 	time hpcstruct meas.1.c.g.t
 	echo ""
@@ -30,9 +30,9 @@ hpct1: llvm.gputest
 	echo ""
 
 hpct2: llvm.gputest
-	echo "Starting \"hpct.2.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+	echo "Starting \"hpct.2.c.g.t: -e CPUTIME -e gpu=nvidia -t\""
 	echo ""
-	time export OMP_NUM_THREADS=2; hpcrun -e CPUTIME -e gpu=nvidia -o meas.2.c.g.t -t ./llvm.gputest
+	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=nvidia -o meas.2.c.g.t -t ./llvm.gputest
 	echo ""
 	time hpcstruct meas.2.c.g.t
 	echo ""
@@ -42,9 +42,9 @@ hpct2: llvm.gputest
 	echo ""
 
 hpctpc: llvm.gputest
-	echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
+	echo "Starting \"hpct.c.gp.t: -e CPUTIME -e gpu=nvidia,pc -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t ./llvm.gputest
+	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t ./llvm.gputest
 	echo ""
 	time hpcstruct meas.c.gp.t
 	echo ""
