@@ -56,7 +56,7 @@ hpctpc: llvm.gputest
 clean:
 	-/bin/rm -rf meas.*
 	-/bin/rm -rf dbase.*
-	-/bin/rm -f TESTS.log
+	-/bin/rm -f log.*
 	-/bin/rm -f *core*
 
 clobber: clean
