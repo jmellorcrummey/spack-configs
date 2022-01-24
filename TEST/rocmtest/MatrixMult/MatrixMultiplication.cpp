@@ -1,5 +1,5 @@
 /**********************************************************************
-Copyright ©2015 Advanced Micro Devices, Inc. All rights reserved.
+Copyright (c) 2015 Advanced Micro Devices, Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -97,9 +97,9 @@ class MatrixMultiplication
             input1 = NULL;
             output = NULL;
             verificationOutput = NULL;
-            n = 64;
-            m = 64;
-            k = 64;
+            n = 4096;
+            m = 4096;
+            k = 4096;
             blockSize = 8;
             setupTime = 0;
             appTime = 0;
@@ -650,7 +650,7 @@ cputime0(int k)
         int     j;      /* temp value for loop */
         volatile float  x;      /* temp variable for f.p. calculation */
 
-	sleep(1);
+	/* sleep(1); */
 
         if(k == 0) {
                 k = 50;

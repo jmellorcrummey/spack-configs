@@ -21,6 +21,13 @@ run: $(EXECUTABLE)
 	time $(EXECUTABLE)
 	echo ""
 
+hpctrun:  $(EXECUTABLE)
+	# echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
+	echo ""
+	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t $(EXECUTABLE)
+	echo ""
+	echo "============================================"
+
 hpct:  $(EXECUTABLE)
 	# echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
 	echo ""

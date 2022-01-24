@@ -35,9 +35,9 @@ hpct: $(EXECUTABLE)
 	echo ""
 
 
-clean: clobber
+clobber: clean
 	rm -f $(EXECUTABLE)
 
-clobber:
+clean:
 	-rm -rf dbase* meas*
 

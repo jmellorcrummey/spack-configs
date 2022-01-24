@@ -7,9 +7,6 @@ default all: $(TARGET)
 CXX = clang++
 OMPFLAGS = -g -O2 -lm -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
-export OMP_NUM_THREADS=1
-export OMP_NUM_THREADS=2
-
 llvm.gputest: ${SRCS}
 	$(CXX) $(OMPFLAGS) -o llvm.gputest ${SRCS}
 
@@ -18,22 +15,36 @@ run: llvm.gputest
 	@echo ""
 	time ./llvm.gputest
 
-hpct: llvm.gputest
-	@echo "*** Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+hpct: hpct1 hpct2
+
+hpct1: llvm.gputest
+	@echo "Starting \"hpct.1.c.g.t: -e CPUTIME -e gpu=nvidia -t\""
 	@echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t ./llvm.gputest
+	export OMP_NUM_THREADS=1; time hpcrun -e CPUTIME -e gpu=nvidia -o meas.1.c.g.t -t ./llvm.gputest
 	@echo ""
-	time hpcstruct meas.c.g.t
+	time hpcstruct meas.1.c.g.t
 	@echo ""
-	time hpcprof -o dbase.c.g.t meas.c.g.t
+	time hpcprof -o dbase.1.c.g.t meas.1.c.g.t
+	@echo ""
+	@echo "============================================"
+	@echo ""
+
+hpct2: llvm.gputest
+	@echo "Starting \"hpct.2.c.g.t: -e CPUTIME -e gpu=nvidia -t\""
+	@echo ""
+	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=nvidia -o meas.2.c.g.t -t ./llvm.gputest
+	@echo ""
+	time hpcstruct meas.2.c.g.t
+	@echo ""
+	time hpcprof -o dbase.2.c.g.t meas.2.c.g.t
 	@echo ""
 	@echo "============================================"
 	@echo ""
 
 hpctpc: llvm.gputest
-	@echo "*** Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
+	@echo "Starting \"hpct.c.gp.t: -e CPUTIME -e gpu=nvidia,pc -t\""
 	@echo ""
-	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t ./llvm.gputest
+	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t ./llvm.gputest
 	@echo ""
 	time hpcstruct meas.c.gp.t
 	@echo ""
@@ -45,7 +56,7 @@ hpctpc: llvm.gputest
 clean:
 	-/bin/rm -rf meas.*
 	-/bin/rm -rf dbase.*
-	-/bin/rm -f TESTS.log
+	-/bin/rm -f log.*
 	-/bin/rm -f *core*
 
 clobber: clean
