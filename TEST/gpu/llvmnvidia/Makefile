@@ -14,33 +14,33 @@ llvm.gputest: ${SRCS}
 	$(CXX) $(OMPFLAGS) -o llvm.gputest ${SRCS}
 
 run: llvm.gputest
-	echo "Running llvm.gputest"
-	echo ""
+	@echo "*** Running llvm.gputest"
+	@echo ""
 	time ./llvm.gputest
 
 hpct: llvm.gputest
-	echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
-	echo ""
+	@echo "*** Starting \"hpct.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+	@echo ""
 	time hpcrun -e CPUTIME -e gpu=nvidia -o meas.c.g.t -t ./llvm.gputest
-	echo ""
+	@echo ""
 	time hpcstruct meas.c.g.t
-	echo ""
+	@echo ""
 	time hpcprof -o dbase.c.g.t meas.c.g.t
-	echo ""
-	echo "============================================"
-	echo ""
+	@echo ""
+	@echo "============================================"
+	@echo ""
 
 hpctpc: llvm.gputest
-	echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
-	echo ""
+	@echo "*** Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
+	@echo ""
 	time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t ./llvm.gputest
-	echo ""
+	@echo ""
 	time hpcstruct meas.c.gp.t
-	echo ""
+	@echo ""
 	time hpcprof -o dbase.c.gp.t meas.c.gp.t
-	echo ""
-	echo "============================================"
-	echo ""
+	@echo ""
+	@echo "============================================"
+	@echo ""
 
 clean:
 	-/bin/rm -rf meas.*
