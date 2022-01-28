@@ -37,12 +37,15 @@ main(int argc, char *argv[], char **envp)
   printf ("init of r2 done\n");
 
   /* determine maximum thread count; if not 1 0r 2, exit */
-  int	numdev = omp_get_num_devices();
-  printf ("Machine has %d GPU device%s\n", numdev, (numdev==1 ? "" : "s") );
-  if ( (numdev != 1) && (numdev !=2) ) {
-    printf ("gputest is suppored for either 1 or 2 threads; this run sete %d threads\n", numdev);
+  omp_num_t = omp_get_max_threads();
+  if ( (omp_num_t != 1) && (omp_num_t !=2) ) {
+    printf ("gputest is suppored for either 1 or 2 threads; this run sets %d threads\n", omp_num_t);
     exit (1);
   }
+
+  /* determine number of GPU's */
+  int numdev = omp_get_num_devices();
+  printf ("Machine has %d GPU device%s\n", numdev, (numdev==1 ? "" : "s") );
 
   /* Test if GPU is available */
   int	idev = omp_is_initial_device();
@@ -56,11 +59,14 @@ main(int argc, char *argv[], char **envp)
 
   /* If still running on CPU, GPU must not be available */
   if (runningOnGPU != 0) {
-    printf("### gputest is unable to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device() = %d; exiting\n", idev, runningOnGPU);
+#ifndef IGNORE_BAD_INITIAL_DEVICE
+    printf(" ERROR unable to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device() = %d; exiting\n", idev, runningOnGPU);
     exit(1);
+#else
+    printf(" ERROR IGNORED idev = %d, runningOnGpU -- omp_is_initial_device() = %d; trying anyway\n", idev, runningOnGPU);
+#endif
   } else {
-    printf("### gputest is able to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device()\n", idev );
-    omp_num_t = omp_get_max_threads();
+    printf("    gputest is able to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device()\n", idev );
     printf("-- launching omp target loops on %d CPU thread%s\n", omp_num_t, omp_num_t ==1? "":"s" );
   }
 

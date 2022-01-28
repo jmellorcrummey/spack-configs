@@ -5,29 +5,28 @@ endif
 
 HIPCC=$(HIP_PATH)/bin/hipcc
 
-TARGET=hcc
-
 SOURCES = MatrixMultiplication.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
 
 MAKE_INCLUDE = ..
-
 
 EXECUTABLE=./MatrixMultiplication
 
 all: $(EXECUTABLE)
 
-CXXFLAGS =-g
-CXX=$(HIPCC)
-
-
-$(EXECUTABLE): $(OBJECTS)
-	$(HIPCC) -I ${MAKE_INCLUDE} $(OBJECTS) -o $@
+$(EXECUTABLE): $(SOURCES)
+	$(HIPCC) -g -I ${MAKE_INCLUDE} $(SOURCES) -o $@
 
 
 run: $(EXECUTABLE)
 	time $(EXECUTABLE)
 	echo ""
+
+hpctrun:  $(EXECUTABLE)
+	# echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
+	echo ""
+	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t $(EXECUTABLE)
+	echo ""
+	echo "============================================"
 
 hpct:  $(EXECUTABLE)
 	# echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
@@ -42,7 +41,6 @@ hpct:  $(EXECUTABLE)
 	echo ""
 
 clean:
-	rm -f $(OBJECTS)
 	-/bin/rm -rf meas.*
 	-/bin/rm -rf dbase.*
 	-/bin/rm -f *core*
