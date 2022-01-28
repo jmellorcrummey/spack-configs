@@ -1,4 +1,28 @@
+#
+#  packages.yaml
+#
+#  This file specifies the versions and variants for HPCToolkit's
+#  dependency packages and serves as a common reference point for how
+#  to build them.  It also specifies the paths or modules for system
+#  build tools (cmake, python, etc) to avoid rebuilding them.
+#
+#  Put this file in one of spack's configuration scope directories:
+#    1. <spack-root>/etc/spack -- applies to this spack repo
+#    2. <home-dir>/.spack -- applies to any spack on this machine
+#    3. any dir -- applies with 'spack -C dir' argument
+#
+#  There are three sections: (1) regular hpctoolkit dependency specs,
+#  (2) gpu and MPI specs, and (3) system build tools: cmake, perl,
+#  python and GCC.
+#
+#  See also:
+#    https://spack.readthedocs.io/en/latest/configuration.html
+#    https://spack.readthedocs.io/en/latest/build_settings.html
+#
+#  Last revised: January 17, 2022.
+#
 packages:
+
   # If you want to specify a generic target or a specific compiler for
   # all builds, then you can set those here.  For example, a generic
   # target might be useful for a shared install acrosss multiple
@@ -52,8 +76,8 @@ packages:
   # +viewer also installs hpcviewer (default).
   # +cuda, +rocm for GPU support.
   #
-  hpctoolkit:
-    version: [2021.10.15, master]
+  # hpctoolkit:
+    version:  [2022.01.15, master]
     variants: +mpi +papi +viewer
 
 
@@ -68,7 +92,7 @@ packages:
   # ~nls is used to avoid building gettext.
   #
   binutils:
-    version: [2.36.1]
+    version:  [2.36.1]
     variants: +libiberty ~nls
 
 
@@ -86,17 +110,21 @@ packages:
   # visibility=global is required for recent hpctoolkit.
   #
   boost:
-    version: [1.72.0]
-    variants: '+atomic +chrono +date_time +filesystem +system +thread +timer +graph
-      +regex +shared +multithreaded ~debug ~mpi ~python ~iostreams ~numpy visibility=global
+    version:  [1.77.0]
+    variants: >
+      +atomic +chrono +date_time +filesystem +system +thread +timer
+      +graph +regex +shared +multithreaded ~debug
+      ~mpi ~python ~iostreams ~numpy
+      visibility=global
 
-      ' # bzip2 -- used by elfutils to read compressed sections (and copy
+
+  # bzip2 -- used by elfutils to read compressed sections (and copy
   # libs).
   #
   # Bzip2 has resumed development, anything after 1.0.6 is good.
   #
   bzip2:
-    version: [1.0.8]
+    version:  [1.0.8]
     variants: +shared
 
 
@@ -105,15 +133,13 @@ packages:
   # and Dyninst issues releases infrequently, so sometimes it's
   # necessary to use master for the best results.
   #
-  # Latest hpctoolkit needs > 11.0.0.  Several problems were discovered
-  # in dyninst 11.0.0 that caused failures in hpcstruct.  Until there
-  # is a new release of dyninst, we recommend building hpctoolkit atop
-  # dyninst master.
+  # Latest hpctoolkit needs > 12.0.0.  Several problems were discovered
+  # in dyninst 11.0.0 that caused failures in hpcstruct.
   #
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version: [11.0.1, master]
+    version:  [12.0.1, master]
     variants: +openmp build_type=RelWithDebInfo
 
 
@@ -122,12 +148,13 @@ packages:
   # Dyninst requires >= 0.173 and we want a recent version for best
   # support for output from current compilers.
   # 0.184 fixes a bug in binaries compiled with gcc 11.x.
+  # dyninst 12.0.1 requires latest elfutils >= 0.186.
   #
   # +bzip2, +xz are for reading compressed sections.
   # ~nls is used to avoid building gettext.
   #
   elfutils:
-    version: [0.185]
+    version:  [0.186]
     variants: +bzip2 +xz ~nls
 
 
@@ -136,7 +163,7 @@ packages:
   # Requires version 1.0.3 or later.
   #
   gotcha:
-    version: [1.0.3]
+    version:  [1.0.3]
     variants: build_type=RelWithDebInfo
 
 
@@ -148,7 +175,7 @@ packages:
   # support transactional memory (no-op on non-x86).
   #
   intel-tbb:
-    version: [2020.3]
+    version:  [2020.3]
     variants: +shared +tm
 
 
@@ -161,7 +188,7 @@ packages:
   # +debug adds debug symbols (-g).
   #
   intel-xed:
-    version: [12.0.1]
+    version:  [12.0.1]
     variants: +debug
 
 
@@ -172,7 +199,9 @@ packages:
   # current compilers.
   #
   libdwarf:
-    version: [20180129]
+    version:  [20180129]
+
+
   # libiberty -- needed for dyninst configure (although dyninst 10.x
   # doesn't actually link with it).
   #
@@ -181,7 +210,7 @@ packages:
   # +pic is needed to link with dyninst shared library.
   #
   libiberty:
-    version: [2.33.1]
+    version:  [2.33.1]
     variants: +pic
 
 
@@ -194,10 +223,8 @@ packages:
   # signals).
   # ~dlopen is needed for 2021.02 and later.
   #
-  # Note: add +bgq on blue gene/q.
-  #
   libmonitor:
-    version: [2021.04.27, master]
+    version:  [2021.11.08, master]
     variants: +hpctoolkit ~dlopen
 
 
@@ -211,7 +238,9 @@ packages:
   # Normally want the latest version to support recent CPU types.
   #
   libpfm4:
-    version: [4.11.0]
+    version:  [4.11.0]
+
+
   # libunwind -- used in hpcrun to help with unwinding.
   #
   # Normally want the most recent release.
@@ -220,7 +249,7 @@ packages:
   # +pic is required for linking with hpcrun.
   #
   libunwind:
-    version: [1.5.0]
+    version:  [1.5.0]
     variants: +xz +pic
 
 
@@ -231,7 +260,7 @@ packages:
   # +pic is required for linking with hpcrun.
   #
   mbedtls:
-    version: [2.27.0]
+    version:  [2.27.0]
     variants: +pic
 
 
@@ -248,7 +277,9 @@ packages:
   # headers.
   #
   papi:
-    version: [6.0.0.1]
+    version:  [6.0.0.1]
+
+
   # xerces -- used in hpcprof to read XML.
   #
   # Any recent version is good.
@@ -257,7 +288,7 @@ packages:
   # netaccessor=none is to reduce prereqs.
   #
   xerces-c:
-    version: [3.2.3]
+    version:  [3.2.3]
     variants: transcoder=iconv netaccessor=none
 
 
@@ -269,7 +300,7 @@ packages:
   # +pic is required for linking with hpcrun.
   #
   xz:
-    version: [5.2.5]
+    version:  [5.2.5]
     variants: +pic
 
 
@@ -282,8 +313,9 @@ packages:
   # +optimize is to add -O2.
   #
   zlib:
-    version: [1.2.11]
+    version:  [1.2.11]
     variants: +optimize +shared
+
 
   #------------------------------------------------------------
   # 2 -- GPU and MPI Packages
@@ -353,12 +385,140 @@ packages:
   # C++ libraries in sync).
   #
   openmpi:
-  #   externals:
-  #   - spec: openmpi@3.1.6
-    buildable: false
-
+    buildable: False
 
     externals:
     - spec: openmpi@4.1.0
       modules:
       - openmpi/4.1.0
+
+  #   externals:
+  #   - spec: openmpi@3.1.6
+  #     modules:
+  #     - OpenMPI/3.1.6
+  #   buildable: False
+
+
+  #------------------------------------------------------------
+  # 3 -- System Build Tools
+  #------------------------------------------------------------
+
+  # Note: Spack can now search for these packages itself.
+  # For example:
+  #
+  #   spack external cmake
+  #
+  # This puts an 'externals:' entry for cmake in ~/.spack/packages.yaml
+  # if spack finds cmake on your PATH.  This works for cmake, perl,
+  # python (and several other packages).  Look for the field
+  # 'Externally Detectable' from 'spack info'.
+
+  #------------------------------------------------------------
+
+  # We require cmake >= 3.4, perl >= 5.x and python >= 3.4.
+  # There are three ways to satisfy these requirements: a system
+  # installed version (eg, /usr), a module or build from scratch.
+  #
+  # By default, spack will rebuild these, even if your version is
+  # perfectly fine.  If you already have an installed version and
+  # prefer to use that instead, then uncomment some entry below and
+  # edit to fit your system.
+  #
+  # Note: these three are all build tools.  They are needed to build
+  # hpctoolkit, but we don't need them at run time or link with any
+  # libraries.  (Not counting hpcsummary which is a python script.)
+  # Note:
+  #
+  #  1. the 'prefix' entry is the parent directory of 'bin', not the
+  #  bin directory itself.
+  #
+  #  2. the 'spec' entry may be a full spec, including dependency specs.
+  #
+  #  3. a given package may have multiple spec, module and version
+  #  entries.
+  #
+  #  4. 'buildable: False' is optional.  It tells spack that it must use
+  #  a 'prefix' or 'modules' entry, or else fail the build.
+
+  #------------------------------------------------------------
+
+  # cmake -- dyninst requires cmake >= 3.4.x.
+
+  # Example for a system install.  This example says that cmake 3.11.0
+  # is available at /usr/bin/cmake.
+  # cmake:
+  #   externals:
+  #   - spec: cmake@3.11.0
+  #     prefix: /usr
+  #   buildable: False
+
+  # Example for a module.  This example says that cmake 3.7.2 is
+  # available from module 'CMake/3.7.2'.  You may specify multiple
+  # modules, if needed.
+  # cmake:
+  #   externals:
+  #   - spec: cmake@3.7.2
+  #     modules:
+  #     - CMake/3.7.2
+  #   buildable: False
+
+  # Example spec to build cmake from scratch.
+  # +ownlibs, ~qt and ~openssl are to reduce prerequisites.
+  # cmake:
+  #   version:  [3.12.4]
+  #   variants: +ownlibs ~qt ~openssl
+
+  #------------------------------------------------------------
+
+  # perl -- autotools requires perl >= 5.x which most systems have.
+
+  # Example for system perl.
+  # perl:
+  #   externals:
+  #   - spec: perl@5.16.3
+  #     prefix: /usr
+  #   buildable: False
+
+  # Example spec to build perl.
+  # perl:
+  #   version:  [5.26.2]
+
+  #------------------------------------------------------------
+
+  # python -- we require python >= 3.4, but some rocm packages require
+  # python 2.7 (and need to be built separately).
+
+  # Example for system python.  If you have both python2 and python3,
+  # then specify them both as 'python' (a special rule for python).
+  # python:
+  #   externals:
+  #   - spec: python@3.6.5
+  #     prefix: /usr
+  #   - spec: python@2.7.5
+  #     prefix: /usr
+  #   buildable: False
+
+  # Example for python module.
+  # python:
+  #   externals:
+  #   - spec: python@3.6.5
+  #     modules:
+  #     - Python/3.6.5
+  #   buildable: False
+
+  # Example spec to build python.
+  # ~dbm, etc are to reduce prerequisites.
+  # python:
+  #   version:  [3.6.5]
+  #   variants: ~dbm ~libxml2 ~ssl ~sqlite3 ~tkinter
+
+  #------------------------------------------------------------
+
+  # GCC -- hpctoolkit requires building with GNU gcc/g++.
+  # Use version 7.3.x or later.
+  #
+  # Spack handles compilers specially with the compilers.yaml file.
+  # This example is only for building a more recent compiler.
+
+  # gcc:
+  #   version:  [7.4.0, 8.4.0]

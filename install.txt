@@ -182,7 +182,7 @@ To do a spack install and test for a machine <machine> at site <site>:
     At LLNL:
 	On rzansel and lassen, <cmd-to-run> = "lalloc 1"
 	On rzmanta and ray, <cmd-to-run> = "lalloc 1"
-	On rzhasgpu and quartz, <cmd-to-run> = "salloc -N 1 -ppdebug"
+	On rzgenie and quartz, <cmd-to-run> = "salloc -N 1 -ppdebug"
 
     At LANL:
 	On kodiak, <cmd-to-run> = "salloc -N 1 --qos=interactive"
