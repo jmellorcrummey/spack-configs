@@ -39,5 +39,7 @@ modules:
       - CMAKE_PREFIX_PATH
 
   lmod:
+    all:
+      autoload: none
     hierarchy:
       - mpi
