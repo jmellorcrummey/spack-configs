@@ -17,7 +17,6 @@
 modules:
   enable:
     - tcl
-    - lmod
 
   prefix_inspections:
     bin:

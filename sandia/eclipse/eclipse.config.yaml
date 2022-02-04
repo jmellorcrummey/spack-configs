@@ -17,7 +17,7 @@
 config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  install_tree: /projects/hpctoolkit/.install/2021.10/packages
+  install_tree: /projects/hpctoolkit/.install/2022.01/packages
 
 
   # Locations where templates should be found
@@ -30,9 +30,7 @@ config:
 
   # Locations where different types of modules should be installed.
   module_roots:
-    lmod:  /projects/hpctoolkit/.install/2021.10/modules/lmod
-    tcl:    /projects/hpctoolkit/.install/2021.10/modules/tcl
-    # dotkit:  /projects/hpctoolkit/2019-08-14/modules/dotkit
+    tcl:    /projects/hpctoolkit/.install/2022.01/modules/tcl
 
   # Temporary locations Spack can try to use for builds.
   #
