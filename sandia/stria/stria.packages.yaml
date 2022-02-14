@@ -252,6 +252,8 @@ packages:
     version:  [1.5.0]
     variants: +xz +pic
 
+  memkind:
+    version: [1.10.1]
 
   # mbedtls -- used in hpcrun for hash functions.
   #
@@ -388,7 +390,7 @@ packages:
     externals:
     - spec: openmpi@4.0.5
       modules:
-      - OpenMPI/4.0.5
+      - openmpi4/4.0.5
 
 
   #------------------------------------------------------------
