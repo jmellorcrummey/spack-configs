@@ -1,0 +1,58 @@
+To debug the runtime under gdb, first set up a ~/.gdbinit file:
+
+
+I use one copied from John:
+---------------------------------------------
+directory /home/msi3/gits/hpctoolkit/src/tool/hpcrun
+
+handle SIG36 nostop noprint pass
+handle SIG37 nostop noprint pass
+handle SIG38 nostop noprint pass
+handle SIG40 nostop noprint pass
+handle SIG42 nostop noprint pass
+
+define sm
+set HPCRUN_DEBUGGER_WAIT=0
+set ompt_debug_wait=0
+tbreak main
+cont
+end
+
+define hc
+call hpcrun_continue()
+set ompt_debug_wait=0
+cont
+end
+
+define pi
+call x86_dump_intervals($arg0,1)
+end
+
+define pd
+call hpcrun_dump_intervals($arg0,1)
+end
+
+define pu
+call dump_ui_dbg($arg0)
+end
+
+define xi
+call x86_dump_ins($arg0)
+end
+---------------------------------------------
+It is customized to point at my source tree.  The "handle" lines tell gdb to not do anything
+with those signals, other than pass them through.  After you have set your .gdbinit
+file:
+
+1.  Invoke hpcrun -d <other args> app <app-=args> &
+	That will start the execution, but hang in a loop in the hpc runtime
+
+2.  Invoke gdb --pid $!
+	That will attach the debugger to the just-launched process
+
+3.  Continue in gdb
+	Alias "hc" removes the flag causing the loop, and then does a "continue"
+	Alias "sm" removes the flag causing the loop, sets a breakpoint in main, and then does a "continue"
+	I don't know anything about the other aliases.
+
+    You are now in gdb, attached to the process, and can use gdb's commands.
