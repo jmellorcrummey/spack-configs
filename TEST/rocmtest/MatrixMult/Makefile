@@ -11,6 +11,8 @@ MAKE_INCLUDE = ..
 
 EXECUTABLE=./MatrixMultiplication
 
+ARGS=-q -x 4096
+
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(SOURCES)
@@ -18,20 +20,20 @@ $(EXECUTABLE): $(SOURCES)
 
 
 run: $(EXECUTABLE)
-	time $(EXECUTABLE)
+	time $(EXECUTABLE) $(ARGS)
 	echo ""
 
 hpctrun:  $(EXECUTABLE)
 	# echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t $(EXECUTABLE)
+	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t $(EXECUTABLE) $(ARGS)
 	echo ""
 	echo "============================================"
 
 hpct:  $(EXECUTABLE)
 	# echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t $(EXECUTABLE)
+	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t $(EXECUTABLE) $(ARGS)
 	echo ""
 	time hpcstruct meas.c.g.t
 	echo ""
