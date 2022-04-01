@@ -7,7 +7,7 @@ TARGET	= llvm.gputest
 
 default all: $(TARGET)
 
-CXX = clang++
+CXX = amdclang++
 OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx906 
 
 llvm.gputest: ${SRCS}

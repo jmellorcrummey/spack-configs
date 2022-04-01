@@ -78,7 +78,7 @@ main(int argc, char *argv[], char **envp)
   // DEBUG -- print addresses and result contents
   printf("Initial allocation of arrays\n");
   for ( int k = 0; k < omp_num_t; k++) {
-    printf( "Thread %d,      lptr[%d] = 0x%016llx; rptr[%d] = 0x%016llx, pptr[%d] = 0x%016llx\n",
+    printf( "Thread %d,      lptr[%d] = %p; rptr[%d] = %p, pptr[%d] = %p\n",
       k, k, lptr[k], k, rptr[k], k, pptr[k] );
   }
 
@@ -132,5 +132,5 @@ void
 output( int threadnum, double *p, size_t size, const char *label)
 {
   size_t i = size -1;
-  printf("%s -- thread %d, index %zu: %g; index %zu: %g\n", label, threadnum, 0, p[0], i, p[i]);
+  printf("%s -- thread %d, index %zu: %g; index %zu: %g\n", label, threadnum, 0UL, p[0], i, p[i]);
 }
