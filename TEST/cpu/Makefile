@@ -19,7 +19,7 @@ OPTS		= $(OFLAGS) $(ARCH)
 TARGETS= testcpu
 
 SRCS=  \
-	../testcpu.c \
+	../src/testcpu.c \
 	$(NULL)
 
 default all: $(TARGETS)
@@ -30,12 +30,22 @@ testcpu: ${SRCS}
 run: testcpu
 	time ./testcpu
 
-hpct: testcpu
-	time hpcrun -o meas.testcpu -t ./testcpu
+hpct: hpctclk hpctcyc
+
+hpctclk: testcpu
+	time hpcrun -o meas.clk -t ./testcpu
 	echo ""
-	time hpcstruct meas.testcpu
+	time hpcstruct meas.clk
 	echo ""
-	time hpcprof -o dbase.testcpu meas.testcpu
+	time hpcprof -o dbase.clk meas.clk
+	echo ""
+
+hpctcyc: testcpu
+	time hpcrun -o meas.cyc -e cycles -t ./testcpu
+	echo ""
+	time hpcstruct meas.cyc
+	echo ""
+	time hpcprof -o dbase.cyc meas.cyc
 	echo ""
 
 clobber: clean

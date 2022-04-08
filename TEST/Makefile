@@ -2,6 +2,11 @@ TARGET	= struct
 
 default all: $(TARGET)
 
+hpct:
+	(cd nvidia; make cache)
+	(cd nvidia/omp.gcc; make hpct)
+	(cd nvidia/omp.llvm; make hpct)
+
 struct: gcc.gputest
 	@echo "Starting \"hpcstruct gcc.gputest\""
 	/bin/time -p hpcstruct gcc.gputest
