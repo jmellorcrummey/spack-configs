@@ -35,9 +35,10 @@ Usage()
     echo " "
     echo "USAGE: ${scriptname} [-a] [-o] [-m] [-s] [-O] [-c] [-h] [-V]"
     echo "      default       Print extended machine name, including os"
-    echo "      -a            Print all versions of the strings"
+    echo "      -a            Print all of the strings"
     echo "      -o            Print operating system version <os>"
     echo "      -m            Print cpu type"
+    echo "      -G            Print gpu type"
     echo "      -s            Print string with all info type"
     echo "      -O            Print user-friendly operating system version <os>"
     echo "      -c            Print cpu count"
@@ -260,7 +261,7 @@ fdhome="${progdir}/.."
 osmode=0
 debug=0
 
-while getopts aoOcmstkghDV option
+while getopts aoOcmstkghDVG option
 do
     case ${option} in
 	a) osmode=-1;;
@@ -272,6 +273,7 @@ do
 	t) osmode=6;;
 	k) osmode=7;;
 	g) osmode=8;;
+	G) osmode=9;;
 	h) Usage
 	    exit 0;;
 	D) debug=1;;
@@ -759,6 +761,7 @@ else
 	echo "OSNAME: ${OSNAME}"
 	echo "NCPUs: ${NCPUS}"
 	echo "CPUTYPE: ${CPUTYPE}"
+	inxi -Gx
 	echo "IMPLEMENTATION: ${IMPLEMENTATION}"
 	echo "FLAVOR: ${FLAVOR}"
 	echo "VERSION: ${VERSION}"
@@ -797,6 +800,8 @@ else
 	echo "GPLUSPLUS_VERSION version: ${GPLUSPLUS_VERSION}"
 	echo "GNU_libc_VERSION: ${GLIBC_VERSION}"
 	echo "GNU_libc64_VERSION: ${GLIBC64_VERSION}"
+    elif [ ${osmode} -eq 9 ]; then
+	inxi -Gx
     else
 	echo "${MACHINE}"
     fi

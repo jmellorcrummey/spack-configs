@@ -1,17 +1,20 @@
 # This code is used to print arguments and environment, to help debug
 # application environment variable invocations
 
-CCTYPE = GNU
+CCTYPE = LLVM
 
 CC-GNU          = gcc
+CC-LLVM         = clang
 CC              = ${CC-${CCTYPE}}
 
 ARCH-GNU        = -m64
+ARCH-LLVM       = -m64
 ARCH            = ${ARCH-${CCTYPE}}
 
 LLDLIBS 	= $(LD_OPTS)
 
-OFLAGS-GNU 	= -g -v
+OFLAGS-GNU 	= -g
+OFLAGS-LLVM 	= -g
 OFLAGS          = ${OFLAGS-${CCTYPE}}
 
 OPTS		= $(OFLAGS) $(ARCH)
@@ -19,7 +22,7 @@ OPTS		= $(OFLAGS) $(ARCH)
 TARGETS= testcpu
 
 SRCS=  \
-	../src/testcpu.c \
+	../../src/testcpu.c \
 	$(NULL)
 
 default all: $(TARGETS)

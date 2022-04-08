@@ -2,6 +2,7 @@
 
 #include	<stdio.h>
 #include	<unistd.h>
+#include	<string.h>
 #if 0
 #include	<procfs.h>
 #endif
@@ -37,7 +38,11 @@ main(int argc, char **argv, char **envp)
 	p = envp;
 	for (i = 0; ; i ++) {
 	    if (*p == NULL) break;
-	    fprintf(stderr, "  envp[%d] = %s\n", i, *p);
+	    if (strlen (*p) < 100) {
+	        fprintf(stderr, "  envp[%d] = %s\n", i, *p);
+	    } else {
+	        fprintf(stderr, "  envp[%d] ==> too long\n", i);
+	    }
 	    p ++;
 	}
 

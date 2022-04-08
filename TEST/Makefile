@@ -2,10 +2,12 @@ TARGET	= struct
 
 default all: $(TARGET)
 
-hpct:
-	(cd nvidia; make cache)
+hpct: struct nocache
+	(cd cpu/cpu.gcc; make hpct)
 	(cd nvidia/omp.gcc; make hpct)
-	(cd nvidia/omp.llvm; make hpct)
+	##############################################################
+	# (cd nvidia/omp.llvm; make hpct)   ## can't find a good clang++
+	##############################################################
 
 struct: gcc.gputest
 	@echo "Starting \"hpcstruct gcc.gputest\""
@@ -25,14 +27,17 @@ nocache: gcc.gputest
 
 clean: 
 	-/bin/rm -f *.hpcstruct
+	(cd cpu/cpu.gcc; make clean)
+	(cd cpu/cpu.llvm; make clean)
 	(cd nvidia; make clean)
 	(cd nvidia/omp.gcc; make clean)
+	(cd nvidia/omp.llvm; make clean)
 	@echo ""
 	@echo ""
 
 clobber: clean
 	-/bin/rm -rf log*
-	-/bin/rm -rf MYCACHE
+	-/bin/rm -rf /home/msi3/NTEST/MYCACHE
 	@echo ""
 	@echo ""
 
