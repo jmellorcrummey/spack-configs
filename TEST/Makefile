@@ -36,6 +36,11 @@ clean:
 	@echo ""
 
 clobber: clean
+	(cd cpu/cpu.gcc; make clobber)
+	(cd cpu/cpu.llvm; make clobber)
+	(cd nvidia; make clobber)
+	(cd nvidia/omp.gcc; make clobber)
+	(cd nvidia/omp.llvm; make clobber)
 	-/bin/rm -rf log*
 	-/bin/rm -rf /home/msi3/NTEST/MYCACHE
 	@echo ""
