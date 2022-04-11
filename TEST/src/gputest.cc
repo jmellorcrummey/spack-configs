@@ -14,8 +14,8 @@ double **pptr;
 #endif
 
 /* Parameters governing the size of the test */
-#define	N 40000000	/* size of the data arrays used */
-#define	NITER 3		/* number of iterations performed by each thread */
+#define        N 40000000      /* size of the data arrays used */
+#define        NITER 3         /* number of iterations performed by each thread */
 
 void output(int threadnum, double *p, size_t size, const char *label);
 void init(double *p, size_t size);
