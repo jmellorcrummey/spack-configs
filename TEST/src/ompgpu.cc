@@ -19,7 +19,7 @@ twork( int iter, int threadnum)
     iter, threadnum, l1, threadnum, r1, threadnum, p1 );
 #endif
 
-  #pragma omp target map(to:l1[0:nn], r1[0:nn]) map(tofrom: p1[0:nn])
+  #pragma omp target map(to:l1[0:nn-1], r1[0:nn-1]) map(tofrom: p1[0:nn-1])
   #pragma omp teams num_teams(4) thread_limit(64)
   {
     #pragma omp distribute parallel for
