@@ -26,14 +26,14 @@ run: $(EXECUTABLE)
 hpctrun:  $(EXECUTABLE)
 	# echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t $(EXECUTABLE) $(ARGS)
+	time hpcrun -e CPUTIME -e gpu=openmp -o meas.c.g.t -t $(EXECUTABLE) $(ARGS)
 	echo ""
 	echo "============================================"
 
 hpct:  $(EXECUTABLE)
 	# echo "Starting \"hpct.c.g.t: -e CPUTIME-e gpu=amd -t\""
 	echo ""
-	time hpcrun -e CPUTIME -e gpu=amd -o meas.c.g.t -t $(EXECUTABLE) $(ARGS)
+	time hpcrun -e CPUTIME -e gpu=openmp -o meas.c.g.t -t $(EXECUTABLE) $(ARGS)
 	echo ""
 	time hpcstruct meas.c.g.t
 	echo ""

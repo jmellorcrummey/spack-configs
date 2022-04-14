@@ -11,20 +11,20 @@ CXX = amdclang++
 OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx906 
 
 llvm.gputest: ${SRCS}
-	$(CXX) -DIGNORE_BAD_INITIAL_DEVICE $(OMPFLAGS) -o llvm.gputest ${SRCS}
+	$(CXX) -DGPU_SMALL -DIGNORE_BAD_INITIAL_DEVICE $(OMPFLAGS) -o llvm.gputest ${SRCS}
 
 run: llvm.gputest
 	@@echo "Running llvm.gputest"
 	@echo ""
-	time ./llvm.gputest
+	export OMP_NUM_THREADS=1; time ./llvm.gputest
 
 hpct: hpct1 hpct2
 # no hpctpc on rocm
 
 hpct1: llvm.gputest
-	@echo "Starting \"hpct.1.c.g.t: -e CPUTIME-e gpu=amd -t\""
+	@echo "Starting \"hpct.1.c.g.t: -e CPUTIME-e gpu=openmp -t\""
 	@echo ""
-	export OMP_NUM_THREADS=1; time hpcrun -e CPUTIME -e gpu=amd -o meas.1.c.g.t -t ./llvm.gputest  > log.1.c.g.t 2>&1
+	export OMP_NUM_THREADS=1; time hpcrun -e CPUTIME -e gpu=openmp -o meas.1.c.g.t -t ./llvm.gputest  > log.1.c.g.t 2>&1
 	@echo ""
 	time hpcstruct meas.1.c.g.t
 	@echo ""
@@ -34,9 +34,9 @@ hpct1: llvm.gputest
 	@echo ""
 
 hpct2: llvm.gputest
-	@echo "Starting \"hpct.2.c.g.t: -e CPUTIME-e gpu=amd -t\""
+	@echo "Starting \"hpct.2.c.g.t: -e CPUTIME-e gpu=openmp -t\""
 	@echo ""
-	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=amd -o meas.2.c.g.t -t ./llvm.gputest  > log.2.c.g.t 2>&1
+	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=openmp -o meas.2.c.g.t -t ./llvm.gputest  > log.2.c.g.t 2>&1
 	@echo ""
 	time hpcstruct meas.2.c.g.t
 	@echo ""
@@ -46,9 +46,9 @@ hpct2: llvm.gputest
 	@echo ""
 
 hpctpc: llvm.gputest
-	@echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=amd,pc -t\""
+	@echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=openmp,pc -t\""
 	@echo ""
-	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=amd,pc -o meas.c.gp.t -t ./llvm.gputest  > log.2.c.gp.t 2>&1
+	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=openmp,pc -o meas.c.gp.t -t ./llvm.gputest  > log.2.c.gp.t 2>&1
 	@echo ""
 	time hpcstruct meas.c.gp.t
 	@echo ""
