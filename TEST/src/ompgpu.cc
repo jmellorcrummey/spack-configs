@@ -1,3 +1,4 @@
+#include <string.h>
 #include "gputest.h"
 
 int checkxfers();
@@ -8,6 +9,10 @@ twork( int iter, int threadnum)
   double *l1 = lptr[threadnum];
   double *r1 = rptr[threadnum];
   double *p1 = pptr[threadnum];
+
+  memset(l1, 0, nn * sizeof(double));
+  memset(r1, 0, nn * sizeof(double));
+  memset(p1, 0, nn * sizeof(double));
 
 #if 0
   printf( "Iteration %3d,   l1[%d] = 0x%016llx;   r1[%d] = 0x%016llx;   p1[%d] = 0x%016llx\n",

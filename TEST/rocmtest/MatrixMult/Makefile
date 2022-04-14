@@ -5,6 +5,8 @@ endif
 
 HIPCC=$(HIP_PATH)/bin/hipcc
 
+ARGS = -q -x 4096
+
 SOURCES = MatrixMultiplication.cpp
 
 MAKE_INCLUDE = ..

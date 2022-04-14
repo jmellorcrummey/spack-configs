@@ -2,13 +2,16 @@
 # module use /home/johnmc/modules
 # module load aomp
 
-SRCS	= ../../src/gputest.cc ../../src/ompgpu.cc
+SRCS	= ../../../src/gputest.cc ../../../src/ompgpu.cc
 TARGET	= llvm.gputest
+
+MARCH = -march=gfx90a
+# MARCH = -march=gfx906 
 
 default all: $(TARGET)
 
 CXX = amdclang++
-OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx906 
+OMPFLAGS = -g -lm -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa $(MARCH)
 
 llvm.gputest: ${SRCS}
 	$(CXX) -DGPU_SMALL -DIGNORE_BAD_INITIAL_DEVICE $(OMPFLAGS) -o llvm.gputest ${SRCS}
