@@ -10,12 +10,8 @@ twork( int iter, int threadnum)
   double *r1 = rptr[threadnum];
   double *p1 = pptr[threadnum];
 
-  memset(l1, 0, nn * sizeof(double));
-  memset(r1, 0, nn * sizeof(double));
-  memset(p1, 0, nn * sizeof(double));
-
 #if 0
-  printf( "Iteration %3d,   l1[%d] = 0x%016llx;   r1[%d] = 0x%016llx;   p1[%d] = 0x%016llx\n",
+  fprintf(stderr, "Iteration %3d,   l1[%d] = 0x%016llx;   r1[%d] = 0x%016llx;   p1[%d] = 0x%016llx\n",
     iter, threadnum, l1, threadnum, r1, threadnum, p1 );
 #endif
 
@@ -49,18 +45,18 @@ checkgpu()
   /* If still running on CPU, GPU must not be available */
   if (runningOnGPU != 0) {
 #ifndef IGNORE_BAD_INITIAL_DEVICE
-    printf(" ERROR unable to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device() = %d; exiting\n", idev, runningOnGPU);
+    fprintf(stderr, " ERROR unable to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device() = %d; exiting\n", idev, runningOnGPU);
     exit(1);
 #else
-    printf(" ERROR IGNORED idev = %d, runningOnGpU -- omp_is_initial_device() = %d; trying anyway\n", idev, runningOnGPU);
+    fprintf(stderr, " ERROR IGNORED idev = %d, runningOnGpU -- omp_is_initial_device() = %d; trying anyway\n", idev, runningOnGPU);
 #endif
   } else {
-    printf("    gputest is able to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device()\n", idev );
+    fprintf(stderr, "    gputest is able to use the GPU! idev = %d, runningOnGpU -- omp_is_initial_device()\n", idev );
   }
 
   int ret = checkxfers();
   if (ret != 0 ) {
-    printf("Return from checkxfers = %d\n", ret);
+    fprintf(stderr, "Return from checkxfers = %d\n", ret);
   }
 }
 
@@ -71,20 +67,20 @@ checkxfers()
   int from = 13;
   int tofrom = 17;
 
-  printf("ON HOST before: to = %d, from = %d, tofrom = %d\n", to, from, tofrom);
+  fprintf(stderr, "ON HOST before: to = %d, from = %d, tofrom = %d\n", to, from, tofrom);
 
   #pragma omp target map (to:to) map(from:from) map(tofrom:tofrom)
   {
-    printf("ON GPU: enter to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
+    fprintf(stderr, "ON GPU: enter to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
 
     to = 4;
     from = 5;
     tofrom = 6; 
 
-    printf("ON GPU: exit to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
+    fprintf(stderr, "ON GPU: exit to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
   }
 
-  printf("ON HOST after: to = %d, from = %d, tofrom = %d\n", to, from, tofrom);
+  fprintf(stderr, "ON HOST after: to = %d, from = %d, tofrom = %d\n", to, from, tofrom);
 
   return 0;
 }

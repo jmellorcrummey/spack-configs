@@ -27,14 +27,14 @@ int omp_num_t;
 int
 main(int argc, char *argv[], char **envp)
 {
-  // printf("sizeof(double) = %d; sizeof(double *) = %d\n", sizeof(double), sizeof(double*) );
+  //fprintf(stderr, "sizeof(double) = %d; sizeof(double *) = %d\n", sizeof(double), sizeof(double*) );
 
   /* check number and accessibility of GPU devices */
   checkgpu();
 
   /* determine thread count */
   omp_num_t = omp_get_max_threads();
-  printf ("This run of gputest will use %d thread%s with data array size = %ld\n",
+  fprintf(stderr, "This run of gputest will use %d thread%s with data array size = %ld\n",
     omp_num_t, (omp_num_t==1 ? "" : "s"), nn );
 
 #ifdef USE_MPI
@@ -42,7 +42,7 @@ main(int argc, char *argv[], char **envp)
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  printf("MPI task %d/%d\n", rank, numtasks);
+  fprintf(stderr, "MPI task %d/%d\n", rank, numtasks);
 #endif
 
   /* allocate pointer arrays for the threads */
@@ -55,14 +55,14 @@ main(int argc, char *argv[], char **envp)
     /* allocate and initialize the l and r arrays */
     lptr[k] = (double *) malloc (nn * sizeof(double) );
     if(lptr[k] == NULL) {
-      printf("Allocation for lptr[%d] failed; aborting\n", k);
+      fprintf(stderr, "Allocation for lptr[%d] failed; aborting\n", k);
       abort();
     }
     init(lptr[k], nn);
 
     rptr[k] = (double *) malloc (nn * sizeof(double) );
     if(rptr[k] == NULL) {
-      printf("Allocation for rptr[%d] failed; aborting\n", k);
+      fprintf(stderr, "Allocation for rptr[%d] failed; aborting\n", k);
       abort();
     }
     init(rptr[k], nn);
@@ -70,17 +70,19 @@ main(int argc, char *argv[], char **envp)
     /* allocate and clear the result array */
     pptr[k] = (double *) calloc(nn, sizeof(double) );
     if(pptr[k] == NULL) {
-      printf("Allocation for pptr[%d] failed; aborting\n", k);
+      fprintf(stderr, "Allocation for pptr[%d] failed; aborting\n", k);
       abort();
     }
   }
 
   // DEBUG -- print addresses and result contents
-  printf("Initial allocation of arrays\n");
+#if 0
+  fprintf(stderr, "Initial allocation of arrays\n");
   for ( int k = 0; k < omp_num_t; k++) {
-    printf( "Thread %d,      lptr[%d] = %p; rptr[%d] = %p, pptr[%d] = %p\n",
+    fprintf(stderr,  "Thread %d,      lptr[%d] = %p; rptr[%d] = %p, pptr[%d] = %p\n",
       k, k, lptr[k], k, rptr[k], k, pptr[k] );
   }
+#endif
 
   for ( int k = 0; k < omp_num_t; k++) {
     /* write out the last element in each thread's result array */
@@ -88,7 +90,7 @@ main(int argc, char *argv[], char **envp)
     // output(k, rptr[k], nn, "initial r array");
     output(k, pptr[k], nn, "initial p array");
   }
-  printf("\n");
+  fprintf(stderr, "\n");
 
   /* perform the number of iterations requested */
   for (int k = 0; k < NITER; k++) {
@@ -98,13 +100,15 @@ main(int argc, char *argv[], char **envp)
       twork(k, omp_get_thread_num() );
     }
 
+#if 0
     for ( int k = 0; k < omp_num_t; k++) {
       /* write out the last element in each thread's result array */
       // output(k, lptr[k], nn, "current l array");
       // output(k, rptr[k], nn, "current r array");
       output(k, pptr[k], nn, "current p array");
     }
-    printf(" end iteration %d\n\n", k);
+#endif
+    fprintf(stderr, " end iteration %d\n", k);
   }
 
   /* write out the last element in each thread's result array */
@@ -132,5 +136,5 @@ void
 output( int threadnum, double *p, size_t size, const char *label)
 {
   size_t i = size -1;
-  printf("%s -- thread %d, index %zu: %g; index %zu: %g\n", label, threadnum, 0UL, p[0], i, p[i]);
+  fprintf(stderr, "%s -- thread %d, index %zu: %g; index %zu: %g\n", label, threadnum, 0UL, p[0], i, p[i]);
 }

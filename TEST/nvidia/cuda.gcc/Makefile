@@ -4,13 +4,13 @@ TARGET	= cuda.gputest
 default all: $(TARGET)
 
 # This version is built with GCC; ../omp.llvm contains the version built with LLVM
-CUDA = /usr/local/cuda-11.2/
+CUDA = /usr/local/cuda-11.6/
 CXX = g++
 CUDACXX = $(CUDA)/bin/nvcc
 CUDACXXFLAGS = -g -O2 -DHAVE_CUDA -std=c++11 -I${CUDA}/include/ $(OPTFLAGS) -Xptxas -v -gencode=arch=compute_60,code=\"sm_60,compute_60\"
+CUDACXXFLAGS = -g -lineinfo -opt-info inline -O2 -std=c++11 -I${CUDA}/include/ -Xptxas -v -gencode=arch=compute_60,code=\"sm_60,compute_60\"
 LDFLAGS = -lm -L${CUDA}/lib64/ -lcuda -lcudart
 OMPFLAGS = -g -O2 -fopenmp -lm
-OMPFLAGS = -g -v -O2 -fopenmp -foffload=nvptx-none="-O2 -lm -misa=sm_35"
 
 gputest.o: ../../src/gputest.cc
 	$(CXX) $(OMPFLAGS) -c -o gputest.o  ../../src/gputest.cc
@@ -24,10 +24,6 @@ cuda.gputest: gputest.o cudagpu.o
 struct: cuda.gputest
 	@echo "Starting \"hpcstruct cuda.gputest\""
 	/bin/time -p hpcstruct cuda.gputest
-	@echo ""
-	@echo ""
-	@echo "Starting \"hpcstruct 205259747422e8dcb2b6f2b6794e44e3.gpubin\" "
-	/bin/time -p hpcstruct --gpucfg no 205259747422e8dcb2b6f2b6794e44e3.gpubin
 	@echo ""
 	@echo ""
 
