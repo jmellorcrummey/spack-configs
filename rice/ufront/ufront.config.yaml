@@ -14,10 +14,11 @@
 #   ~/.spack/config.yaml
 # -------------------------------------------------------------------------
 config:
+  concretizer: clingo
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
   # install_tree: $spack/opt/spack
-  install_tree: /home/msi3/my.install/2022-01
+  install_tree: /home/msi3/my.install/2022-04
 
 
   # Locations where templates should be found
@@ -31,7 +32,7 @@ config:
 
   # Locations where different types of modules should be installed.
   module_roots:
-    tcl:    /home/msi3/my.install/2022-01/MODULES/modules
+    tcl:    /home/msi3/my.install/2022-04/MODULES/modules
 
 
   # Temporary locations Spack can try to use for builds.

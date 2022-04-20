@@ -19,7 +19,7 @@
 #    https://spack.readthedocs.io/en/latest/configuration.html
 #    https://spack.readthedocs.io/en/latest/build_settings.html
 #
-#  Last revised: January 17, 2022.
+#  Last revised: April 14, 2022.
 #
 packages:
 
@@ -49,17 +49,15 @@ packages:
   # normally be built from source, even if there is a system install.
   # For most packages, the most recent version will work.
   #
-  # Note: the following packages have variants that may need changing
-  # for your local system. 
+  # Note: the following packages have vewrsions or variants that may
+  # need changing for your local system. 
   #
-  #   1. binutils -- avoid 2.35, it has a bug that spews errors from
-  #   hpcprof.  Use 2.34 until 2.36 is available.
+  #   1. dyninst -- the latest hpctoolkit release should work with the
+  #   latest dyninst release.  But if you're building hpctoolkit at
+  #   master or develop, then you may need dyninst master.
   #
-  #   2. boost -- avoid 1.68.0, it breaks the build in hpctoolkit.
-  #   1.66.0 is good for older dyninst revs, or 1.72.0 for recent dyninst.
-  #
-  #   3. intel-tbb -- add '~tm' for AMD, Xeon Phi (KNL, etc), and very
-  #   old Intel systems that don't support transactional memory. 
+  #   2. intel-tbb -- add '~tm' for AMD, Xeon Phi (KNL, etc), and very
+  #   old Intel systems that don't support transactional memory.
   #
   # Blue Gene is no longer supported.
   #
@@ -79,7 +77,7 @@ packages:
   # +cuda, +rocm for GPU support.
   #
   hpctoolkit:
-    version:  [2022.01.15, master]
+    version:  [2022.04.00]
     variants: +mpi +papi +viewer +cuda +rocm
 
   # binutils -- used by hpcprof and struct simple (for functions and
@@ -93,22 +91,26 @@ packages:
   # ~nls is used to avoid building gettext.
   #
   binutils:
-    version:  [2.36.1]
+    version:  [2.38]
     variants: +libiberty ~nls
 
 
   # boost -- used by dyninst and now in hpcstruct.
   #
-  # Dyninst requires >= 1.61.
-  #   1.66.0 is good for older versions of dyninst.
-  #   1.72.0 is good for recent dyninst.
+  # Dyninst requires >= 1.67.
+  #   1.72.0 is good for older versions of dyninst.
+  #   1.77.0 is good for recent dyninst.
   #   avoid 1.68.0, it breaks the build for hpctoolkit.
   #
   # +atomic, +chrono, etc are for dyninst.
   # +graph, +regex, etc are for toolkit proper.
-  # ~mpi, ~python, etc are to reduce prereqs.
   # ~debug is to build release (optimized) variant.
   # visibility=global is required for recent hpctoolkit.
+  #
+  # Note: boost now turns off all libraries by default and expects
+  # each package to add what it needs.  So, the best practice is to
+  # add everything that we use and not disable anything so as not to
+  # interfere with another package's needs.
   #
   boost:
     version:  [1.77.0]
@@ -140,7 +142,7 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [12.0.1, master]
+    version:  [12.1.0, master]
     variants: +openmp build_type=RelWithDebInfo
 
 
@@ -157,15 +159,6 @@ packages:
   elfutils:
     version:  [0.186]
     variants: +bzip2 +xz ~nls
-
-
-  # gotcha -- used in hpcrun to assist libunwind
-  #
-  # Requires version 1.0.3 or later.
-  #
-  gotcha:
-    version:  [1.0.3]
-    variants: build_type=RelWithDebInfo
 
 
   # intel-tbb -- used by dyninst as part of parallel parsing.
@@ -211,7 +204,7 @@ packages:
   # +pic is needed to link with dyninst shared library.
   #
   libiberty:
-    version:  [2.33.1]
+    version:  [2.37]
     variants: +pic
 
 
@@ -250,11 +243,11 @@ packages:
   # +pic is required for linking with hpcrun.
   #
   libunwind:
-    version:  [1.5.0]
+    version:  [1.6.2]
     variants: +xz +pic
 
 
-  # mbedtls -- used in hpcrun for hash functions.
+  # mbedtls -- no longer used, this is for old hpctoolkit only
   #
   # Use a recent version >= 2.16.1.
   #
@@ -308,13 +301,13 @@ packages:
   # zlib -- used by binutils, elfutils and libdwarf to read compressed
   # sections.
   #
-  # Zlib development is stagnant and 1.2.9 and 1.2.10 are buggy, so
-  # 1.2.11 is the only recent version.
+  # Zlib development is stagnant and everything before 1.2.12 is
+  # deprecated due to security bugs, so use 1.2.12
   #
   # +optimize is to add -O2.
   #
   zlib:
-    version:  [1.2.11]
+    version:  [1.2.12]
     variants: +optimize +shared
 
 
@@ -344,34 +337,39 @@ packages:
 
   # rocm -- amd gpus, now in master
   #
-  # Requires: 3.10.0 or later, 4.x preferred.
+  # Requires: 4.5.x or later, 5.x is preferred
   #
   # If /opt/rocm is available, then the easiest solution is to use
-  # that.  In that case, specify hip, rocm-dbgapi and roctracer-dev as
-  # externals in packages.yaml.  For example, with /opt/rocm-4.0.0,
-  # use:
+  # that.  In that case, specify four prereqs (hip, hsa-rocr-dev,
+  # roctracer-dev, rocprofiler-dev) as externals in packages.yaml.
+  # For example, with /opt/rocm-5.0.0, use:
   #
   hip:
     externals:
-    - spec: hip@4.5.2
-      prefix: /opt/rocm-4.5.2/hip
+    - spec: hip@5.1.0
+      prefix: /opt/rocm-5.1.0
    
-  rocm-dbgapi:
+  hsa-rocr-dev:
     externals:
-    - spec: rocm-dbgapi@4.5.2
-      prefix: /opt/rocm-4.5.2
- 
+    - spec: hsa-rocr-dev@5.1.0
+      prefix: /opt/rocm-5.1.0
+
   roctracer-dev:
     externals:
-    - spec: roctracer-dev@4.5.2
-      prefix: /opt/rocm-4.5.2
+    - spec: roctracer-dev@5.1.0
+      prefix: /opt/rocm-5.1.0
 
-  # Note: for /opt/rocm, the hip prefix is the hip subdirectory,
-  # for the other two, it is the /opt/rocm directory.
+  rocprofiler-dev
+    externals:
+    - spec: rocprofiler-dev@5.1.0
+      prefix: /opt/rocm-5.1.0
+
+    # If ROCM is not already installed, then you can build it as part of 
+  # hpctoolkit.  In either case, build hpctoolkit with:
   #
-  # If ROCM is not already installed, then you can build it as part of
-  # hpctoolkit with the spec: hpctoolkit +rocm
-
+  #   spack install hpctoolkit +rocm
+  #
+  # Note: this is all very fluid and subject to change.
 
   #------------------------------------------------------------
 
@@ -386,11 +384,11 @@ packages:
   # C++ libraries in sync).
   #
   openmpi:
-    version:  [3.1.6]
+    version:  [4.1.2]
   #   externals:
-  #   - spec: openmpi@3.1.6
+  #   - spec: openmpi@4.1.2
   #     modules:
-  #     - OpenMPI/3.1.6
+  #     - OpenMPI/4.1.2
   #   buildable: False
 
 
@@ -401,7 +399,7 @@ packages:
   # Note: Spack can now search for these packages itself.
   # For example:
   #
-  #   spack external cmake
+  #   spack external find cmake
   #
   # This puts an 'externals:' entry for cmake in ~/.spack/packages.yaml
   # if spack finds cmake on your PATH.  This works for cmake, perl,
@@ -410,7 +408,7 @@ packages:
 
   #------------------------------------------------------------
 
-  # We require cmake >= 3.4, perl >= 5.x and python >= 3.4.
+  # We require cmake >= 3.4, perl >= 5.x and python >= 3.6.
   # There are three ways to satisfy these requirements: a system
   # installed version (eg, /usr), a module or build from scratch.
   #
@@ -480,8 +478,7 @@ packages:
 
   #------------------------------------------------------------
 
-  # python -- we require python >= 3.4, but some rocm packages require
-  # python 2.7 (and need to be built separately).
+  # python -- we require python >= 3.6
 
   # Example for system python.  If you have both python2 and python3,
   # then specify them both as 'python' (a special rule for python).
@@ -516,4 +513,4 @@ packages:
   # This example is only for building a more recent compiler.
 
   # gcc:
-  #   version:  [7.4.0, 8.4.0]
+  #   version:  [8.5.0, 9.3.0, 10.3.0]

@@ -71,13 +71,14 @@ checkxfers()
 
   #pragma omp target map (to:to) map(from:from) map(tofrom:tofrom)
   {
-    fprintf(stderr, "ON GPU: enter to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
+    // Note that if this and the one below are changed to fprintf(stderr, the compile fails
+    printf("ON GPU: enter to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
 
     to = 4;
     from = 5;
     tofrom = 6; 
 
-    fprintf(stderr, "ON GPU: exit to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
+    printf("ON GPU: exit to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
   }
 
   fprintf(stderr, "ON HOST after: to = %d, from = %d, tofrom = %d\n", to, from, tofrom);
