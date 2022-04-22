@@ -1,3 +1,4 @@
+###  -- needs work
 SRCS	= ../../src/gputest.cc ../../src/ompgpu.cc
 TARGET	= llvm.gputest
 

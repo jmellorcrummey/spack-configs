@@ -1,12 +1,10 @@
-#  To get a working aomp compiler:
-# module use /home/johnmc/modules
-# module load aomp
+#  A working aomp compiler is in the rocm module
 
 SRCS	= ../../../src/gputest.cc ../../../src/ompgpu.cc
 TARGET	= llvm.gputest
 
 MARCH = -march=gfx90a
-# MARCH = -march=gfx906 
+MARCH = -march=gfx906 
 
 default all: $(TARGET)
 
@@ -19,43 +17,49 @@ llvm.gputest: ${SRCS}
 run: llvm.gputest
 	@@echo "Running llvm.gputest"
 	@echo ""
-	export OMP_NUM_THREADS=1; time ./llvm.gputest
+	export OMP_NUM_THREADS=1; /bin/time -p ./llvm.gputest
 
-hpct: hpct1 hpct2
+hpct: hpct1 hpct2 hpct3
 # no hpctpc on rocm
 
 hpct1: llvm.gputest
-	@echo "Starting \"hpct.1.c.g.t: -e CPUTIME-e gpu=openmp -t\""
+	@echo "Starting \"hpct.1.c.g.t: -e CPUTIME-e gpu=openmp -t\"" > log.1.c.g.t
+	pwd >> log.1.c.g.t
+	@echo "" >> log.1.c.g.t
 	@echo ""
-	export OMP_NUM_THREADS=1; time hpcrun -e CPUTIME -e gpu=openmp -o meas.1.c.g.t -t ./llvm.gputest  > log.1.c.g.t 2>&1
+	export OMP_NUM_THREADS=1; /bin/time -p hpcrun -e CPUTIME -e gpu=openmp -o meas.1.c.g.t -t ./llvm.gputest  >> log.1.c.g.t 2>&1
 	@echo ""
-	time hpcstruct meas.1.c.g.t
+	/bin/time -p hpcstruct meas.1.c.g.t
 	@echo ""
-	time hpcprof -o dbase.1.c.g.t meas.1.c.g.t
+	/bin/time -p hpcprof -o dbase.1.c.g.t meas.1.c.g.t
 	@echo ""
 	@echo "============================================"
 	@echo ""
 
 hpct2: llvm.gputest
-	@echo "Starting \"hpct.2.c.g.t: -e CPUTIME-e gpu=openmp -t\""
+	@echo "Starting \"hpct.2.c.g.t: -e CPUTIME-e gpu=openmp -t\"" > log.2.c.g.t
+	pwd >> log.2.c.g.t
+	@echo "" >> log.2.c.g.t
 	@echo ""
-	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=openmp -o meas.2.c.g.t -t ./llvm.gputest  > log.2.c.g.t 2>&1
+	export OMP_NUM_THREADS=2; /bin/time -p hpcrun -e CPUTIME -e gpu=openmp -o meas.2.c.g.t -t ./llvm.gputest  >> log.2.c.g.t 2>&1
 	@echo ""
-	time hpcstruct meas.2.c.g.t
+	/bin/time -p hpcstruct meas.2.c.g.t
 	@echo ""
-	time hpcprof -o dbase.2.c.g.t meas.2.c.g.t
+	/bin/time -p hpcprof -o dbase.2.c.g.t meas.2.c.g.t
 	@echo ""
 	@echo "============================================"
 	@echo ""
 
-hpctpc: llvm.gputest
-	@echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=openmp,pc -t\""
+hpct3: llvm.gputest
+	@echo "Starting \"hpct.3.c.g.t: -e CPUTIME-e gpu=openmp -t\"" > log.3.c.g.t
+	pwd >> log.3.c.g.t
+	@echo "" >> log.3.c.g.t
 	@echo ""
-	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=openmp,pc -o meas.c.gp.t -t ./llvm.gputest  > log.2.c.gp.t 2>&1
+	export OMP_NUM_THREADS=3; /bin/time -p hpcrun -e CPUTIME -e gpu=openmp -o meas.3.c.g.t -t ./llvm.gputest  >> log.3.c.g.t 2>&1
 	@echo ""
-	time hpcstruct meas.c.gp.t
+	/bin/time -p hpcstruct meas.3.c.g.t
 	@echo ""
-	time hpcprof -o dbase.c.gp.t meas.c.gp.t
+	/bin/time -p hpcprof -o dbase.3.c.g.t meas.3.c.g.t
 	@echo ""
 	@echo "============================================"
 	@echo ""

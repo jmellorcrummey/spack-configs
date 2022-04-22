@@ -23,11 +23,12 @@ run: gcc.gputest
 	@echo ""
 	@echo ""
 
-hpct: hpct1 hpct2 hpct3 hpctpc1 hpctpc2
-	 grep avg log*
+hpct: hpct1 hpct2 hpct3
 
 hpct1: gcc.gputest
 	@echo "Starting \"hpct.1.c.g.t: -e CPUTIME -t\"" > log.1.c.g.t
+	pwd >> log.1.c.g.t
+	@echo "" >> log.1.c.g.t
 	@echo ""
 	export OMP_NUM_THREADS=1; /bin/time -p hpcrun -e CPUTIME -o meas.1.c.g.t -t ./gcc.gputest >> log.1.c.g.t 2>&1
 	@echo ""
@@ -39,6 +40,8 @@ hpct1: gcc.gputest
 
 hpct2: gcc.gputest
 	@echo "Starting \"hpct.2.c.g.t: -e CPUTIME -t\"" > log.2.c.g.t
+	pwd >> log.2.c.g.t
+	@echo "" >> log.2.c.g.t
 	@echo ""
 	export OMP_NUM_THREADS=2; /bin/time -p hpcrun -e CPUTIME -o meas.2.c.g.t -t ./gcc.gputest >>  log.2.c.g.t 2>&1
 	@echo ""
@@ -50,6 +53,8 @@ hpct2: gcc.gputest
 
 hpct3: gcc.gputest
 	@echo "Starting \"hpct.3.c.g.t: -e CPUTIME -t\"" > log.3.c.g.t
+	pwd >> log.3.c.g.t
+	@echo "" >> log.3.c.g.t
 	@echo ""
 	export OMP_NUM_THREADS=3; /bin/time -p hpcrun -e CPUTIME -o meas.3.c.g.t -t ./gcc.gputest >> log.3.c.g.t 2>&1
 	@echo ""
@@ -59,27 +64,10 @@ hpct3: gcc.gputest
 	@echo ""
 	@echo ""
 
-hpctpc1: gcc.gputest
-	@echo "Starting \"hpct.1.c.gp.t: -e CPUTIME -t\"" > log.1.c.gp.t
-	@echo ""
-	export OMP_NUM_THREADS=1; /bin/time -p hpcrun -e CPUTIME -o meas.1.c.gp.t -t ./gcc.gputest >> log.1.c.gp.t 2>&1
-	@echo ""
-	/bin/time -p hpcstruct meas.1.c.gp.t
-	@echo ""
-	/bin/time -p hpcprof -o dbase.1.c.gp.t meas.1.c.gp.t
-	@echo ""
-	@echo ""
+collect: gcc.gputest
+	export OMP_NUM_THREADS=1; collect -p hi gcc.gputest
+	er_print -func test.1.er
 
-hpctpc2: gcc.gputest
-	@echo "Starting \"hpct.2.c.gp.t: -e CPUTIME -t\"" > log.2.c.gp.t
-	@echo ""
-	export OMP_NUM_THREADS=2; /bin/time -p hpcrun -e CPUTIME -o meas.2.c.gp.t -t ./gcc.gputest >> log.2.c.gp.t 2>&1
-	@echo ""
-	/bin/time -p hpcstruct meas.2.c.gp.t
-	@echo ""
-	/bin/time -p hpcprof -o dbase.2.c.gp.t meas.2.c.gp.t
-	@echo ""
-	@echo ""
 
 clean:
 	-/bin/rm -rf meas.*
@@ -88,7 +76,7 @@ clean:
 	-/bin/rm -f *log.*
 	-/bin/rm -f TEST.log*
 	-/bin/rm -f *.hpcstruct
-	-/bin/rm -f test.*.er
+	-/bin/rm -rf test.*.er
 	@echo ""
 	@echo ""
 

@@ -63,25 +63,37 @@ checkgpu()
 int
 checkxfers()
 {
-  int to = 11;
-  int from = 13;
-  int tofrom = 17;
+  // define original host values
+  int origto = 11;
+  int origfrom = 13;
+  int origtofrom = 17;
 
-  fprintf(stderr, "ON HOST before: to = %d, from = %d, tofrom = %d\n", to, from, tofrom);
+  //define values the gpu will set
+  int gputo = 4;
+  int gpufrom = 5;
+  int gputofrom = 6; 
+
+  int to = origto;
+  int from = origfrom;
+  int tofrom = origtofrom;
+
+  fprintf(stderr, "ON HOST before: to = %02d, from = %02d, tofrom = %02d\n", to, from, tofrom);
 
   #pragma omp target map (to:to) map(from:from) map(tofrom:tofrom)
   {
     // Note that if this and the one below are changed to fprintf(stderr, the compile fails
-    printf("ON GPU: enter to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
+    //   with a link error.  For now, disable this check, and rely on the HOST checks below.
+    // printf("ON GPU: enter to = %02d, from = %02d, tofrom = %02d\n", to, from, tofrom); 
 
-    to = 4;
-    from = 5;
-    tofrom = 6; 
+    to = gputo;
+    from = gpufrom;
+    tofrom = gputofrom; 
 
-    printf("ON GPU: exit to = %d, from = %d, tofrom = %d\n", to, from, tofrom); 
+    // printf("ON GPU: exit to = %02d, from = %02d, tofrom = %02d\n", to, from, tofrom); 
   }
 
-  fprintf(stderr, "ON HOST after: to = %d, from = %d, tofrom = %d\n", to, from, tofrom);
+  fprintf(stderr, "ON HOST after: to = %02d, from = %02d, tofrom = %02d\n", to, from, tofrom);
+  fprintf(stderr, "EXPECTED     : to = %02d, from = %02d, tofrom = %02d\n", origto, gpufrom, gputofrom);
 
   return 0;
 }
