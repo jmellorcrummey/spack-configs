@@ -35,11 +35,12 @@ run: cuda.gputest
 	@echo ""
 
 hpct: hpct1 hpct2 hpctpc1 hpctpc2
+	 grep avg log*
 
 hpct1: cuda.gputest
-	@echo "Starting \"hpct.1.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+	@echo "Starting \"hpct.1.c.g.t: -e CPUTIME-e gpu=nvidia -t\"" > log.1.c.g.t
 	@echo ""
-	export OMP_NUM_THREADS=1; /bin/time -p hpcrun -e CPUTIME -e gpu=nvidia -o meas.1.c.g.t -t ./cuda.gputest | tee log.1.c.g.t 2>&1
+	export OMP_NUM_THREADS=1; /bin/time -p hpcrun -e CPUTIME -e gpu=nvidia -o meas.1.c.g.t -t ./cuda.gputest >> log.1.c.g.t 2>&1
 	@echo ""
 	/bin/time -p hpcstruct --gpucfg no meas.1.c.g.t
 	@echo ""
@@ -48,9 +49,9 @@ hpct1: cuda.gputest
 	@echo ""
 
 hpct2: cuda.gputest
-	@echo "Starting \"hpct.2.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+	@echo "Starting \"hpct.2.c.g.t: -e CPUTIME-e gpu=nvidia -t\"" > log.2.c.g.t
 	@echo ""
-	export OMP_NUM_THREADS=2; /bin/time hpcrun -e CPUTIME -e gpu=nvidia -o meas.2.c.g.t -t ./cuda.gputest | tee  log.2.c.g.t 2>&1
+	export OMP_NUM_THREADS=2; /bin/time hpcrun -e CPUTIME -e gpu=nvidia -o meas.2.c.g.t -t ./cuda.gputest >>  log.2.c.g.t 2>&1
 	@echo ""
 	/bin/time -p hpcstruct --gpucfg yes meas.2.c.g.t
 	@echo ""
@@ -59,9 +60,9 @@ hpct2: cuda.gputest
 	@echo ""
 
 hpct3: cuda.gputest
-	@echo "Starting \"hpct.3.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+	@echo "Starting \"hpct.3.c.g.t: -e CPUTIME-e gpu=nvidia -t\"" > log.3.c.g.t
 	@echo ""
-	export OMP_NUM_THREADS=1; /bin/time -p hpcrun -e CPUTIME -e gpu=nvidia -o meas.3.c.g.t -t ./cuda.gputest | tee log.3.c.g.t 2>&1
+	export OMP_NUM_THREADS=3; /bin/time -p hpcrun -e CPUTIME -e gpu=nvidia -o meas.3.c.g.t -t ./cuda.gputest >> log.3.c.g.t 2>&1
 	@echo ""
 	/bin/time -p hpcstruct --gpucfg no --nocache meas.3.c.g.t
 	@echo ""
@@ -70,9 +71,9 @@ hpct3: cuda.gputest
 	@echo ""
 
 hpctpc1: cuda.gputest
-	@echo "Starting \"hpct.1.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
+	@echo "Starting \"hpct.1.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\"" > log.1.c.gp.t
 	@echo ""
-	export OMP_NUM_THREADS=1; /bin/time -p hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.1.c.gp.t -t ./cuda.gputest | tee  log.1.c.gp.t 2>&1
+	export OMP_NUM_THREADS=1; /bin/time -p hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.1.c.gp.t -t ./cuda.gputest >>  log.1.c.gp.t 2>&1
 	@echo ""
 	/bin/time -p hpcstruct --gpucfg no meas.1.c.gp.t
 	@echo ""
@@ -81,9 +82,9 @@ hpctpc1: cuda.gputest
 	@echo ""
 
 hpctpc2: cuda.gputest
-	@echo "Starting \"hpct.2.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
+	@echo "Starting \"hpct.2.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\"" > log.2.c.gp.t
 	@echo ""
-	export OMP_NUM_THREADS=2; /bin/time -p hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.2.c.gp.t -t ./cuda.gputest | tee  log.2.c.gp.t 2>&1
+	export OMP_NUM_THREADS=2; /bin/time -p hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.2.c.gp.t -t ./cuda.gputest >>  log.2.c.gp.t 2>&1
 	@echo ""
 	/bin/time -p hpcstruct --gpucfg yes meas.2.c.gp.t
 	@echo ""

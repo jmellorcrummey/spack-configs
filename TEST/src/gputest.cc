@@ -127,7 +127,7 @@ void
 init(double *p, size_t size)
 {
   for (size_t i = 0; i < size; ++i) {
-    p[i] = i+1;
+    p[i] = (double) (i+1);
   }
 }
 

@@ -1,3 +1,6 @@
+# -------------------------------------------------------------------------
+# This is the spack packages file, CONFIGURED for msi3 on ufront.cs.rice.edu
+#
 #
 #  packages.yaml
 #
@@ -359,12 +362,12 @@ packages:
     - spec: roctracer-dev@5.1.0
       prefix: /opt/rocm-5.1.0
 
-  rocprofiler-dev
+  rocprofiler-dev:
     externals:
     - spec: rocprofiler-dev@5.1.0
       prefix: /opt/rocm-5.1.0
 
-    # If ROCM is not already installed, then you can build it as part of 
+  # If ROCM is not already installed, then you can build it as part of 
   # hpctoolkit.  In either case, build hpctoolkit with:
   #
   #   spack install hpctoolkit +rocm
@@ -385,11 +388,11 @@ packages:
   #
   openmpi:
     version:  [4.1.2]
-  #   externals:
-  #   - spec: openmpi@4.1.2
-  #     modules:
-  #     - OpenMPI/4.1.2
-  #   buildable: False
+   # externals:
+   # - spec: openmpi@4.1.2
+   #   modules:
+   #   - OpenMPI/4.1.2
+   # buildable: False
 
 
   #------------------------------------------------------------

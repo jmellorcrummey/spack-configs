@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------
-# This is the spack configuration file, CONFIGURED for msi3 on gpu.cs.rice.edu
+# This is the spack configuration file, CONFIGURED for msi3 on ufront.cs.rice.edu
 #
 # Settings here are versioned with Spack and are intended to provide
 # sensible defaults out of the box. Spack maintainers should edit this
@@ -14,11 +14,13 @@
 #   ~/.spack/config.yaml
 # -------------------------------------------------------------------------
 config:
+  # all installations should use clingo
   concretizer: clingo
+
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
   # install_tree: $spack/opt/spack
-  install_tree: /home/msi3/my.install/2022-04
+  install_tree: /home/msi3/my.install/2022-04A
 
 
   # Locations where templates should be found
@@ -28,11 +30,6 @@ config:
 
   # Default directory layout
   install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
-
-
-  # Locations where different types of modules should be installed.
-  module_roots:
-    tcl:    /home/msi3/my.install/2022-04/MODULES/modules
 
 
   # Temporary locations Spack can try to use for builds.
