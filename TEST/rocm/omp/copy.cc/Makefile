@@ -6,7 +6,7 @@ SRCS	= ../../../src/copy.cc
 TARGET	= copy
 
 MARCH = -march=gfx90a
-# MARCH = -march=gfx906 
+MARCH = -march=gfx906
 
 default all: $(TARGET)
 

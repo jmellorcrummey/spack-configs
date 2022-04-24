@@ -8,57 +8,50 @@ default all: $(TARGET)
 CXX = clang++
 OMPFLAGS = -g -O2 -lm -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
-llvm.gputest: ${SRCS}
+$(TARGET): ${SRCS}
 	$(CXX) $(OMPFLAGS) -o llvm.gputest ${SRCS}
 
-run: llvm.gputest
-	@@echo "Running llvm.gputest"
+run: $(TARGET)
+	@echo "Running \"$(TARGET)\""
 	@echo ""
-	time ./llvm.gputest
-
-hpct: hpct1 hpct2 hpctpc
-
-hpct1: llvm.gputest
-	@echo "Starting \"hpct.1.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
+	/bin/time -p ./$(TARGET)
 	@echo ""
-	export OMP_NUM_THREADS=1; time hpcrun -e CPUTIME -e gpu=nvidia -o meas.1.c.g.t -t ./llvm.gputest  > log.1.c.g.t 2>&1
-	@echo ""
-	time hpcstruct meas.1.c.g.t
-	@echo ""
-	time hpcprof -o dbase.1.c.g.t meas.1.c.g.t
-	@echo ""
-	@echo "============================================"
 	@echo ""
 
-hpct2: llvm.gputest
-	@echo "Starting \"hpct.2.c.g.t: -e CPUTIME-e gpu=nvidia -t\""
-	@echo ""
-	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=nvidia -o meas.2.c.g.t -t ./llvm.gputest  > log.2.c.g.t 2>&1
-	@echo ""
-	time hpcstruct meas.2.c.g.t
-	@echo ""
-	time hpcprof -o dbase.2.c.g.t meas.2.c.g.t
-	@echo ""
-	@echo "============================================"
-	@echo ""
+hpct: hpct1 hpct2 hpct3 hpctpc1 hpctpc2
 
-hpctpc: llvm.gputest
-	@echo "Starting \"hpct.c.gp.t: -e CPUTIME-e gpu=nvidia,pc -t\""
-	@echo ""
-	export OMP_NUM_THREADS=2; time hpcrun -e CPUTIME -e gpu=nvidia,pc -o meas.c.gp.t -t ./llvm.gputest  > log.2.c.gp.t 2>&1
-	@echo ""
-	time hpcstruct meas.c.gp.t
-	@echo ""
-	time hpcprof -o dbase.c.gp.t meas.c.gp.t
-	@echo ""
-	@echo "============================================"
-	@echo ""
+hpct1: $(TARGET)
+	export OMP_NUM_THREADS=1; runhpct $(TARGET) "-e CPUTIME -e gpu=nvidia -t" hpct1.cg
+
+
+hpct2: $(TARGET)
+	export OMP_NUM_THREADS=2; runhpct $(TARGET) "-e CPUTIME -e gpu=nvidia -t" hpct2.cg
+
+hpct3: $(TARGET)
+	export OMP_NUM_THREADS=3; runhpct $(TARGET) "-e CPUTIME -e gpu=nvidia -t" hpct3.cg
+
+hpctpc1: $(TARGET)
+	export OMP_NUM_THREADS=1; runhpct $(TARGET) "-e CPUTIME -e gpu=nvidia,pc -t" hpct1.cgp "--gpucfg yes"
+
+hpctpc2: $(TARGET)
+	export OMP_NUM_THREADS=2; runhpct $(TARGET) "-e CPUTIME -e gpu=nvidia,pc -t" hpct2.cgp "--gpucfg yes"
+
+collect: $(TARGET)
+	collect -p hi $(TARGET)
+	er_print -func test.1.er
 
 clean:
 	-/bin/rm -rf meas.*
 	-/bin/rm -rf dbase.*
-	-/bin/rm -f TESTS.log
 	-/bin/rm -f *core*
+	-/bin/rm -f *log.*
+	-/bin/rm -f TEST.log*
+	-/bin/rm -f *.hpcstruct
+	-/bin/rm -rf test.*.er
+	@echo ""
+	@echo ""
 
 clobber: clean
-	-/bin/rm -rf *.o llvm.gputest
+	-/bin/rm -rf *.o $(TARGET)
+	@echo ""
+	@echo ""

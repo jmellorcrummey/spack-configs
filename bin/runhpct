@@ -1,0 +1,103 @@
+#!/bin/sh
+
+#------------------------------------------------------------
+# runhpct:
+#
+#  a script that will invoke hpcrun to collect a measurements
+#  directory, process it with hpcstruct, and then process
+#  it with hpcprof to produce a database directory.
+#------------------------------------------------------------
+
+#------------------------------------------------------------
+# usage message
+#------------------------------------------------------------
+
+usage()
+{
+	    cat <<EOF 1>&2
+
+Usage:
+  runhpct [-n] <"target-app args"> <"hpcrun args"> <name> [<"hpcstruct args">]
+
+  [-n] means show what would be run, but don't run it
+
+  Arg 1: the target application name, and any arguments it needs
+    If the target-app needs arguments Arg 1 should be a quoted string
+
+  Arg2: The hpcrun arguments inside a quoted string
+
+  Arg3: A string to be used in constructing file and directory names:
+    meas.<name>/
+    dbase.<name>/
+    log.<name>
+
+  Arg4: If needed, extra hpcstruct arguments
+EOF
+    exit 1
+}
+
+
+#------------------------------------------------------------
+# the script
+#------------------------------------------------------------
+
+if [ "$1" == "-n" ]; then 
+        norun=yes
+        shift
+else
+        norun=no
+fi
+
+
+
+# $1 the target and its arguments
+if [ "$1" == "" ]; then
+	usage
+else
+	targargs=$1
+
+fi
+
+# $2 the hpcrun arguments to be used
+if [ "$2" == "" ]; then
+	usage
+else
+	runargs=$2
+fi
+
+# $3 the name to be used for directories and files
+if [ "$3" == "" ]; then
+	usage
+else
+	name=$3
+fi
+
+# $4 [optional] the hpcstruct arguments to be used
+
+#------------------------------------------------------------
+# Now the actual commands
+#------------------------------------------------------------
+
+pwd > log.$name
+
+if [ $norun == "yes" ]; then
+	echo "/bin/time -p hpcrun $targargs $runargs -o meas.$name >>log.$name 2>&1"
+fi
+echo "Launching /bin/time -p hpcrun -o meas.$name $runargs $targargs >>log.$name 2>&1"
+echo "Launching /bin/time -p hpcrun -o meas.$name $runargs $targargs >>log.$name 2>&1" >>log.$name
+/bin/time -p hpcrun -o meas.$name $runargs $targargs >>log.$name 2>&1
+
+echo "" >> log.$name
+echo "=================================================================" >> log.$name
+echo "" >> log.$name
+echo "Launching /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1"
+echo "Launching /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1" >> log.$name
+/bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1
+
+echo "" >> log.$name
+echo "=================================================================" >> log.$name
+echo "" >> log.$name
+echo "Launching /bin/time -p hpcprof -o dbase.$name meas.$name  >>log.$name 2>&1"
+echo "Launching /bin/time -p hpcprof -o dbase.$name meas.$name  >>log.$name 2>&1" >>log.$name
+/bin/time -p hpcprof -o dbase.$name meas.$name  >>log.$name 2>&1
+echo ""
