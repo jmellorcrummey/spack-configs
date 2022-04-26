@@ -35,11 +35,11 @@ subdirs=( \
 	nvidia/omp.gcc \
 	rocm/hip.llvm \
 	rocm/omp/copy.amdclang++ \
+	rocm/omp/copy.hipcc \
 	rocm/omp/gputest.amdclang++ \
 	)
 
 dirsfail=( \
-	rocm/omp/copy.cc \	## fails to compile and link
 	rocm/omp/gputest.amdclang++ \	## fails to run with memory error
 	)
 
