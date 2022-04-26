@@ -24,7 +24,6 @@ hpct: hpct1 hpct2 hpct3 hpctpc1 hpctpc2
 hpct1: $(TARGET)
 	export OMP_NUM_THREADS=1; runhpct $(TARGET) "-e CPUTIME -e gpu=nvidia -t" hpct1.cg
 
-
 hpct2: $(TARGET)
 	export OMP_NUM_THREADS=2; runhpct $(TARGET) "-e CPUTIME -e gpu=nvidia -t" hpct2.cg
 
@@ -45,8 +44,6 @@ clean:
 	-/bin/rm -rf dbase.*
 	-/bin/rm -f *core*
 	-/bin/rm -f *log.*
-	-/bin/rm -f TEST.log*
-	-/bin/rm -f *.hpcstruct
 	-/bin/rm -rf test.*.er
 	@echo ""
 	@echo ""

@@ -79,6 +79,9 @@ fi
 #------------------------------------------------------------
 
 pwd > log.$name
+date >> log.$name
+hpcrun -V >> log.$name 2>&1
+echo "" >> log.$name
 
 if [ $norun == "yes" ]; then
 	echo "/bin/time -p hpcrun $targargs $runargs -o meas.$name >>log.$name 2>&1"

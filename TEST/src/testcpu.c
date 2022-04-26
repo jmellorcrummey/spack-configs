@@ -20,10 +20,12 @@ main(int argc, char **argv, char **envp)
 	fprintf(stderr, "printargenv, argc = %d, pid = %d\n",
 		argc, getpid() );
 
+	// waste CPU time
 	for (i = 0; i<5 ; i ++) {
 	    cputime0(0);
 	}
 
+	// print the arguments
 	p = argv;
 	for (i = 0; i < argc; i ++) {
 	    fprintf(stderr, "  argv[%d] = %s\n", i, *p);
@@ -31,12 +33,14 @@ main(int argc, char **argv, char **envp)
 	}
 	fprintf(stderr, "\n");
 
+	// waste more CPU time
 	for (i = 0; i<5 ; i ++) {
 	    cputime2(0);
 	}
 
+	// print the first five environment variables
 	p = envp;
-	for (i = 0; ; i ++) {
+	for (i = 0; i<5 ; i ++) {
 	    if (*p == NULL) break;
 	    if (strlen (*p) < 100) {
 	        fprintf(stderr, "  envp[%d] = %s\n", i, *p);
@@ -53,6 +57,8 @@ main(int argc, char **argv, char **envp)
 	fprintf(stderr, "sizes: long long(%d), prusage_t(%d)\n",
 	    sizeof(long long), sizeof(prusage_t) );
 #endif
+
+	// waste yet more CPU time
 	for (i = 0; i<5 ; i ++) {
 	    cputime1(0);
 	}

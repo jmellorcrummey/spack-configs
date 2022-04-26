@@ -37,8 +37,6 @@ clean:
 	-/bin/rm -rf dbase.*
 	-/bin/rm -f *core*
 	-/bin/rm -f *log.*
-	-/bin/rm -f TEST.log*
-	-/bin/rm -f *.hpcstruct
 	-/bin/rm -rf test.*.er
 	@echo ""
 	@echo ""

@@ -88,7 +88,7 @@ main(int argc, char *argv[], char **envp)
     /* write out the last element in each thread's result array */
     // output(k, lptr[k], nn, "initial l array");
     // output(k, rptr[k], nn, "initial r array");
-    output(k, pptr[k], nn, "initial p array");
+    // output(k, pptr[k], nn, "initial p array");
   }
   fprintf(stderr, "\n");
 
@@ -136,5 +136,7 @@ void
 output( int threadnum, double *p, size_t size, const char *label)
 {
   size_t i = size -1;
-  fprintf(stderr, "%s -- thread %d, index %zu: %g; index %zu: %g\n", label, threadnum, 0UL, p[0], i, p[i]);
+  size_t j = i-1;
+  fprintf(stderr, "%s -- thread %d, index %zu: %g;  index %zu: %g; index %zu: %g\n",
+    label, threadnum, 0UL, p[0], j, p[j], i, p[i]);
 }

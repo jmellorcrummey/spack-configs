@@ -1,0 +1,100 @@
+#!/bin/sh
+
+#------------------------------------------------------------
+# minitest:
+#
+#  a script iterate over subdirectories, and run a make command on each
+#------------------------------------------------------------
+
+#------------------------------------------------------------
+# usage message
+#------------------------------------------------------------
+
+usage()
+{
+	    cat <<EOF 1>&2
+
+Usage:
+  minitest <makecmd>
+	Only "ll", "clean", "clobber", and "hpct" are supported
+	Be sure to correctly set TOPDIR to the top-level directory
+EOF
+    exit 1
+}
+
+
+#------------------------------------------------------------
+# the script
+#------------------------------------------------------------
+TOPDIR="/home/msi3/gits/spack-configs/TEST"
+
+subdirs=( \
+	cpu/cpu.gcc \
+	nvidia/cuda.gcc \
+	nvidia/nogpu.gcc \
+	nvidia/omp.gcc \
+	rocm/hip.llvm \
+	rocm/omp/copy.amdclang++ \
+	rocm/omp/gputest.amdclang++ \
+	)
+
+dirsfail=( \
+	rocm/omp/copy.cc \	## fails to compile and link
+	rocm/omp/gputest.amdclang++ \	## fails to run with memory error
+	)
+
+dirswronganswer=( \
+	rocm/hip.llvm \		## shows all results as zeros
+	)
+
+dirsnotworkingyet=( \
+	cpu/cpu.llvm \
+	nvidia/omp.llvm \
+	rocm/omp/copy.cc \
+	rocmtest \
+	)
+
+go="f"
+
+if [ "$1" == "ll" ]; then
+	go="ll"
+fi
+
+if [ "$1" == "clean" ]; then
+	go="t"
+fi
+
+if [ "$1" == "clobber" ]; then
+	go="t"
+fi
+
+if [ "$1" == "hpct" ]; then
+	go="t"
+fi
+
+if [ "$go" == "f" ]; then
+	usage
+fi
+
+echo ""
+echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+echo ""
+for sd in "${subdirs[@]}"
+do
+	echo ""
+	echo "================================================================="
+	echo ""
+	if [ "${go}" == "ll" ]; then
+		echo "cd'ing to ${sd} to run \"ls -alF\""
+		(cd ${TOPDIR}/${sd} ; ls -alF )
+	else
+		echo "cd'ing to ${sd} to run \"make $1\""
+		(cd ${TOPDIR}/${sd} ; make $1)
+	fi
+done
+echo ""
+echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+echo ""
+echo ""
+exit 0
+exit 0
