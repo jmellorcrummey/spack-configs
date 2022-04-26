@@ -24,7 +24,7 @@ $(TARGET): gputest.o hipgpu.o
 run: $(TARGET)
 	@echo "Running \"$(TARGET)\""
 	@echo ""
-	/bin/time -p ./$(TARGET)
+	export OMP_NUM_THREADS=1; /bin/time -p ./$(TARGET)
 	@echo ""
 	@echo ""
 

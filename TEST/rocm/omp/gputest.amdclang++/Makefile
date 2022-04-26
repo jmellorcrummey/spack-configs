@@ -23,13 +23,14 @@ hpct: hpct1 hpct2 hpct3
 # no hpctpc on rocm
 
 hpct1: ${TARGET}
-	export OMP_NUM_THREADS=1; runhpct $(TARGET) "-e CPUTIME -e gpu=openmp -t" hpct1.cg
+	export OMP_NUM_THREADS=1; runhpct $(TARGET) "-e CPUTIME -e gpu=amd -t" hpct1.cg
+	export OMP_NUM_THREADS=1; runhpct $(TARGET) "-e CPUTIME -e gpu=openmp -t" hpct1.cg.omp
 
 hpct2: ${TARGET}
-	export OMP_NUM_THREADS=2; runhpct $(TARGET) "-e CPUTIME -e gpu=openmp -t" hpct2.cg
+	export OMP_NUM_THREADS=2; runhpct $(TARGET) "-e CPUTIME -e gpu=amd -t" hpct2.cg
 
 hpct3: ${TARGET}
-	export OMP_NUM_THREADS=3; runhpct $(TARGET) "-e CPUTIME -e gpu=openmp -t" hpct3.cg
+	export OMP_NUM_THREADS=3; runhpct $(TARGET) "-e CPUTIME -e gpu=amd -t" hpct3.cg
 
 clean:
 	-/bin/rm -rf meas.*

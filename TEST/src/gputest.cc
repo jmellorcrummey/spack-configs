@@ -111,7 +111,7 @@ main(int argc, char *argv[], char **envp)
     fprintf(stderr, " end iteration %d\n", k);
   }
 
-  /* write out the last element in each thread's result array */
+  /* write out various elements in each thread's result array */
   for (int k = 0; k < omp_num_t; k++) {
     output(k, pptr[k], nn, "result p array");
   }
@@ -136,7 +136,20 @@ void
 output( int threadnum, double *p, size_t size, const char *label)
 {
   size_t i = size -1;
-  size_t j = i-1;
-  fprintf(stderr, "%s -- thread %d, index %zu: %g;  index %zu: %g; index %zu: %g\n",
-    label, threadnum, 0UL, p[0], j, p[j], i, p[i]);
+  size_t j = size/8;
+  size_t k = size/16;
+  fprintf(stderr, "%s -- t %d, p[%zu]=%g; p[%zu]=%g; p[%zu]=%g; p[%zu]=%g; p[%zu]=%g\n",
+    label, threadnum, 0UL, p[0], 1UL, p[1], k, p[k], j, p[j], i, p[i]);
+  int cnt = 0;
+  for( int m; m < size; m++) {
+    if (p[m] != p[0]) {
+      fprintf(stderr, "     ==> ERROR -- thread %d: p[%d]=%g != p[0]\n",
+        threadnum, m, p[m]);
+      cnt ++;
+      if (cnt >= 5) {
+        fprintf(stderr, "  and possibly many more ERRORs\n");
+        return;
+      }
+    }
+  }
 }

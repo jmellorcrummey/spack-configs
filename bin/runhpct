@@ -48,8 +48,6 @@ else
         norun=no
 fi
 
-
-
 # $1 the target and its arguments
 if [ "$1" == "" ]; then
 	usage
@@ -83,24 +81,29 @@ date >> log.$name
 hpcrun -V >> log.$name 2>&1
 echo "" >> log.$name
 
-if [ $norun == "yes" ]; then
+if [ "$norun" == "yes" ]; then
 	echo "/bin/time -p hpcrun $targargs $runargs -o meas.$name >>log.$name 2>&1"
+	exit 0
 fi
-echo "Launching /bin/time -p hpcrun -o meas.$name $runargs $targargs >>log.$name 2>&1"
-echo "Launching /bin/time -p hpcrun -o meas.$name $runargs $targargs >>log.$name 2>&1" >>log.$name
-/bin/time -p hpcrun -o meas.$name $runargs $targargs >>log.$name 2>&1
+echo "Launching /bin/time hpcrun -o meas.$name $runargs $targargs >>log.$name 2>&1"
+echo "Launching /bin/time hpcrun -o meas.$name $runargs $targargs >>log.$name 2>&1" >>log.$name
+/bin/time hpcrun -o meas.$name $runargs $targargs >>log.$name 2>&1
+
+grep avgtext log.$name
+grep ERROR log.$name
+grep "Memory Error" log.$name
 
 echo "" >> log.$name
 echo "=================================================================" >> log.$name
 echo "" >> log.$name
-echo "Launching /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1"
+# echo "Launching /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1"
 echo "Launching /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1" >> log.$name
 /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1
 
 echo "" >> log.$name
 echo "=================================================================" >> log.$name
 echo "" >> log.$name
-echo "Launching /bin/time -p hpcprof -o dbase.$name meas.$name  >>log.$name 2>&1"
+# echo "Launching /bin/time -p hpcprof -o dbase.$name meas.$name  >>log.$name 2>&1"
 echo "Launching /bin/time -p hpcprof -o dbase.$name meas.$name  >>log.$name 2>&1" >>log.$name
 /bin/time -p hpcprof -o dbase.$name meas.$name  >>log.$name 2>&1
 echo ""

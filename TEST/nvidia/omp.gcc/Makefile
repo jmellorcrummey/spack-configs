@@ -15,7 +15,7 @@ $(TARGET): ${SRCS}
 run: $(TARGET)
 	@echo "Running \"$(TARGET)\""
 	@echo ""
-	/bin/time -p ./$(TARGET)
+	export OMP_NUM_THREADS=2; /bin/time -p ./$(TARGET)
 	@echo ""
 	@echo ""
 

@@ -39,11 +39,11 @@ subdirs=( \
 	rocm/omp/gputest.amdclang++ \
 	)
 
-dirsfail=( \
+dirsfail=( \				## not skipped, however
 	rocm/omp/gputest.amdclang++ \	## fails to run with memory error
 	)
 
-dirswronganswer=( \
+dirswronganswer=( \			## run even with wrong answer
 	rocm/hip.llvm \		## shows all results as zeros
 	)
 
@@ -77,6 +77,9 @@ if [ "$go" == "f" ]; then
 fi
 
 echo ""
+date
+pwd
+hpcrun -V
 echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 echo ""
 for sd in "${subdirs[@]}"
