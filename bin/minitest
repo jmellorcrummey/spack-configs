@@ -30,6 +30,7 @@ TOPDIR="/home/msi3/gits/spack-configs/TEST"
 
 subdirs=( \
 	cpu/cpu.gcc \
+	nvidia/copy.gcc \
 	nvidia/cuda.gcc \
 	nvidia/nogpu.gcc \
 	nvidia/omp.gcc \
@@ -37,6 +38,7 @@ subdirs=( \
 	rocm/omp/copy.amdclang++ \
 	rocm/omp/copy.hipcc \
 	rocm/omp/gputest.amdclang++ \
+	rocmtest/MatrixMult/ \
 	)
 
 dirsfail=( \				## not skipped, however
@@ -44,7 +46,7 @@ dirsfail=( \				## not skipped, however
 	)
 
 dirswronganswer=( \			## run even with wrong answer
-	rocm/hip.llvm \		## shows all results as zeros
+	rocm/hip.llvm \			## shows confusing results
 	)
 
 dirsnotworkingyet=( \

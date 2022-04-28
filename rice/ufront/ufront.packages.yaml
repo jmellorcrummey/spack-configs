@@ -80,7 +80,7 @@ packages:
   # +cuda, +rocm for GPU support.
   #
   hpctoolkit:
-    version:  [2022.04.00]
+    version:  [2022.04.15]
     variants: +mpi +papi +viewer +cuda +rocm
 
   # binutils -- used by hpcprof and struct simple (for functions and
@@ -120,7 +120,6 @@ packages:
     variants: >
       +atomic +chrono +date_time +filesystem +system +thread +timer
       +graph +regex +shared +multithreaded ~debug
-      ~mpi ~python ~iostreams ~numpy
       visibility=global
 
 

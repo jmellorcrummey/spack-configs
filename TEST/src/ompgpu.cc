@@ -15,8 +15,11 @@ twork( int iter, int threadnum)
     iter, threadnum, l1, threadnum, r1, threadnum, p1 );
 #endif
 
+  int threadsPerBlock = 256;
+  int  blocksPerGrid = ( nn + threadsPerBlock -1 ) / threadsPerBlock;
+
   #pragma omp target map(to:l1[0:nn], r1[0:nn]) map(tofrom: p1[0:nn])
-  #pragma omp teams num_teams(4) thread_limit(64)
+  #pragma omp teams num_teams(blocksPerGrid) thread_limit(threadsPerBlock)
   {
     #pragma omp distribute parallel for
     for (size_t i = 0; i < nn; ++i) {

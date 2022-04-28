@@ -1,44 +1,101 @@
 #include <stdio.h>
 #include <omp.h>
 
+void check_copy(int *, int *);
+void targ_par(int *, int *);
+void team_par(int *, int *);
+int rc = 0;
+#define N 1000000
+#define NITER 10
+
 int main()
 {
-  int N = 100000;
 
+  int i;
   int a[N];
   int b[N];
 
-  int i;
-
-  for (i=0; i<N; i++)
+  fprintf(stderr,"Initializing a[i] to 0; b[i] to i+1\n" );
+  for (i=0; i<N; i++) {
     a[i]=0;
-
-  for (i=0; i<N; i++)
-    b[i]=i;
-
-#pragma omp target parallel for
-  {
-    for (int j = 0; j< N; j++)
-      a[j]=b[j];
   }
 
-#pragma omp target teams distribute parallel for
-  {
-    for (int j = 0; j< N; j++)
-      a[j]=b[j];
+  for (i=0; i<N; i++) {
+    b[i]=i+1;
   }
 
-  int rc = 0;
-  for (i=0; i<N; i++)
-    if (a[i] != b[i] ) {
-      rc++;
-      printf ("Wrong value: a[%d]=%d\n", i, a[i]);
-    }
+  fprintf(stderr,"Invoking team_par\n" );
+  team_par(a,b);
+  check_copy(a, b);
+  fprintf(stderr,"team_par and check_copy complete\n" );
+
+  fprintf(stderr,"Reinitializing a[i] to 0\n" );
+
+  for (i=0; i<N; i++) {
+    a[i]=0;
+  }
+
+  fprintf(stderr,"Invoking targ_par\n" );
+  targ_par (a, b);
+
+  check_copy(a, b);
+  fprintf(stderr,"targ_par and check_copy complete\n" );
 
   if (!rc)
-    printf("Success\n");
+    fprintf(stderr,"Success\n");
+  else {
+    fprintf(stderr, "  %d ERRORS detected\n", rc);
+  }
 
   return rc;
+}
+
+void
+check_copy(int *a, int *b)
+{
+  for (int i=0; i<N; i++)
+    if (a[i] != b[i] ) {
+      rc++;
+      fprintf(stderr,"ERROR -- Wrong value: a[%d]=%d, not %d\n", i, a[i], b[i]);
+    }
+}
+
+void
+targ_par(int *a, int *b)
+{
+  int threadsPerBlock = 4;
+  int blocksPerGrid = ( N + threadsPerBlock -1 ) / threadsPerBlock;
+
+  #pragma omp target map(tofrom: a[0:N]) map(to: b[0:N])
+  #pragma omp teams num_teams(blocksPerGrid) thread_limit(threadsPerBlock)
+  #pragma omp distribute parallel for
+  for (int i=0; i<1; i++) {
+    for (int m = 0; m < NITER; m++ ) {
+      for (int j = 0; j< N; j++) {
+        a[j]=b[j];
+      }
+    }
+  }
+  return;
+}
+
+void
+team_par(int *a, int *b)
+{
+  int threadsPerBlock = 256;
+  int blocksPerGrid = ( N + threadsPerBlock -1 ) / threadsPerBlock;
+
+  #pragma omp target map(tofrom: a[0:N]) map(to: b[0:N])
+  #pragma omp teams num_teams(blocksPerGrid) thread_limit(threadsPerBlock)
+  #pragma omp distribute parallel for
+  for (int i=0; i<1; i++) {
+    for (int m = 0; m < NITER; m++ ) {
+      for (int j = 0; j< N; j++) {
+        a[j]=b[j];
+      }
+    }
+  }
+  return;
 }
 
   /// CHECK: Callback Init:
