@@ -802,6 +802,21 @@ else
 	echo "GNU_libc64_VERSION: ${GLIBC64_VERSION}"
     elif [ ${osmode} -eq 9 ]; then
 	inxi -Gx
+	 if [ -r nvidia-smi ]; then
+	    echo"Nvidia GPU information"
+	    nvidia-smi
+	else
+	    echo "No Nvidia GPUs accessible"
+	fi
+	echo
+	if [ -r rocm-smi ]; then
+	    echo"ROCM GPU information"
+	    rocm-smi
+	    rocminfo
+	else
+	    echo "No ROCM GPUs accessible"
+	fi
+
     else
 	echo "${MACHINE}"
     fi

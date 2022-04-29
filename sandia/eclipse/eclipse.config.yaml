@@ -17,7 +17,7 @@
 config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  install_tree: /projects/hpctoolkit/.install/2022.01/packages
+  install_tree: /projects/hpctoolkit/.install/2022-04-15/packages
 
 
   # Locations where templates should be found
@@ -27,10 +27,6 @@ config:
 
   # Default directory layout
   install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
-
-  # Locations where different types of modules should be installed.
-  module_roots:
-    tcl:    /projects/hpctoolkit/.install/2022.01/modules/tcl
 
   # Temporary locations Spack can try to use for builds.
   #
@@ -119,3 +115,8 @@ config:
   # anticipates that a significant delay indicates that the lock attempt will
   # never succeed.
   package_lock_timeout: null
+
+  # Whether to set the terminal title to display status information during
+  # building and installing packages. This gives information about Spack's
+  # current progress as well as the current and total number of packages.
+  terminal_title: true
