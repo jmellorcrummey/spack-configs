@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------
 # This is the default configuration for Spack's module file generation.
-#       configured for Power 9 installation from rzansel
+#       configured for TOSS3 installation at Sandia (eclipse)
 #
 # Settings here are versioned with Spack and are intended to provide
 # sensible defaults out of the box. Spack maintainers should edit this
@@ -15,32 +15,8 @@
 #   ~/.spack/modules.yaml
 # -------------------------------------------------------------------------
 modules:
-  enable:
-    - tcl
-    - lmod
-
-  prefix_inspections:
-    bin:
-      - PATH
-    man:
-      - MANPATH
-    share/man:
-      - MANPATH
-    share/aclocal:
-      - ACLOCAL_PATH
-    lib:
-      - LIBRARY_PATH
-    lib64:
-      - LIBRARY_PATH
-    include:
-      - CPATH
-    lib/pkgconfig:
-      - PKG_CONFIG_PATH
-    lib64/pkgconfig:
-      - PKG_CONFIG_PATH
-    '':
-      - CMAKE_PREFIX_PATH
-
-  lmod:
-    hierarchy:
-      - mpi
+  default:
+    roots:
+      tcl: /projects/hpctoolkit/.install/2022-04-15/modules/tcl
+    enable:
+      - tcl

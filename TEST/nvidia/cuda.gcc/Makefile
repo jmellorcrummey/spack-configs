@@ -3,10 +3,9 @@ TARGET	= cuda.gputest
 
 default all: $(TARGET)
 
-# This version is built with GCC; ../omp.llvm contains the version built with LLVM
-CUDA = /usr/local/cuda-11.6/
+CUDA = /usr/tce/packages/cuda/cuda-11.6.0
 CXX = g++
-CUDACXX = $(CUDA)/bin/nvcc
+CUDACXX = `which nvcc`
 CUDACXXFLAGS = -g -O2 -DHAVE_CUDA -std=c++11 -I${CUDA}/include/ $(OPTFLAGS) -Xptxas -v -gencode=arch=compute_60,code=\"sm_60,compute_60\"
 CUDACXXFLAGS = -g -lineinfo -opt-info inline -O2 -std=c++11 -I${CUDA}/include/ -Xptxas -v -gencode=arch=compute_60,code=\"sm_60,compute_60\"
 LDFLAGS = -lm -L${CUDA}/lib64/ -lcuda -lcudart

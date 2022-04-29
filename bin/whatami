@@ -284,19 +284,6 @@ do
 done
 
 if [ ${debug} -eq 1 ]; then
-    if [ -r nvidia-smi ]; then
-	echo"Nvidia GPU information"
-	nvidia-smi
-    else
-	echo "No Nvidia GPUs accessible"
-    fi
-    echo
-    if [ -r rocm-smi ]; then
-	echo"ROCM GPU information"
-	rocm-smi
-    else
-	echo "No ROCM GPUs accessible"
-    fi
     exit
     echo
     echo "${CAT} /etc/release:"
@@ -802,19 +789,12 @@ else
 	echo "GNU_libc64_VERSION: ${GLIBC64_VERSION}"
     elif [ ${osmode} -eq 9 ]; then
 	inxi -Gx
-	 if [ -r nvidia-smi ]; then
-	    echo"Nvidia GPU information"
-	    nvidia-smi
+	nvidia-smi
+	HASROCM=`rocminfo | grep "^  Name:" | grep -v AMD`
+	if [ "$HASROCM" == "" ]; then
+	    echo "No AMD GPU devices"
 	else
-	    echo "No Nvidia GPUs accessible"
-	fi
-	echo
-	if [ -r rocm-smi ]; then
-	    echo"ROCM GPU information"
-	    rocm-smi
-	    rocminfo
-	else
-	    echo "No ROCM GPUs accessible"
+	    echo $HASROCM
 	fi
 
     else

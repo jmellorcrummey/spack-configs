@@ -1,3 +1,4 @@
+
 packages:
   # If you want to specify a generic target or a specific compiler for
   # all builds, then you can set those here.  For example, a generic
@@ -53,7 +54,7 @@ packages:
   # +cuda, +rocm for GPU support.
   #
   hpctoolkit:
-    version: [2022.01.15, master]
+    version: [2022.04.15, master]
     variants: +mpi +papi +viewer +cuda
 
 
@@ -303,9 +304,9 @@ packages:
   cuda:
     buildable: false
     externals:
-    - spec: cuda@10.1.243
+    - spec: cuda@11.6.0
       modules:
-      - cuda/10.1.243
+      - cuda/11.6.0
 
   #------------------------------------------------------------
 
@@ -354,8 +355,6 @@ packages:
   #
   openmpi:
     buildable: false
-
-
     externals:
     - spec: OpenMPI@10.3.1
       modules:

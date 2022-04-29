@@ -26,14 +26,16 @@ EOF
 #------------------------------------------------------------
 # the script
 #------------------------------------------------------------
-TOPDIR="/home/msi3/gits/spack-configs/TEST"
+TOPDIR="/ascldap/users/msitzko/gits/spack-configs/TEST"
 
 subdirs=( \
 	cpu/cpu.gcc \
 	nvidia/copy.gcc \
+	nvidia/copy.llvm \
 	nvidia/cuda.gcc \
 	nvidia/nogpu.gcc \
 	nvidia/omp.gcc \
+	nvidia/omp.llvm \
 	rocm/hip.llvm \
 	rocm/omp/copy.amdclang++ \
 	rocm/omp/copy.hipcc \
