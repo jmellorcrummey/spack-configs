@@ -3,7 +3,6 @@ TARGET	= llvm.gputest
 
 default all: $(TARGET)
 
-# This version is built with LLVM; ../testnvidia contains the version built with GCC
 CXX = clang++
 OMPFLAGS =  -DIGNORE_BAD_INITIAL_DEVICE -g -O2 -lm -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
