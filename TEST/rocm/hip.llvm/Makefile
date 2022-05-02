@@ -8,6 +8,7 @@ HIP = /opt/rocm-5.1.0
 CXX = g++
 HIPCXX = $(HIP)/bin/hipcc
 HIPCXXFLAGS = -g -opt-info -O2 -std=c++11 -I${HIP}/hip/include/hip/ -offload-arch=gfx906
+HIPCXXFLAGS = -g -opt-info -O2 -std=c++11 -I${HIP}/hip/include/hip/
 LDFLAGS = -lm -L${HIP}/lib64/
 OMPFLAGS = -g -O2 -fopenmp -lm
 

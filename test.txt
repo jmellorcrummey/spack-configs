@@ -1,4 +1,29 @@
 -----------------------------
+To run the minitest tests in spack-configs
+-----------------------------
+So get a compute node from a login node:
+
+    At LLNL:
+	On rzansel and lassen, <cmd-to-run> = "lalloc 1"
+	On rzmanta and ray, <cmd-to-run> = "lalloc 1"
+	On rzhasgpu and quartz, <cmd-to-run> = "salloc -N 1 -ppdebug"
+
+    At LANL:
+	On kodiak, <cmd-to-run> = "salloc -N 1 --qos=interactive"
+
+    At Sandia:
+	On eclipse and stria, <cmd-to-run> = "salloc -N1"
+	On vortex, <cmd-to-run> = "lalloc 1"
+
+    At ANL:
+
+    At NERSC:
+
+
+To run a <cmd> from a compute node from lalloc:
+ lrun -1 -g 1 -c 1 <cmd>
+
+-----------------------------
 To run the hpctest test suite
 -----------------------------
 Be sure you have run "spack compiler find" before starting.
