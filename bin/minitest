@@ -79,12 +79,20 @@ if [ "$go" == "f" ]; then
 	usage
 fi
 
+# remove any previous log of a run
 /bin/rm -f log.minitest
+
+# create a new log, with information about the system
 echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" 2>&1 | tee -a log.minitest
 echo -n "minitest $1 -- invoked on " 2>&1 | tee -a log.minitest
 date 2>&1 | tee -a log.minitest
 pwd 2>&1 | tee -a log.minitest
+echo "" 2>&1 | tee -a log.minitest
 hpcrun -V 2>&1 | tee -a log.minitest
+echo "" 2>&1 | tee -a log.minitest
+clang --version 2>&1 | tee -a log.minitest
+gcc --version 2>&1 | tee -a log.minitest
+
 for sd in "${RUNDIRS[@]}"
 do
 	echo "" 2>&1 | tee -a log.minitest
