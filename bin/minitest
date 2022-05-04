@@ -12,12 +12,23 @@
 
 usage()
 {
-	    cat <<EOF 1>&2
+	    cat <<EOF
+minitest is a shell script that will process a set of subdirectories
+inside a TEST repository.  It requires that it be invoked with two
+definitions
+    TOPDIR, pointing to the top of the repository; and
+    RUNDIRS, a list of the subdirectories to be processed.
+
+    Both of these are obtained by sourcing a file named
+    file named "miniconfig" in the same directory as this.
+
+    An "example.miniconfig" file is in this directory, and should
+    be used as a template for customizing the test run.
 
 Usage:
   minitest <makecmd>
-	Only "ll", "clean", "clobber", and "hpct" are supported
-	Be sure to correctly set TOPDIR to the top-level directory
+	Only <makecmd>'s of "ll", "clean", "clobber", and "hpct" are supported
+
 EOF
     exit 1
 }
@@ -28,37 +39,23 @@ EOF
 #------------------------------------------------------------
 source miniconfig
 
-echo "TOPDIR = $TOPDIR"
+if [ "${TOPDIR}" == "" ]; then
+	echo "TOPDIR is not set."
+	usage
+fi
+if [ "${RUNDIRS}" == "" ]; then
+	echo "RUNDIRS is not set."
+	usage
+fi
 echo ""
 
-# echo -n "CPUDIRS: "
-# for sd in "${CPUDIRS[@]}"
-# do
-# 	echo -n " $sd"
-# done
-# echo ""
-
-# echo -n "NVIDIADIRS: "
-# for sd in "${NVIDIADIRS[@]}"
-# do
-# 	echo -n " $sd"
-# done
-# echo ""
-
-# echo -n "ROCMDIRS: "
-# for sd in "${ROCMDIRS[@]}"
-# do
-# 	echo -n " $sd"
-# done
-# echo ""
-
+# echo "TOPDIR: "
 # echo -n "RUNDIRS: "
 # for sd in "${RUNDIRS[@]}"
 # do
 # 	echo -n " $sd"
 # done
 # echo ""
-# exit 0
 
 go="f"
 
@@ -82,28 +79,24 @@ if [ "$go" == "f" ]; then
 	usage
 fi
 
-echo ""
-date
-pwd
-hpcrun -V
-echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
-echo ""
+/bin/rm -f log.minitest
+echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" 2>&1 | tee -a log.minitest
+echo -n "minitest $1 -- invoked on " 2>&1 | tee -a log.minitest
+date 2>&1 | tee -a log.minitest
+pwd 2>&1 | tee -a log.minitest
+hpcrun -V 2>&1 | tee -a log.minitest
 for sd in "${RUNDIRS[@]}"
 do
-	echo ""
-	echo "================================================================="
-	echo ""
+	echo "" 2>&1 | tee -a log.minitest
+		echo "================================================================="  2>&1 | tee -a log.minitest
 	if [ "${go}" == "ll" ]; then
-		echo "cd'ing to ${sd} to run \"ls -alF\""
-		(cd ${TOPDIR}/${sd} ; ls -alF )
+		echo "cd'ing to ${sd} to run \"ls -alF\""  2>&1 | tee -a log.minitest
+		(cd ${TOPDIR}/${sd} ; ls -alF )  2>&1 | tee -a log.minitest
 	else
-		echo "cd'ing to ${sd} to run \"make $1\""
-		(cd ${TOPDIR}/${sd} ; make $1)
+		echo "cd'ing to ${sd} to run \"make $1\""  2>&1 | tee -a log.minitest
+		(cd ${TOPDIR}/${sd} ; make $1)  2>&1 | tee -a log.minitest
 	fi
 done
-echo ""
-echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
-echo ""
-echo ""
-exit 0
+echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"  2>&1 | tee -a log.minitest
+echo ""  2>&1 | tee -a log.minitest
 exit 0

@@ -19,42 +19,33 @@ OFLAGS          = ${OFLAGS-${CCTYPE}}
 
 OPTS		= $(OFLAGS) $(ARCH)
 
-TARGETS= testcpu
+TARGET=testcpu
 
 SRCS=  \
 	../../src/testcpu.c \
 	$(NULL)
 
-default all: $(TARGETS)
+default all: $(TARGET)
 
-testcpu: ${SRCS}
-	$(CC) $(OPTS) -o testcpu ${SRCS} $(LLDLIBS)
+${TARGET}: ${SRCS}
+	$(CC) $(OPTS) -o ${TARGET} ${SRCS} $(LLDLIBS)
 
-run: testcpu
-	time ./testcpu
+run: ${TARGET}
+	time ./$(TARGET)
 
 hpct: hpctclk hpctcyc
 
-hpctclk: testcpu
-	time hpcrun -o meas.clk -t ./testcpu
-	echo ""
-	time hpcstruct meas.clk
-	echo ""
-	time hpcprof -o dbase.clk meas.clk
-	echo ""
+hpctclk: ${TARGET}
+	runhpct $(TARGET) "-e CPUTIME -t" hpct.clk
 
-hpctcyc: testcpu
-	time hpcrun -o meas.cyc -e cycles -t ./testcpu
-	echo ""
-	time hpcstruct meas.cyc
-	echo ""
-	time hpcprof -o dbase.cyc meas.cyc
-	echo ""
+hpctcyc: ${TARGET}
+	runhpct $(TARGET) "-e cycles -t" hpct.cyc
 
 clobber: clean
-	-rm -f $(TARGETS)
+	-rm -f $(TARGET)
 
 clean:
 	-rm -rf meas.*
 	-rm -rf dbase.*
 	-rm -f *core*
+	-rm -f log*

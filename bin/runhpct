@@ -92,6 +92,8 @@ echo "Launching /bin/time hpcrun -o meas.$name $runargs $targargs >>log.$name 2>
 grep avgtext log.$name
 grep ERROR log.$name
 grep "Memory Error" log.$name
+THREADS=`ls meas.$name/*.hpcrun | wc -l`
+echo "  Experiment has $THREADS hpcrun files"
 
 echo "" >> log.$name
 echo "=================================================================" >> log.$name
@@ -99,6 +101,8 @@ echo "" >> log.$name
 # echo "Launching /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1"
 echo "Launching /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1" >> log.$name
 /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1
+GPUBINSUSED=`ls meas.${name}/gpubins-used | wc -l`
+echo "  Experiment used $GPUBINSUSED gpubins"
 
 echo "" >> log.$name
 echo "=================================================================" >> log.$name
