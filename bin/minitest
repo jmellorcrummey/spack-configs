@@ -15,7 +15,8 @@ usage()
 	    cat <<EOF
 minitest is a shell script that will process a set of subdirectories
 inside a TEST repository.  It requires that it be invoked with two
-definitions
+definitions:
+
     TOPDIR, pointing to the top of the repository; and
     RUNDIRS, a list of the subdirectories to be processed.
 
@@ -37,7 +38,18 @@ EOF
 #------------------------------------------------------------
 # the script
 #------------------------------------------------------------
-source miniconfig
+
+if [ -a miniconfig ]; then
+	source miniconfig
+else
+	echo "ERROR no miniconfig file is found"
+	echo "Please create a miniconfig file; be sure to set TOPDIR in it"
+	echo "and customize the list of tests."
+	echo ""
+	usage
+	exit 1
+fi
+
 
 if [ "${TOPDIR}" == "" ]; then
 	echo "TOPDIR is not set."
@@ -91,7 +103,16 @@ echo "" 2>&1 | tee -a log.minitest
 hpcrun -V 2>&1 | tee -a log.minitest
 echo "" 2>&1 | tee -a log.minitest
 clang --version 2>&1 | tee -a log.minitest
+echo "" 2>&1 | tee -a log.minitest
 gcc --version 2>&1 | tee -a log.minitest
+echo "" 2>&1 | tee -a log.minitest
+if [ -x `which nvidia-smi` ]; then
+	nvidia-smi 2>$1 | tee -a log.minitest
+	cat /sys/class/kfd/kfd/topology/nodes/*/properties | grep ^fw_version  2>&1 | tee -a log.minitest
+fi
+if [ -x `which rocm-smi` ]; then
+	rocm-smi -i --showdriverversion  2>$1 | tee -a log.minitest
+fi
 
 for sd in "${RUNDIRS[@]}"
 do
