@@ -7,7 +7,7 @@ CXX = clang++
 OMPFLAGS =  -DIGNORE_BAD_INITIAL_DEVICE -g -O2 -lm -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
 $(TARGET): ${SRCS}
-	$(CXX) $(OMPFLAGS) -o $TARGET ${SRCS}
+	$(CXX) $(OMPFLAGS) -o $(TARGET) ${SRCS}
 
 run: $(TARGET)
 	@echo "Running \"$(TARGET)\""
@@ -44,9 +44,7 @@ clean:
 	-/bin/rm -f *log.*
 	-/bin/rm -rf test.*.er
 	@echo ""
-	@echo ""
 
 clobber: clean
 	-/bin/rm -rf *.o $(TARGET)
-	@echo ""
 	@echo ""
