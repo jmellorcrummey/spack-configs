@@ -101,6 +101,7 @@ date 2>&1 | tee -a log.minitest
 pwd 2>&1 | tee -a log.minitest
 echo -n "${USER} @ " | tee -a log.minitest
 hostname 2>&1 | tee -a log.minitest
+module list 2>&1 | tee -a log.minitest
 echo "" 2>&1 | tee -a log.minitest
 
 # log the version of hpctoolkit, and the compilers
@@ -111,20 +112,26 @@ echo "" 2>&1 | tee -a log.minitest
 gcc --version 2>&1 | tee -a log.minitest
 echo "" 2>&1 | tee -a log.minitest
 
-# Checking for Nvidia and AMD GPUs
-echo "========================Checking for Nvidia GPUs============================="  2>&1 | tee -a log.minitest
-if [ -x `which nvidia-smi` ]; then
+# Check for GPUs
+echo "======================== Checking for Nvidia GPUs ============================="  2>&1 | tee -a log.minitest
+if [ -x /usr/bin/nvidia-smi ]; then
 	nvidia-smi 2>&1 | grep NVIDIA | tee -a log.minitest
-	echo -n "  Firmware version: "  | tee -a log.minitest
-	cat /sys/class/kfd/kfd/topology/nodes/*/properties | grep ^fw_version  2>&1 | uniq | tee -a log.minitest
 else
 	echo "No NVIDIA GPUs found" | tee -a log.minitest
 fi
-if [ -x `which rocm-smi` ]; then
-	rocm-smi -i --showdriverversion  2>&1 | tee -a log.minitest
+# echo "======================= End check for Nvidia GPUs ============================="  2>&1 | tee -a log.minitest
+
+echo "======================== Checking for AMD GPUs ================================"  2>&1 | tee -a log.minitest
+if [ -x /usr/bin/rocm-smi ]; then
+	rocm-smi -i --showdriverversion  2>&1 | grep -v "=============" | grep -v "^$" | tee -a log.minitest
+	echo -n "  AMD Firmware version: "  | tee -a log.minitest
+	cat /sys/class/kfd/kfd/topology/nodes/*/properties | grep ^fw_version  2>&1 | uniq | tee -a log.minitest
 else
 	echo "No AMD GPUs found" | tee -a log.minitest
 fi
+# echo "======================= End check for AMD GPUs ================================"  2>&1 | tee -a log.minitest
+
+# To be added: chack for intel GPUs
 
 # Now loop through the specified run directories, and issue the comand
 echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" 2>&1 | tee -a log.minitest
