@@ -6,7 +6,7 @@ CC =clang
 LLDLIBS 	= $(LD_OPTS)
 OFLAGS 	= -g -m64
 
-TARGET=testcpu
+TARGET=testcpu.llvm
 
 SRCS=  \
 	../../src/testcpu.c \

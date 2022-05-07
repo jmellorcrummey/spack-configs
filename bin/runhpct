@@ -110,7 +110,7 @@ echo "Launching /bin/time -p hpcstruct $4 meas.$name  >>log.$name 2>&1" >> log.$
 if [ -d meas.${name}/gpubins-used ]; then
 	GPUBINSUSED=`ls meas.${name}/gpubins-used | wc -l`
 else
-	GPUBINS=0
+	GPUBINSUSED=0
 fi
 echo "  Experiment gpubins-used: $GPUBINSUSED" | tee -a log.$name
 
