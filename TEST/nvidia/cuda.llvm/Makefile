@@ -1,5 +1,5 @@
 SRCS	= ../../src/gputest.cc ../../src/cudagpu.cc
-TARGET	= cuda.gputest
+TARGET	= cuda.llvm.gputest
 
 default all: $(TARGET)
 
@@ -8,7 +8,7 @@ CXX = clang++
 CUDACXX = `which nvcc`
 CUDACXXFLAGS = -g -lineinfo -O2 -std=c++11 -I${CUDA}/include/
 LDFLAGS = -lm -L${CUDA}/lib64/ -lcuda -lcudart
-OMPFLAGS = -g -O2 -fopenmp -lm
+OMPFLAGS = -g -O2 -fopenmp
 
 gputest.o: ../../src/gputest.cc
 	$(CXX) $(OMPFLAGS) -c -o gputest.o  ../../src/gputest.cc

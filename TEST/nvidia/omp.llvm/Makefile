@@ -1,5 +1,5 @@
 SRCS	= ../../src/gputest.cc ../../src/ompgpu.cc
-TARGET	= llvm.gputest
+TARGET	= omp.llvm.gputest
 
 default all: $(TARGET)
 
@@ -7,7 +7,7 @@ CXX = clang++
 OMPFLAGS =  -DIGNORE_BAD_INITIAL_DEVICE -g -O2 -lm -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
 $(TARGET): ${SRCS}
-	$(CXX) $(OMPFLAGS) -o llvm.gputest ${SRCS}
+	$(CXX) $(OMPFLAGS) -o $(TARGET) ${SRCS}
 
 run: $(TARGET)
 	@echo "Running \"$(TARGET)\""

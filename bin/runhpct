@@ -95,9 +95,9 @@ grep "Memory Error" log.$name
 
 if [ -d meas.$name ]; then
 	THREADS=`ls meas.$name/*.hpcrun | wc -l`
-	echo "  Experiment has $THREADS hpcrun files" >> log.$name
+	echo "  Experiment hpcrun files: $THREADS" | tee -a log.$name
 else
-	echo "ERROR: meansurements directory does not exist" >> log.$name
+	echo "ERROR: meansurements directory does not exist" | tee -a log.$name
 fi
 
 echo "" >> log.$name
@@ -112,7 +112,7 @@ if [ -d meas.${name}/gpubins-used ]; then
 else
 	GPUBINS=0
 fi
-echo "  Experiment used $GPUBINSUSED gpubins" >> log.$name
+echo "  Experiment gpubins-used: $GPUBINSUSED" | tee -a log.$name
 
 echo "" >> log.$name
 echo "=================================================================" >> log.$name

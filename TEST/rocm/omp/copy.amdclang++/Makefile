@@ -3,7 +3,7 @@
 # module load aomp
 
 SRCS	= ../../../src/copy.cc 
-TARGET	= copy
+TARGET	= copy.aomp
 
 MARCH = -march=gfx90a
 MARCH = -march=gfx906 

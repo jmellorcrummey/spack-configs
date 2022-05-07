@@ -1,9 +1,5 @@
-#  To get a working aomp compiler:
-# module use /home/johnmc/modules
-# module load aomp
-
 SRCS	= ../../src/copy.cc 
-TARGET	= copy
+TARGET	= copy.gcc
 
 MARCH = -march=gfx90a
 MARCH = -march=gfx906

@@ -1,5 +1,5 @@
 SRCS	= ../../src/gputest.cc ../../src/nogpu.cc
-TARGET	= llvm.gputest
+TARGET	= nogpu.llvm.gputest
 
 default all: $(TARGET)
 

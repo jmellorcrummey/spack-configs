@@ -1,23 +1,10 @@
 # This code is used to print arguments and environment, to help debug
 # application environment variable invocations
 
-CCTYPE = LLVM
-
-CC-GNU          = gcc
-CC-LLVM         = clang
-CC              = ${CC-${CCTYPE}}
-
-ARCH-GNU        = -m64
-ARCH-LLVM       = -m64
-ARCH            = ${ARCH-${CCTYPE}}
+CC =clang
 
 LLDLIBS 	= $(LD_OPTS)
-
-OFLAGS-GNU 	= -g
-OFLAGS-LLVM 	= -g
-OFLAGS          = ${OFLAGS-${CCTYPE}}
-
-OPTS		= $(OFLAGS) $(ARCH)
+OFLAGS 	= -g -m64
 
 TARGET=testcpu
 
@@ -28,7 +15,7 @@ SRCS=  \
 default all: $(TARGET)
 
 ${TARGET}: ${SRCS}
-	$(CC) $(OPTS) -o ${TARGET} ${SRCS} $(LLDLIBS)
+	$(CC) $(OFLAGS) -o ${TARGET} ${SRCS} $(LLDLIBS)
 
 run: ${TARGET}
 	time ./$(TARGET)

@@ -99,21 +99,35 @@ echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" 2>&1
 echo -n "minitest $1 -- invoked on " 2>&1 | tee -a log.minitest
 date 2>&1 | tee -a log.minitest
 pwd 2>&1 | tee -a log.minitest
+echo -n "${USER} @ " | tee -a log.minitest
+hostname 2>&1 | tee -a log.minitest
 echo "" 2>&1 | tee -a log.minitest
+
+# log the version of hpctoolkit, and the compilers
 hpcrun -V 2>&1 | tee -a log.minitest
 echo "" 2>&1 | tee -a log.minitest
 clang --version 2>&1 | tee -a log.minitest
 echo "" 2>&1 | tee -a log.minitest
 gcc --version 2>&1 | tee -a log.minitest
 echo "" 2>&1 | tee -a log.minitest
+
+# Checking for Nvidia and AMD GPUs
+echo "========================Checking for Nvidia GPUs============================="  2>&1 | tee -a log.minitest
 if [ -x `which nvidia-smi` ]; then
-	nvidia-smi 2>$1 | tee -a log.minitest
-	cat /sys/class/kfd/kfd/topology/nodes/*/properties | grep ^fw_version  2>&1 | tee -a log.minitest
+	nvidia-smi 2>&1 | grep NVIDIA | tee -a log.minitest
+	echo -n "  Firmware version: "  | tee -a log.minitest
+	cat /sys/class/kfd/kfd/topology/nodes/*/properties | grep ^fw_version  2>&1 | uniq | tee -a log.minitest
+else
+	echo "No NVIDIA GPUs found" | tee -a log.minitest
 fi
 if [ -x `which rocm-smi` ]; then
-	rocm-smi -i --showdriverversion  2>$1 | tee -a log.minitest
+	rocm-smi -i --showdriverversion  2>&1 | tee -a log.minitest
+else
+	echo "No AMD GPUs found" | tee -a log.minitest
 fi
 
+# Now loop through the specified run directories, and issue the comand
+echo " - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" 2>&1 | tee -a log.minitest
 for sd in "${RUNDIRS[@]}"
 do
 	echo "" 2>&1 | tee -a log.minitest

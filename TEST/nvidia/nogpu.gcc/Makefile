@@ -1,14 +1,13 @@
 SRCS	= ../../src/gputest.cc ../../src/nogpu.cc
-TARGET	= gcc.gputest
+TARGET	= nogpu.gcc.gputest
 
 default all: $(TARGET)
 
-# This version is built with GCC; ../omp.llvm contains the version built with LLVM
 CXX = g++
 OMPFLAGS = -g -O2 -fopenmp -lm
 
 $(TARGET): ${SRCS}
-	$(CXX) $(OMPFLAGS) -o gcc.gputest ${SRCS}
+	$(CXX) $(OMPFLAGS) -o $(TARGET) ${SRCS}
 
 run: $(TARGET)
 	@echo "Running \"$(TARGET)\""

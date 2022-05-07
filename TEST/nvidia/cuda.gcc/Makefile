@@ -1,5 +1,5 @@
 SRCS	= ../../src/gputest.cc ../../src/cudagpu.cc
-TARGET	= cuda.gputest
+TARGET	= cuda.gcc.gputest
 
 default all: $(TARGET)
 
