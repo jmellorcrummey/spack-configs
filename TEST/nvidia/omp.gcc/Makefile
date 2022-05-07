@@ -6,7 +6,7 @@ default all: $(TARGET)
 # This version is built with GCC; ../omp.llvm contains the version built with LLVM
 CXX = g++
 OMPFLAGS = -g -O2 -fopenmp -lm
-OMPFLAGS = -g -O2 -fopenmp -foffload=nvptx-none="-O2 -lm -misa=sm_70"
+OMPFLAGS = -g -O2 -fopenmp -foffload=nvptx-none="-O2 -lm -misa=sm_35"
 
 $(TARGET): ${SRCS}
 	$(CXX) $(OMPFLAGS) -o $(TARGET) ${SRCS}
