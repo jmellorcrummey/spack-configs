@@ -66,6 +66,8 @@ targ_par(int *a, int *b)
   int threadsPerBlock = 4;
   int blocksPerGrid = ( N + threadsPerBlock -1 ) / threadsPerBlock;
 
+  fprintf(stderr,"  targ_par -- threadsPerBlock = %d; blocksPerGrid = %d\n", threadsPerBlock, blocksPerGrid);
+
   #pragma omp target map(tofrom: a[0:N]) map(to: b[0:N])
   #pragma omp teams num_teams(blocksPerGrid) thread_limit(threadsPerBlock)
   #pragma omp distribute parallel for
@@ -84,6 +86,8 @@ team_par(int *a, int *b)
 {
   int threadsPerBlock = 256;
   int blocksPerGrid = ( N + threadsPerBlock -1 ) / threadsPerBlock;
+
+  fprintf(stderr,"  team_par -- threadsPerBlock = %d; blocksPerGrid = %d\n", threadsPerBlock, blocksPerGrid);
 
   #pragma omp target map(tofrom: a[0:N]) map(to: b[0:N])
   #pragma omp teams num_teams(blocksPerGrid) thread_limit(threadsPerBlock)

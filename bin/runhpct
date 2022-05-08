@@ -92,10 +92,15 @@ echo "Launching /bin/time hpcrun -o meas.$name $runargs $targargs >>log.$name 2>
 grep avgtext log.$name
 grep ERROR log.$name
 grep "Memory Error" log.$name
+grep "No valid target devices" log.$name
 
 if [ -d meas.$name ]; then
 	THREADS=`ls meas.$name/*.hpcrun | wc -l`
 	echo "  Experiment hpcrun files: $THREADS" | tee -a log.$name
+	CPUTHREADS=`ls meas.$name/*-000000-0*.hpcrun | wc -l`
+	echo "        CPU  hpcrun files: $CPUTHREADS" | tee -a log.$name
+	GPUTHREADS=`ls meas.$name/*-000000-5*.hpcrun | wc -l`
+	echo "        GPU  hpcrun files: $GPUTHREADS" | tee -a log.$name
 else
 	echo "ERROR: meansurements directory does not exist" | tee -a log.$name
 fi
@@ -121,3 +126,9 @@ echo "" >> log.$name
 echo "Launching /bin/time -p hpcprof -o dbase.$name meas.$name  >>log.$name 2>&1" >>log.$name
 /bin/time -p hpcprof -o dbase.$name meas.$name  >>log.$name 2>&1
 echo ""
+grep ERROR log.$name
+echo ""
+echo "=================================================================" >> log.$name
+echo "" >> log.$name
+ls -lF >> log.$name
+echo "" >> log.$name
