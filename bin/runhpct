@@ -96,7 +96,7 @@ grep "No valid target devices" log.$name
 
 if [ -d meas.$name ]; then
 	THREADS=`ls meas.$name/*.hpcrun | wc -l`
-	CPUTHREADS=`ls meas.$name/*.hpcrun 2>/dev/null | grep -v *-000000-5 | wc -l`
+	CPUTHREADS=`ls meas.$name/*.hpcrun 2>/dev/null | grep -v "000000-5" | wc -l`
 	GPUTHREADS=`ls meas.$name/*-000000-5*.hpcrun 2>/dev/null | wc -l`
 	echo "  Experiment hpcrun files: $THREADS   CPU = $CPUTHREADS   GPU = $GPUTHREADS" | tee -a log.$name
 else
