@@ -97,9 +97,9 @@ grep "No valid target devices" log.$name
 if [ -d meas.$name ]; then
 	THREADS=`ls meas.$name/*.hpcrun | wc -l`
 	echo "  Experiment hpcrun files: $THREADS" | tee -a log.$name
-	CPUTHREADS=`ls meas.$name/*-000000-0*.hpcrun | wc -l`
+	CPUTHREADS=`ls meas.$name/*-000000-0*.hpcrun 2>/dev/null | wc -l`
 	echo "        CPU  hpcrun files: $CPUTHREADS" | tee -a log.$name
-	GPUTHREADS=`ls meas.$name/*-000000-5*.hpcrun | wc -l`
+	GPUTHREADS=`ls meas.$name/*-000000-5*.hpcrun 2>/dev/null | wc -l`
 	echo "        GPU  hpcrun files: $GPUTHREADS" | tee -a log.$name
 else
 	echo "ERROR: meansurements directory does not exist" | tee -a log.$name
