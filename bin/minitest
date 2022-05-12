@@ -28,7 +28,7 @@ definitions:
 
 Usage:
   minitest <makecmd>
-	Only <makecmd>'s of "ll", "clean", "clobber", and "hpct" are supported
+	Only <makecmd>'s of "ll", "clean", "clobber", "default", and "hpct" are supported
 
 EOF
     exit 1
@@ -76,6 +76,10 @@ if [ "$1" == "ll" ]; then
 fi
 
 if [ "$1" == "clean" ]; then
+	go="t"
+fi
+
+if [ "$1" == "default" ]; then
 	go="t"
 fi
 

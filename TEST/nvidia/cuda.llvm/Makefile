@@ -5,7 +5,7 @@ default all: $(TARGET)
 
 CUDA = /usr/local/cuda-11.6
 CXX = clang++
-CUDACXX = `which nvcc`
+CUDACXX = $(CUDA)/bin/nvcc
 CUDACXXFLAGS = -g -lineinfo -O2 -std=c++11 -I${CUDA}/include/
 LDFLAGS = -lm -L${CUDA}/lib64/ -lcuda -lcudart
 OMPFLAGS = -g -O2 -fopenmp

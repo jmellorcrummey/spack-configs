@@ -4,13 +4,15 @@ TARGET	= cuda.gcc.gputest
 default all: $(TARGET)
 
 CUDA = /usr/local/cuda-11.6
-CXX = g++
-CUDACXX = `which nvcc`
+CUDACXX = ${CUDA}/bin/nvcc
 CUDACXXFLAGS = -g -O2 -DHAVE_CUDA -std=c++11 -I${CUDA}/include/ $(OPTFLAGS) -Xptxas -v -gencode=arch=compute_60,code=\"sm_60,compute_60\"
 CUDACXXFLAGS = -g -lineinfo -opt-info inline -O2 -std=c++11 -I${CUDA}/include/ -Xptxas -v -gencode=arch=compute_60,code=\"sm_60,compute_60\"
 CUDACXXFLAGS = -g -lineinfo -O2 -std=c++11 -I${CUDA}/include/
-LDFLAGS = -lm -L${CUDA}/lib64/ -lcuda -lcudart
+
+CXX = g++
 OMPFLAGS = -g -O2 -fopenmp -lm
+
+LDFLAGS = -lm -L${CUDA}/lib64/ -lcuda -lcudart
 
 gputest.o: ../../src/gputest.cc
 	$(CXX) $(OMPFLAGS) -c -o gputest.o  ../../src/gputest.cc
