@@ -8,7 +8,7 @@ default all: $(TARGET)
 
 CXX = gcc
 OMPFLAGS = -g -lm -fopenmp -foffload=nvptx-none="-O2 -lm"
-OMPFLAGS = -g -lm -fopenmp -foffload=nvptx-none="-O2 -lm -misa=sm_35"
+OMPFLAGS = -g -lm -fopenmp -foffload="-O2 -lm -misa=sm_35"
 
 $(TARGET): ${SRCS}
 	$(CXX) -DIGNORE_BAD_INITIAL_DEVICE $(OMPFLAGS) -o $(TARGET) ${SRCS}
