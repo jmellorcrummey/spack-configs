@@ -3,8 +3,8 @@ TARGET	= omp.nvcc.gputest
 
 default all: $(TARGET)
 
-CXX = nvcc
-OMPFLAGS =  -DIGNORE_BAD_INITIAL_DEVICE -g -O2 -lm -mp -mp=gpu_70
+CXX = nvc++
+OMPFLAGS =  -DIGNORE_BAD_INITIAL_DEVICE -g -O2 -lm -mp -mp=gpu
 
 $(TARGET): ${SRCS}
 	$(CXX) $(OMPFLAGS) -o $(TARGET) ${SRCS}

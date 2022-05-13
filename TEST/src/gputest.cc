@@ -141,7 +141,7 @@ output( int threadnum, double *p, size_t size, const char *label)
   fprintf(stderr, "%s -- t %d, p[%zu]=%g; p[%zu]=%g; p[%zu]=%g; p[%zu]=%g; p[%zu]=%g\n",
     label, threadnum, 0UL, p[0], 1UL, p[1], k, p[k], j, p[j], i, p[i]);
   int cnt = 0;
-  for( int m; m < size; m++) {
+  for( int m = 0; m < size; m++) {
     if (p[m] != p[0]) {
       fprintf(stderr, "     ==> ERROR -- thread %d: p[%d]=%g != p[0]\n",
         threadnum, m, p[m]);
