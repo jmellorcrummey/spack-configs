@@ -15,7 +15,7 @@ EXECUTABLE=./MatrixMultiplication
 
 ARGS=-q -x 4096
 
-all: $(EXECUTABLE)
+default all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(SOURCES)
 	$(HIPCC) -g -I ${MAKE_INCLUDE} $(SOURCES) -o $@
