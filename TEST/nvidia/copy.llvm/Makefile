@@ -3,7 +3,7 @@ TARGET	= nvidia.llvm.copy
 
 default all: $(TARGET)
 
-CUDA = /usr/local/cuda-11.6/
+CUDA = $(CUDA_HOME)
 NVCC = $(CUDA)/bin/nvcc
 CXX = clang++
 OMPFLAGS =  -g -O2 -lm -fopenmp -fopenmp-targets=nvptx64

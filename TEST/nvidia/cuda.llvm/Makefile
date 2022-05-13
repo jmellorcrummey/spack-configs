@@ -3,7 +3,7 @@ TARGET	= cuda.llvm.gputest
 
 default all: $(TARGET)
 
-CUDA = /usr/local/cuda-11.6
+CUDA = $(CUDA_HOME)
 CXX = clang++
 CUDACXX = $(CUDA)/bin/nvcc
 CUDACXXFLAGS = -g -lineinfo -O2 -std=c++11 -I${CUDA}/include/

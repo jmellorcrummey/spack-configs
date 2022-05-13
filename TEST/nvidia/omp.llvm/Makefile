@@ -3,7 +3,7 @@ TARGET	= omp.llvm.gputest
 
 default all: $(TARGET)
 
-CUDA = /usr/local/cuda-11.6/
+CUDA = $(CUDA_HOME)
 NVCC = $(CUDA)/bin/nvcc
 CXX = clang++
 OMPFLAGS =  -DIGNORE_BAD_INITIAL_DEVICE -g -O2 -lm -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
