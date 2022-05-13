@@ -7,6 +7,7 @@ default all: $(TARGET)
 CXX = g++
 OMPFLAGS = -g -O2 -fopenmp -lm
 OMPFLAGS = -g -O2 -fopenmp -foffload=nvptx-none="-O2 -lm -misa=sm_35"
+OMPFLAGS = -g -O2 -fopenmp -foffload="-O2 -lm -misa=sm_35"
 
 $(TARGET): ${SRCS}
 	$(CXX) $(OMPFLAGS) -o $(TARGET) ${SRCS}
