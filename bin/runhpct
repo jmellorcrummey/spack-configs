@@ -93,6 +93,7 @@ grep avgtext log.$name
 grep ERROR log.$name
 grep "Memory Error" log.$name
 grep "No valid target devices" log.$name
+grep "Command terminated" log.$name
 
 if [ -d meas.$name ]; then
 	THREADS=`ls meas.$name/*.hpcrun | wc -l`
