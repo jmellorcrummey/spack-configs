@@ -3,20 +3,11 @@
 #include <hip_runtime_api.h>
 #include <device_functions.h>
 
-#if 0
-#include <cuda.h>
-#include <cuda_runtime_api.h>
-#include <cuda_device_runtime_api.h>
-#include <cuda_runtime.h>
-#include <device_launch_parameters.h>
-#endif
-
 int checkxfers();
 
 __global__ void
 xcompute(const double *d_l1, const double *d_r1, double *d_p1, int nelements )
 {
-  dim3 blockDim;
   int i = blockDim.x * blockIdx.x + threadIdx.x;
   if (i < nelements) {
     d_p1[i] = d_p1[i] + 1.+ (sqrt( exp( log (d_l1[i]*d_l1[i]) ) + exp( log (d_r1[i]*d_r1[i]) ) ) ) /

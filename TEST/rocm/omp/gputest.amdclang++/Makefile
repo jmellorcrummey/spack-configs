@@ -3,8 +3,8 @@
 SRCS	= ../../../src/gputest.cc ../../../src/ompgpu.cc
 TARGET	= llvm.gputest
 
-MARCH = -march=gfx90a
 MARCH = -march=gfx906 
+MARCH = -march=gfx90a
 
 default all: $(TARGET)
 
