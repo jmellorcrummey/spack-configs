@@ -81,6 +81,8 @@ packages:
     version:  [master]
     variants: +cuda +mpi ~papi +viewer
 
+  hpcviewer:
+    version: [2022.06]
 
   # binutils -- used by hpcprof and struct simple (for functions and
   # line map info) and for VMA types in various places.
