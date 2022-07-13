@@ -76,9 +76,11 @@ packages:
   # +cuda, +rocm for GPU support.
   #
   hpctoolkit:
-    version:  [2022.04.15, master]
+    version:  [master]
     variants: +mpi +papi +viewer
 
+  hpcviewer:
+    version: [2022.06]
 
   # binutils -- used by hpcprof and struct simple (for functions and
   # line map info) and for VMA types in various places.
@@ -141,7 +143,7 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [12.1.0, master]
+    version:  [master]
     variants: +openmp build_type=RelWithDebInfo
 
 
