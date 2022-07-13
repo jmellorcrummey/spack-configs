@@ -54,7 +54,7 @@ packages:
   # +cuda, +rocm for GPU support.
   #
   hpctoolkit:
-    version: [2022.04.15, master]
+    version: [master]
     variants: +mpi +papi +viewer +cuda
 
 
@@ -112,7 +112,7 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version: [12.0.1, master]
+    version: [master]
     variants: +openmp build_type=RelWithDebInfo
 
 
