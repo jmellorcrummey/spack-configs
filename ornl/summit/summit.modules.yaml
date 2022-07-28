@@ -1,0 +1,31 @@
+# -------------------------------------------------------------------------
+# This is the default configuration for Spack's module file generation.
+#
+# Settings here are versioned with Spack and are intended to provide
+# sensible defaults out of the box. Spack maintainers should edit this
+# file to keep it current.
+#
+# Users can override these settings by editing the following files.
+#
+# Per-spack-instance settings (overrides defaults):
+#   $SPACK_ROOT/etc/spack/modules.yaml
+#
+# Per-user settings (overrides default and site settings):
+#   ~/.spack/modules.yaml
+# -------------------------------------------------------------------------
+modules:
+  default:
+    enable:
+      - tcl
+      - lmod
+    roots:
+      tcl:    /gpfs/alpine/csc322/world-shared/.install/2022-07-27/modulefiles-tcl
+      lmod:   /gpfs/alpine/csc322/world-shared/.install/2022-07-27/modulefiles-lmod
+    tcl:
+      all:
+        autoload: none
+    lmod:
+      all:
+        autoload: none
+      hierarchy:
+        - compiler
