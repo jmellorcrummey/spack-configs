@@ -20,6 +20,13 @@
 packages:
 
   #------------------------------------------------------------
+  # For now, HPCToolkit can only be compiled with GCC.
+  # Enforce this requirement here for all Spack packages.
+  #------------------------------------------------------------
+  all:
+    compiler: [gcc@9.1.0]
+
+  #------------------------------------------------------------
   # 1 -- HPCToolkit Prerequisite Packages
   #------------------------------------------------------------
 
@@ -50,7 +57,7 @@ packages:
   # +papi uses papi instead of perfmon.
   #
   hpctoolkit:
-    version:  [2020.08.03]
+    version:  [master]
     variants: +cuda +mpi
 
 
@@ -61,11 +68,12 @@ packages:
   # function names in the viewer (from hpcprof and struct simple).
   #
   # +libiberty is needed for xmalloc functions in libbfd.
-  # ~nls is needed to avoid linking with libintl from gettext.
+  # ~nls was needed to avoid linking with libintl from gettext. (no longer
+  # needed since hpctoolkit 2020.04)
   #
   binutils:
-    version:  [2.33.1]
-    variants: +libiberty ~nls
+    version:  [2.37]
+    variants: +libiberty
 
 
   # boost -- used by dyninst and now in hpcstruct.
@@ -83,7 +91,7 @@ packages:
   # visibility=global is required for recent hpctoolkit.
   #
   boost:
-    version:  [1.72.0]
+    version:  [1.79.0]
     variants: >
       +atomic +chrono +date_time +filesystem +system +thread +timer
       +graph +regex +shared +multithreaded ~debug
@@ -104,13 +112,15 @@ packages:
   # Version 10.1 reportedly has faster support for PC sampling
   # Use the default one on summit
   # cuda:
-  #   modules:
-  #     cuda@10.0:  cuda/10.0
+  #   externals:
+  #   - spec: cuda@10.0
+  #     modules: [cuda/10.0]
   #   buildable: False
   #
   cuda:
-    modules:
-      cuda@11.0.3:  cuda/11.0.3
+    externals:
+    - spec: cuda@11.0.3
+      modules: [cuda/11.0.3]
     buildable: False
 
 
@@ -120,10 +130,14 @@ packages:
   # Need >= 10.0 or develop for best parseapi and CFG support.  On
   # Blue Gene, with the default gcc 4.4 compilers, use version 9.3.2.
   #
+  # For Summit, as of July 2022 dyninst master branch is needed for
+  # bugfix with parallel analysis of NVIDIA GPU cubins:
+  # https://github.com/dyninst/dyninst/pull/1284
+  #
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [10.2.0]
+    version:  [master]
     variants: +openmp build_type=RelWithDebInfo
 
 
@@ -137,7 +151,7 @@ packages:
   # ~nls is needed to avoid linking with libintl from gettext.
   #
   elfutils:
-    version:  [0.178]
+    version:  [0.186]
     variants: +bzip2 +xz ~nls
 
 
@@ -149,21 +163,22 @@ packages:
   # support transactional memory (no-op on non-x86).
   #
   intel-tbb:
-    version:  [2020.1]
+    version:  [2020.3]
     variants: +shared +tm
 
 
   # intel-xed -- used in various places to parse x86 instructions
   # (used on x86 only).
+  # For Summit (ppc64le) it's obviously not needed.
   #
   # Xed does not have releases, only git repo snapshots.  But Xed
   # changes pretty slowly.
   #
   # +debug adds debug symbols (-g).
   #
-  intel-xed:
-    version:  [2019.03.01]
-    variants: +debug
+  #intel-xed:
+  #  version:  [2022.04.17]
+  #  variants: +debug
 
 
   # libdwarf -- used in fnbounds for access to eh frames (not yet
@@ -180,11 +195,12 @@ packages:
   # doesn't actually link with it).
   #
   # Any recent version is good.
+  # Try to sync the same version with binutils above.
   #
   # +pic is needed to link with dyninst shared library.
   #
   libiberty:
-    version:  [2.33.1]
+    version:  [2.37]
     variants: +pic
 
 
@@ -192,6 +208,7 @@ packages:
   # processes and threads.
   #
   # Normally want the most recent snapshot.
+  # No longer needed for hpctoolkit >= 2021.03.01
   #
   # +hpctoolkit is needed for features specific to hpctoolkit (client
   # signals).
@@ -213,7 +230,7 @@ packages:
   # Normally want the latest version to support recent CPU types.
   #
   libpfm4:
-    version:  [4.10.1]
+    version:  [4.11.0]
 
 
   # libunwind -- used in hpcrun to help with unwinding.
@@ -224,34 +241,36 @@ packages:
   # +xz is for reading compressed symbol tables.
   #
   libunwind:
-    version:  [1.4-rc1, 2018.10.12]
-    variants: +xz
+    version:  [1.6.2]
+    variants: +xz +pic
 
 
-  # mbedtls -- now used in master.
+  # mbedtls -- used until hpctoolkit 2022.03.15
   #
   # Use a recent version >= 2.16.1.
   #
   # +pic is required for linking with hpcrun.
   #
-  mbedtls:
-    version:  [2.16.1]
-    variants: +pic
+  #mbedtls:
+  #  version:  [2.16.1]
+  #  variants: +pic
 
   # papi -- used in hpcrun for access to the hardware performance
   # counters.
   #
   # If there is a pre-built PAPI for the compute nodes, then it may be
-  # better to use that and replace this with a 'paths:' or 'modules:'
-  # entry (see the section on cmake).  But make sure that the PAPI
-  # include directory contains the perfmon headers, or else you can't
-  # use both PAPI and perfmon.
+  # better to use that and replace this with a 'externals:' entry.
+  # But make sure that the PAPI include directory contains the perfmon
+  # headers, or else you can't use both PAPI and perfmon.
   #
   # If building, then use version >= 5.6.0 for the installed perfmon
   # headers.
   #
   papi:
-    version:  [5.7.0]
+    externals:
+    - spec: papi@6.0.0.1
+      modules: [papi/6.0.0.1]
+    buildable: False
 
 
   # xerces -- used in hpcprof to read XML.
@@ -261,7 +280,7 @@ packages:
   # transcoder=iconv is needed to avoid linking with libiconv.
   #
   xerces-c:
-    version:  [3.2.2]
+    version:  [3.2.3]
     variants: transcoder=iconv
 
 
@@ -271,19 +290,20 @@ packages:
   # Any recent version is good.
   #
   xz:
-    version:  [5.2.4]
+    version:  [5.2.5]
+    variants: +pic
 
 
   # zlib -- used by binutils, elfutils and libdwarf to read compressed
   # sections (and copy libs).
   #
-  # Zlib development is stagnant and 1.2.9 and 1.2.10 are buggy, so
-  # 1.2.11 is the only recent version.
+  # Zlib development seems to have resumed with version 1.2.12.
+  # 1.2.9 and 1.2.10 are buggy.
   #
   # +optimize is to add -O2.
   #
   zlib:
-    version:  [1.2.11]
+    version:  [1.2.12]
     variants: +optimize +shared
 
 
@@ -314,15 +334,17 @@ packages:
   # parent directory of 'bin', not the bin directory itself (similar
   # to prefix).
   # cmake:
-  #   paths:
-  #     cmake@3.11.0:  /usr
+  #   externals:
+  #   - spec: cmake@3.11.0:
+  #     prefix: /usr
   #   buildable: False
 
   # Example for a module.  This example says that cmake 3.7.2 is
   # available from module 'CMake/3.7.2'.
   cmake:
-    modules:
-      cmake@3.13.4:   cmake/3.13.4
+    externals:
+    - spec: cmake@3.23.2
+      modules: [cmake/3.23.2]
     buildable: False
 
   # Example spec to build cmake from scratch.
@@ -338,8 +360,9 @@ packages:
   # Example for system perl.
 
   perl:
-    paths:
-      perl@5.16.3:  /usr
+    externals:
+    - spec: perl@5.26.3
+      prefix: /usr
     buildable: False
 
   # Example spec to build perl.
@@ -353,14 +376,16 @@ packages:
 
   # Example for system python.
   python:
-    paths:
-      python@2.7.5:  /usr
+    externals:
+    - spec: python@3.6.8
+      prefix: /usr
     buildable: False
 
   # Example for python module.
   # python:
-  #   modules:
-  #     python@2.7.15:  Python/2.7.15
+  #   externals:
+  #   - spec: python@2.7.15
+  #     modules: [Python/2.7.15]
   #   buildable: False
 
   # Example spec to build python.
@@ -370,7 +395,6 @@ packages:
   #   variants: ~dbm ~tk
 
   #------------------------------------------------------------
-
   # MPI -- hpctoolkit always supports profiling MPI applications.
   # Adding MPI here is only for building hpcprof-mpi, the MPI version
   # of hpcprof.
@@ -381,18 +405,15 @@ packages:
   # gcc/g++ and the same version used to build hpctoolkit (to keep the
   # C++ libraries in sync).
   #
-  # openmpi:
-  #   modules:
-  #     openmpi@2.1.3:  OpenMPI/2.1.3
-  #   buildable: False
-  openmpi:
-    modules:
-      openmpi@3.0.0: spectrum-mpi/10.3.1.2-20200121
+
+  spectrum-mpi:
+    externals:
+    - spec: spectrum-mpi@10.4.0.03rtm4
+      modules: [spectrum-mpi/10.4.0.3-20210112]
     buildable: False
 
 
   #------------------------------------------------------------
-
   # GCC -- hpctoolkit requires building with GNU gcc/g++.  We require
   # version 4.8 at a minimum and preferably 5.x or later.
   #
@@ -404,6 +425,19 @@ packages:
   # want to build first.  4.8.4 is really only for Blue Gene.
 
   gcc:
-    modules:
-      gcc@6.4.0:   gcc/6.4.0
+    externals:
+    - spec: gcc@9.1.0 languages=c,c++,fortran
+      modules: [gcc/9.1.0]
     buildable: False
+
+  #------------------------------------------------------------
+  # Other packages
+  #------------------------------------------------------------
+
+  # For some reason curl refuses to build, which xerces depends on.
+  # Use system-installed curl, for now.
+
+  curl:
+    externals:
+    - spec: curl@7.61.1
+      prefix: /usr
