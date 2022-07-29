@@ -80,7 +80,7 @@ packages:
   # +cuda, +rocm for GPU support.
   #
   hpctoolkit:
-    version:  [2022.04.15]
+    version:  [master]
     variants: +mpi +papi +viewer +cuda +rocm
 
   # binutils -- used by hpcprof and struct simple (for functions and
@@ -144,7 +144,7 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [12.1.0, master]
+    version:  [master]
     variants: +openmp build_type=RelWithDebInfo
 
 
@@ -348,23 +348,23 @@ packages:
   #
   hip:
     externals:
-    - spec: hip@5.1.0
-      prefix: /opt/rocm-5.1.0
+    - spec: hip@5.2.0
+      prefix: /opt/rocm-5.2.0
    
   hsa-rocr-dev:
     externals:
-    - spec: hsa-rocr-dev@5.1.0
-      prefix: /opt/rocm-5.1.0
+    - spec: hsa-rocr-dev@5.2.0
+      prefix: /opt/rocm-5.2.0
 
   roctracer-dev:
     externals:
-    - spec: roctracer-dev@5.1.0
-      prefix: /opt/rocm-5.1.0
+    - spec: roctracer-dev@5.2.0
+      prefix: /opt/rocm-5.2.0
 
   rocprofiler-dev:
     externals:
-    - spec: rocprofiler-dev@5.1.0
-      prefix: /opt/rocm-5.1.0
+    - spec: rocprofiler-dev@5.2.0
+      prefix: /opt/rocm-5.2.0
 
   # If ROCM is not already installed, then you can build it as part of 
   # hpctoolkit.  In either case, build hpctoolkit with:
