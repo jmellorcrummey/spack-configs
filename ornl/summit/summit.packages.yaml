@@ -121,6 +121,8 @@ packages:
     externals:
     - spec: cuda@11.0.3
       modules: [cuda/11.0.3]
+    - spec: cuda@11.5.2
+      modules: [cuda/11.5.2]
     buildable: False
 
 
@@ -130,14 +132,10 @@ packages:
   # Need >= 10.0 or develop for best parseapi and CFG support.  On
   # Blue Gene, with the default gcc 4.4 compilers, use version 9.3.2.
   #
-  # For Summit, as of July 2022 dyninst master branch is needed for
-  # bugfix with parallel analysis of NVIDIA GPU cubins:
-  # https://github.com/dyninst/dyninst/pull/1284
-  #
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [master]
+    version:  [12.2.0]
     variants: +openmp build_type=RelWithDebInfo
 
 
