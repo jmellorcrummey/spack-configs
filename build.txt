@@ -34,6 +34,9 @@ INITIAL BUILD
       <build.out> is the absolute path to wherever you want the build installed
 
       <other-options> specify additional options for the build.  They include
+	--with-rocm=<path to rocm>  You can find it by loading the module and doing "which hipcc".
+	    The <path to rocm> is "which hipcc", with bin/hipcc removed from it.
+
 	--with-cuda=<path to cuda>  You can find it by loading the module and doing "which nvcc".
 	    The <path to cuda> is "which nvcc", with bin/nvcc removed from it.
 
