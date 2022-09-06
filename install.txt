@@ -19,7 +19,7 @@ To do a spack install and test for a machine <machine> at site <site>:
 
 	FYI:
 	    The hpctoolkit sources may not be needed, but can be gotten by:
-		git clone https://github.com/hpctoolkit/hpctoolkit
+		git clone https://gitlab.com/hpctoolkit/hpctoolkit
 		    See build.txt for more information
 	    The hpctest sources may not be needed, but can be gotten by
 		git clone https://github.com/scottkwarren/hpctest

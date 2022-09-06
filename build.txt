@@ -8,14 +8,14 @@ INITIAL BUILD
 -------------
 1.  Get the sources:
     To create a new branch:
-	git clone https://github.com/hpctoolkit/hpctoolkit.git
+	git clone https://gitlab.com/hpctoolkit/hpctoolkit.git
 	git branch xyz (If you want to create the branch, not otherwise)
 	git checkout xyz
 	git push --set-upstream origin xyz
 	git pull	
 
     To use an existing branch:
-	git clone https://github.com/hpctoolkit/hpctoolkit.git -b <branch>
+	git clone https://gitlab.com/hpctoolkit/hpctoolkit.git -b <branch>
 
 2.  Construct the build area:
 	cd hpctoolkit
