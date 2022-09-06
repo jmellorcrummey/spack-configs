@@ -6,7 +6,7 @@
 config:
   # This is the path to the root of the Spack install tree.
   install_tree:
-    root: /gpfs/alpine/csc322/world-shared/.install/2022-07-27/spack
+    root: /gpfs/alpine/csc322/world-shared/.install/2022-08-summit/spack
 
 
   # Temporary locations Spack can try to use for builds.
