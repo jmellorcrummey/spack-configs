@@ -1,0 +1,23 @@
+# -------------------------------------------------------------------------
+# This is the per-spack-instance configuration file customized for Summit.
+# Keys that are identical to the defaults have been omitted.
+# Make sure to run bin/spacklink!
+# -------------------------------------------------------------------------
+config:
+  # This is the path to the root of the Spack install tree.
+  install_tree:
+    root: /gpfs/alpine/csc322/world-shared/.install/2022-08-crusher-rocm-5.1/spack
+
+
+  # Temporary locations Spack can try to use for builds.
+  # Use MEMBERWORK on Crusher for best performance.
+  build_stage:
+    - /gpfs/alpine/csc322/scratch/wyphan/spack/stage
+#    - /gpfs/alpine/csc322/scratch/laksono/spack/stage
+
+
+  # How long to wait to lock the Spack installation database. This lock is used
+  # when Spack needs to manage its own package metadata and all operations are
+  # expected to complete within the default time limit. The timeout should
+  # therefore generally be left untouched.
+  db_lock_timeout: 120
