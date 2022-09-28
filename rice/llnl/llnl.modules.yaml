@@ -1,21 +1,14 @@
 # -------------------------------------------------------------------------
-# This is the spack configuration file, CONFIGURED for msi3 on ufront.cs.rice.edu
-#
-# Settings here are versioned with Spack and are intended to provide
-# sensible defaults out of the box. Spack maintainers should edit this
-# file to keep it current.
-#
-# Users can override these settings by editing the following files.
-#
-# Per-spack-instance settings (overrides defaults):
-#   $SPACK_ROOT/etc/spack/config.yaml
-#
-# Per-user settings (overrides default and site settings):
-#   ~/.spack/config.yaml
+# This is the spack configuration file, CONFIGURED for wp11 on llnl.cs.rice.edu
+# Make sure to run bin/spacklink!
 # -------------------------------------------------------------------------
 modules:
   default:
+    enable: [tcl]
     roots:
-      tcl:  /home/msi3/my.install/2022-04-15/MODULES/modules
-    enable:
-      - tcl
+      tcl:  /home/wp11/hpctoolkit-develop/modulefiles
+    tcl:
+      include: [hpctoolkit, hpcviewer]
+      exclude: ["@:"]
+      projections:
+        all: '{name}/{version}'

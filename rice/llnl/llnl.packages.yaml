@@ -1,5 +1,7 @@
 # -------------------------------------------------------------------------
-# This is the spack packages file, CONFIGURED for msi3 on llnl.cs.rice.edu
+# This is the spack packages file, CONFIGURED for wp11 on llnl.cs.rice.edu
+# Make sure to run bin/spacklink!
+# -------------------------------------------------------------------------
 #
 #
 #  packages.yaml
@@ -22,7 +24,7 @@
 #    https://spack.readthedocs.io/en/latest/configuration.html
 #    https://spack.readthedocs.io/en/latest/build_settings.html
 #
-#  Last revised: April 14, 2022.
+#  Last revised: Sep 23, 2022.
 #
 packages:
 
@@ -36,12 +38,12 @@ packages:
   # Selecting a specific provider for a virtual package (eg, openmpi
   # for mpi) also goes here under 'all'.
   #
-  all:
-    target: ['x86_64','ppc64','ppc64le','aarch64']
-  #   compiler: [gcc@8.3.1]
-  #   providers:
-  #     mpi: [openmpi]
+  # For now, HPCToolkit can only be compiled with GCC.
+  # Enforce this requirement here for all Spack packages.
 
+  all:
+    target: [ppc64le]
+    compiler: [gcc@11.2.0]
 
   #------------------------------------------------------------
   # 1 -- HPCToolkit Prerequisite Packages
@@ -67,6 +69,7 @@ packages:
   #------------------------------------------------------------
 
 
+
   # hpctoolkit -- these settings can be specified here or else on the
   # spack install command line.
   #
@@ -77,25 +80,11 @@ packages:
   # +mpi builds hpcprof-mpi (requires mpi).
   # +papi uses papi instead of perfmon (now default).
   # +viewer also installs hpcviewer (default).
-  # +cuda, +rocm for GPU support.
+  # +cuda, +rocm, +level_zero, +gtpin, +opencl for GPU support.
   #
   hpctoolkit:
-    version:  [2022.04.15,master]
-    variants: +mpi +papi +viewer +cuda
-
-  # binutils -- used by hpcprof and struct simple (for functions and
-  # line map info) and for VMA types in various places.
-  #
-  # Need >= 2.32 for important bug fixes.
-  # Avoid 2.35, it contains a bug that spews errors from hpcprof.
-  # Hpctoolkit <= 2020.03.01 requires binutils <= 2.33.1.
-  #
-  # +libiberty is needed for xmalloc functions in libbfd.
-  # ~nls is used to avoid building gettext.
-  #
-  binutils:
-    version:  [2.38]
-    variants: +libiberty ~nls
+    version:  [develop]
+    variants: ~mpi +papi +viewer +cuda
 
 
   # boost -- used by dyninst and now in hpcstruct.
@@ -137,6 +126,7 @@ packages:
   # and loop analysis.  Hpctoolkit and Dyninst work closely together
   # and Dyninst issues releases infrequently, so sometimes it's
   # necessary to use master for the best results.
+  # Also used for hpcprof since HPCToolkit 2022.09.
   #
   # Latest hpctoolkit needs > 12.0.0.  Several problems were discovered
   # in dyninst 11.0.0 that caused failures in hpcstruct.
@@ -144,7 +134,7 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [12.1.0, master]
+    version:  [12.2.0]
     variants: +openmp build_type=RelWithDebInfo
 
 
@@ -165,10 +155,10 @@ packages:
 
   # intel-tbb -- used by dyninst as part of parallel parsing.
   #
-  # Dyninst requires >= 2018.6, most anything after that is good.
+  # Dyninst requires >= 2018.6 and <= 2020.3
   #
   # Note: add ~tm for very old x86 or AMD or KNL systems that don't
-  # support transactional memory (no-op on non-x86).
+  #       support transactional memory (no-op on non-x86).
   #
   intel-tbb:
     version:  [2020.3]
@@ -177,25 +167,16 @@ packages:
 
   # intel-xed -- used in various places to parse x86 instructions
   # (used on x86 only).
+  # For llnl.cs (ppc64le) it's obviously not needed.
   #
   # Xed now has releases but changes very slowly.  Normally use the
   # latest release for best results.
   #
   # +debug adds debug symbols (-g).
   #
-  intel-xed:
-    version:  [12.0.1]
-    variants: +debug
-
-
-  # libdwarf -- used in fnbounds for access to eh frames (not yet
-  # available from elfutils).
-  #
-  # Normally want a recent version for best support for output from
-  # current compilers.
-  #
-  libdwarf:
-    version:  [20180129]
+  # intel-xed:
+  #   version:  [12.0.1]
+  #   variants: +debug
 
 
   # libiberty -- needed for dyninst configure (although dyninst 10.x
@@ -220,7 +201,7 @@ packages:
   # ~dlopen is needed for 2021.02 and later.
   #
   libmonitor:
-    version:  [2021.11.08, master]
+    version:  [master]
     variants: +hpctoolkit ~dlopen
 
 
@@ -233,8 +214,8 @@ packages:
   #
   # Normally want the latest version to support recent CPU types.
   #
-  libpfm4:
-    version:  [4.11.0]
+  # libpfm4:
+  #   version:  [4.11.0]
 
 
   # libunwind -- used in hpcrun to help with unwinding.
@@ -255,9 +236,9 @@ packages:
   #
   # +pic is required for linking with hpcrun.
   #
-  mbedtls:
-    version:  [2.27.0]
-    variants: +pic
+  # mbedtls:
+  #   version:  [2.27.0]
+  #   variants: +pic
 
 
   # papi -- used in hpcrun for access to the hardware performance
@@ -300,6 +281,11 @@ packages:
     variants: +pic
 
 
+  # yaml-cpp -- used in hpcprof since HPCToolkit 2022.09
+  yaml-cpp:
+    version: [0.7.0]
+
+
   # zlib -- used by binutils, elfutils and libdwarf to read compressed
   # sections.
   #
@@ -331,9 +317,11 @@ packages:
   #   version: [11.1.0]
   #
   cuda:
+    buildable: False
     externals:
     - spec: cuda@11.0
       prefix: /usr/local/cuda-11.0
+      modules: [cuda/11.0]
 
   #------------------------------------------------------------
 
@@ -375,6 +363,14 @@ packages:
 
   #------------------------------------------------------------
 
+  # opencl: new in HPCToolkit 2022.09. Requires OpenCL header files.
+
+  opencl-c-headers:
+    version: [2022.01.04]
+  
+
+  #------------------------------------------------------------
+
   # MPI -- hpctoolkit always supports profiling MPI applications.
   # Adding MPI here is only for building hpcprof-mpi, the MPI version
   # of hpcprof.
@@ -385,8 +381,11 @@ packages:
   # gcc/g++ and the same version used to build hpctoolkit (to keep the
   # C++ libraries in sync).
   #
-  openmpi:
-    version:  [4.1.1]
+  # Note that starting with HPCToolkit 2022.09, hpcprof-mpi is
+  # disabled.
+  #
+  #openmpi:
+  #  version:  [4.1.1]
 
 
   #------------------------------------------------------------
@@ -454,20 +453,19 @@ packages:
 
   # Example spec to build cmake from scratch.
   # +ownlibs, ~qt and ~openssl are to reduce prerequisites.
-  # cmake:
-  #   version:  [3.12.4]
-  #   variants: +ownlibs ~qt ~openssl
+  cmake:
+    variants: +ownlibs ~qt ~openssl
 
   #------------------------------------------------------------
 
   # perl -- autotools requires perl >= 5.x which most systems have.
 
   # Example for system perl.
-  # perl:
-  #   externals:
-  #   - spec: perl@5.16.3
-  #     prefix: /usr
-  #   buildable: False
+  perl:
+    buildable: False
+    externals:
+    - spec: perl@5.16.3
+      prefix: /usr
 
   # Example spec to build perl.
   # perl:
@@ -479,13 +477,14 @@ packages:
 
   # Example for system python.  If you have both python2 and python3,
   # then specify them both as 'python' (a special rule for python).
-  # python:
-  #   externals:
-  #   - spec: python@3.6.5
-  #     prefix: /usr
-  #   - spec: python@2.7.5
-  #     prefix: /usr
-  #   buildable: False
+  python:
+    buildable: False
+    externals:
+    - spec: python@3.6.8
+      prefix: /usr
+    - spec: python@2.7.5
+      prefix: /usr
+
 
   # Example for python module.
   # python:
