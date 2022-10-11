@@ -57,23 +57,8 @@ packages:
   # +papi uses papi instead of perfmon.
   #
   hpctoolkit:
-    version:  [master]
-    variants: +cuda +mpi
-
-
-  # binutils -- used by hpcprof and struct simple (for functions and
-  # line map info) and for VMA types in various places.
-  #
-  # Best to use >= 2.32, earlier versions have a bug causing duplicate
-  # function names in the viewer (from hpcprof and struct simple).
-  #
-  # +libiberty is needed for xmalloc functions in libbfd.
-  # ~nls was needed to avoid linking with libintl from gettext. (no longer
-  # needed since hpctoolkit 2020.04)
-  #
-  binutils:
-    version:  [2.37]
-    variants: +libiberty
+    version:  ['2022.10.01']
+    variants: +cuda +viewer ~mpi ~papi
 
 
   # boost -- used by dyninst and now in hpcstruct.
@@ -155,10 +140,11 @@ packages:
 
   # intel-tbb -- used by dyninst as part of parallel parsing.
   #
-  # Dyninst requires >= 2018.6, most anything after that is good.
+  # Dyninst requires >= 2018.6 and <= 2020.3
   #
   # Note: add ~tm for very old x86 or AMD or KNL systems that don't
   # support transactional memory (no-op on non-x86).
+  # For Summit, POWER9 supports transactional memory.
   #
   intel-tbb:
     version:  [2020.3]
@@ -179,14 +165,14 @@ packages:
   #  variants: +debug
 
 
-  # libdwarf -- used in fnbounds for access to eh frames (not yet
+  # libdwarf -- was used in fnbounds for access to eh frames (not yet
   # available from elfutils).
   #
   # Normally want a recent version for best support for output from
   # current compilers.
   #
-  libdwarf:
-    version:  [20180129]
+  # libdwarf:
+  #   version:  [20180129]
 
 
   # libiberty -- needed for dyninst configure (although dyninst 10.x
@@ -206,16 +192,15 @@ packages:
   # processes and threads.
   #
   # Normally want the most recent snapshot.
-  # No longer needed for hpctoolkit >= 2021.03.01
   #
   # +hpctoolkit is needed for features specific to hpctoolkit (client
   # signals).
   #
   # Note: add +bgq on blue gene/q.
   #
-  #libmonitor:
-  #  version:  [2018.07.18, master]
-  #  variants: +hpctoolkit
+  libmonitor:
+    version:  [2022.09.02]
+    variants: +hpctoolkit
 
 
   # libpfm4 (perfmon) -- used in hpcrun for access to the hardware
@@ -250,8 +235,14 @@ packages:
   # +pic is required for linking with hpcrun.
   #
   #mbedtls:
-  #  version:  [2.16.1]
+  #  version:  [2.27.0]
   #  variants: +pic
+
+
+  # opencl-c-headers -- new in HPCToolkit 2022.10.01 for OpenCL support
+  #
+  opencl-c-headers:
+    version: [2022.01.04]
 
   # papi -- used in hpcrun for access to the hardware performance
   # counters.

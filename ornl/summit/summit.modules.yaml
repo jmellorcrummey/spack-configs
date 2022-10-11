@@ -19,8 +19,8 @@ modules:
       - tcl
       - lmod
     roots:
-      tcl:    /gpfs/alpine/csc322/world-shared/.install/2022-07-27/modulefiles-tcl
-      lmod:   /gpfs/alpine/csc322/world-shared/.install/2022-07-27/modulefiles-lmod
+      tcl:    /gpfs/alpine/csc322/world-shared/.install/2022-10-summit/modulefiles-tcl
+      lmod:   /gpfs/alpine/csc322/world-shared/.install/2022-10-summit/modulefiles-lmod
     tcl:
       all:
         autoload: none
