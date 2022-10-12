@@ -27,7 +27,7 @@ modules:
       hierarchy: false
       'hpctoolkit+cuda':
         projections: '{name}/{version}-gpu'
-	conflict: ['cpu']
+        conflict: ['cpu']
       'hpctoolkit~cuda':
         projections: '{name}/{version}-cpu'
-	conflict: ['gpu']
+        conflict: ['gpu']
