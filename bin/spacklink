@@ -78,6 +78,7 @@ if test ! -d $spack_config_root/$site/$machine; then
 fi
 
 spack_etc=$spack_root/etc/spack
+spack_env_root="$(realpath $spack_root/../spack-env)"
 
 echo Removing current spack configuration settings
 $echo /bin/rm -rf $spack_etc/*.yaml
@@ -87,6 +88,7 @@ echo "Configuring $spack_root with spack configuration files for  site=$site mac
 config=$spack_config_root/$site/$machine/$machine.config.yaml
 modules=$spack_config_root/$site/$machine/$machine.modules.yaml
 packages=$spack_config_root/$site/$machine/$machine.packages.yaml
+spack_env_yaml=$spack_config_root/$site/$machine/$machine.spack.yaml
 
 if test ! -f $config; then
 	echo "No config file $config; skipping"
@@ -104,4 +106,17 @@ if test ! -f $packages; then
 	$echo "No packages file $packages; skipping"
 else
 	$echo ln  -s $packages $spack_etc/packages.yaml
+fi
+
+if test -f $spack_env_yaml; then
+  echo "Found Spack environment file $spack_env_yaml"
+  if test ! -d "$spack_env_root"; then
+    echo "Creating Spack environment directory at $spack_env_root"
+    $echo mkdir -p "$spack_env_root"
+  fi
+  if test -h "$spack_env_root/spack.yaml"; then
+    echo "Note: remember to reconcretize the Spack environment"
+    $echo /bin/rm -rf "$spack_env_root/spack.yaml"
+  fi  
+  $echo ln -s $spack_env_yaml $spack_env_root/spack.yaml
 fi
