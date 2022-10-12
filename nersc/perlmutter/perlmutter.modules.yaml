@@ -1,0 +1,33 @@
+# -------------------------------------------------------------------------
+# This is the default configuration for Spack's module file generation.
+#
+# Settings here are versioned with Spack and are intended to provide
+# sensible defaults out of the box. Spack maintainers should edit this
+# file to keep it current.
+#
+# Users can override these settings by editing the following files.
+#
+# Per-spack-instance settings (overrides defaults):
+#   $SPACK_ROOT/etc/spack/modules.yaml
+#
+# Per-user settings (overrides default and site settings):
+#   ~/.spack/modules.yaml
+# -------------------------------------------------------------------------
+modules:
+  default:
+    enable: [lmod]
+    roots:
+      lmod: /global/common/software/m3977/hpctoolkit/2022.10.01/perlmutter/modulefiles
+    arch_folder: false
+    lmod:
+      all:
+        autoload: none
+      core_compilers:
+        - 'gcc@7.5.0'
+      hierarchy: false
+      'hpctoolkit+cuda':
+        projections: '{name}/{version}-gpu'
+	conflict: ['cpu']
+      'hpctoolkit~cuda':
+        projections: '{name}/{version}-cpu'
+	conflict: ['gpu']
