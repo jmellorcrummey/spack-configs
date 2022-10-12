@@ -347,19 +347,18 @@ packages:
   # python -- spack always requires python >= 2.6 to do anything.
   # On x86, intel-xed requires python 2.7.x or >= 3.4.
 
-  # Example for system python.
   python:
-    externals:
-    - spec: python@3.6.15
-      prefix: /usr
     buildable: False
+    externals:
+    - spec: python@3.9.12
+      modules: [cray-python/3.9.12.1]
 
-  # Example for python module.
-  # python:
-  #   externals:
-  #   - spec: python@2.7.15
-  #     modules: [Python/2.7.15]
-  #   buildable: False
+  # Note: system Python is affected by issue #25354
+  # https://github.com/spack/spack/issues/25354#issuecomment-958670411
+  #
+  #  - spec: python@3.6.15
+  #    prefix: /usr
+
 
   # Example spec to build python.
   # ~dbm, ~tk are to reduce prerequisites.
