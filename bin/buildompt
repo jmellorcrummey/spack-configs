@@ -78,7 +78,7 @@ $echo pushd "${LLVM_OMP_BLDDIR}"
 # Configure
 #-------------------------------------------------------------------------------
 
-$echo cmake -D CMAKE_BUILD_TYPE=RelWithDebInfo -D CMAKE_C_COMPILER=$CC -D CMAKE_CXX_COMPILER=$CXX -D LIBOMP_OMPT_SUPPORT=ON -D OPENMP_ENABLE_LIBOMPTARGET=OFF -D CMAKE_INSTALL_PREFIX="${LLVM_OMP_PFX_REAL})" ..
+$echo cmake -D CMAKE_BUILD_TYPE=RelWithDebInfo -D CMAKE_C_COMPILER=$CC -D CMAKE_CXX_COMPILER=$CXX -D LIBOMP_OMPT_SUPPORT=ON -D OPENMP_ENABLE_LIBOMPTARGET=OFF -D CMAKE_INSTALL_PREFIX="${LLVM_OMP_PFX_REAL}" ..
   if [ $? -ne 0 ]; then
     echo "$(basename $0): Configure failed!"
     exit 0  
