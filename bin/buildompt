@@ -1,0 +1,101 @@
+#!/bin/bash
+
+#-------------------------------------------------------------------------------
+# buildompt
+#
+# A script to build LLVM OpenMP runtime for OMPT support
+#
+# Please provide the following positional arguments:
+#
+# 1. <llvm-repo-srcdir>: source directory of a git clone of the LLVM monorepo.
+#    You can always get the latest dev version using
+#    git clone https://github.com/llvm/llvm-project.git
+#
+# 2. <install-prefix>: the installation prefix to pass on to CMake
+#
+# If not set already, you might want to export CC and CXX to point to
+# the gcc and g++ versions that you want to use.
+#
+# Also check out LLVM docs on building:
+# https://llvm.org/docs/GettingStarted.html#getting-started-with-llvm
+#-------------------------------------------------------------------------------
+
+usage()
+{ 
+  echo "Usage: $(basename $0) [-n] [-j N] <llvm-repo-srcdir> <install-prefix>"
+  exit 1
+}
+
+# -n flag means a dry-run simulation
+if [ "$1" == "-n" ]; then
+  echo=echo
+  shift
+else
+  echo=
+fi
+
+# -j flag specifies to build in parallel with N jobs
+if [ "$1" == "-j" ]; then
+  NJOBS=$2
+  shift 2  
+fi
+
+# $1 LLVM monorepo source directory
+if [ "x$1" == "x" ]; then
+  usage
+else
+  LLVM_SRCDIR="$1"
+fi
+
+# $2 Install prefix directory
+if [ "x$2" == "x" ]; then
+    usage
+else
+  LLVM_OMP_PFX="$2"
+fi  
+
+if [ -d "${LLVM_SRCDIR}" ]; then
+  LLVM_OMP_SRCDIR="${LLVM_SRCDIR}/openmp"
+  LLVM_OMP_BLDDIR="${LLVM_OMP_SRCDIR}/openmp-build"
+  if [ ! -d "${LLVM_OMP_SRCDIR}" ]; then
+    echo "$(basename $0): Cannot find LLVM OpenMP source directory ${LLVM_OMP_SRCDIR}"
+    usage
+  fi
+  if [ -d "${LLVM_OMP_BLDDIR}" ]; then
+    LLVM_OMP_BLDDIR_REAL="$(realpath -m ${LLVM_OMP_BLDDIR})"
+    echo "Deleting previous build directory at ${LLVM_OMP_BLDDIR_REAL}"
+    $echo rm -rf "${LLVM_OMP_BLDDIR_REAL}"
+  fi
+  $echo mkdir -p "${LLVM_OMP_BLDDIR_REAL}"
+fi
+
+# Set up install prefix
+LLVM_OMP_PFX_REAL="$(realpath -m ${LLVM_OMP_PFX})"
+
+$echo pushd "${LLVM_OMP_BLDDIR}"
+
+#-------------------------------------------------------------------------------
+# Configure
+#-------------------------------------------------------------------------------
+
+$echo cmake -D CMAKE_BUILD_TYPE=RelWithDebInfo -D CMAKE_C_COMPILER=$CC -D CMAKE_CXX_COMPILER=$CXX -D LIBOMP_OMPT_SUPPORT=ON -D OPENMP_ENABLE_LIBOMPTARGET=OFF -D CMAKE_INSTALL_PREFIX="${LLVM_OMP_PFX_REAL})" ..
+  if [ $? -ne 0 ]; then
+    echo "$(basename $0): Configure failed!"
+    exit 0  
+  fi
+
+#-------------------------------------------------------------------------------
+# Build
+#-------------------------------------------------------------------------------
+
+  if [ -n "$NJOBS" ]; then
+    $echo make -j $NJOBS install
+  else
+    $echo make install
+  fi
+  if [ $? -ne 0 ]; then
+    echo "$(basename $0): Build failed!"
+    exit 0  
+  fi
+
+$echo popd
