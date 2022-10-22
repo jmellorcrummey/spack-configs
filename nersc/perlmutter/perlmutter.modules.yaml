@@ -1,0 +1,28 @@
+# -------------------------------------------------------------------------
+# This is the per-spack-instance module generator configuration customized
+# for Perlmutter.
+# Make sure to run bin/spacklink!
+# -------------------------------------------------------------------------
+modules:
+  default:
+    enable: [lmod]
+    roots:
+      lmod: /global/cfs/cdirs/m3977/2022.10.01/modulefiles
+    arch_folder: false
+    lmod:
+      include: ['hpctoolkit', 'hpcviewer']
+      exclude: ['@:']
+      hierarchy: [compiler]
+      core_compilers:
+        - 'gcc@7.5.0'
+      hash_length: 0
+      projections:
+        all: '{name}/{version}'
+        'hpctoolkit+cuda': '{name}/{version}-gpu'
+        'hpctoolkit~cuda': '{name}/{version}-cpu'
+      all:
+        autoload: none
+      'hpctoolkit+cuda':
+        load: ['gpu', 'cudatoolkit/11.7']
+      'hpctoolkit~cuda':
+        load: ['cpu', 'papi/6.0.0.15']
