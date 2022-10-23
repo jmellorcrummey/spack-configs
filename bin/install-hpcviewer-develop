@@ -1,0 +1,84 @@
+#!/bin/bash
+
+#-------------------------------------------------------------------------------
+# install-hpcviewer-develop
+#
+# A script to download and install a development snapshot of hpcviewer
+#-------------------------------------------------------------------------------
+
+# Return success (0) if $1 is not empty and not the next option.
+non_empty()
+{
+    case "x$1" in
+        x | x-* ) return 1 ;;
+        * ) return 0 ;;
+    esac
+}
+
+usage()
+{
+    cat <<EOF
+Usage: ./install-hpcviewer-develop -u url -j java-dir -i install-dir
+
+where 
+ 'url' is a link to download a copy of hpcviewer
+ 'java-dir' is a Java jdk or jre directory suitable for hpcviewer
+ 'install-dir' is the directory in which to install
+EOF
+    exit 0
+}
+
+
+url=undefined
+install_dir=undefined
+java=undefined
+
+
+while test "x$1" != x
+do
+    arg="$1" ; shift
+    case "$arg" in
+
+        -u )
+            non_empty "$1" || die "missing argument for $arg"	    
+            url=$1
+            ;;
+
+        -j )
+            non_empty "$1" || die "missing argument for $arg"	    
+            java=$1
+            ;;
+
+        -i )
+            non_empty "$1" || die "missing argument for $arg"	    
+            install_dir=$1
+            ;;
+    esac
+done
+
+if [ "$java"x == "undefined"x ]; then
+  echo java-dir not specified
+  usage
+else
+  if [ ! -x "$java"/bin/java ]; then
+  echo "$java/bin/java" is not executable 
+  usage
+  fi
+fi
+
+if [ "$url"x == "undefined"x ]; then
+  echo url not specified
+  usage
+fi
+
+if [ "$install_dir"x == "undefined"x ]; then
+  echo install-dir not specified
+  usage
+fi
+
+DIR=/tmp/hpcviewer-install-${RANDOM}
+curl $url --output $DIR/hpcviewer.tgz
+cd $DIR
+tar xf hpcviewer.tgz
+cd hpcviewer
+./install.sh -j $java $install_dir  
