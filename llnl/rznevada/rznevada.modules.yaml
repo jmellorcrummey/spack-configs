@@ -22,7 +22,7 @@ modules:
     # Where to install modules
     roots:
     #  tcl:    $spack/share/spack/modules
-      lmod:   /collab/usr/global/tools/hpctoolkit/toss_4_x86_64_ib_cray/.install/2022-05/modules/lmod
+      lmod:   /collab/usr/global/tools/hpctoolkit/toss_4_x86_64_ib_cray/.install/2022-10/modules
     # What type of modules to use
     enable:
       - lmod
@@ -33,7 +33,11 @@ modules:
 
     # Default configurations if lmod is enabled
     lmod:
+      core_compilers:
+        - 'gcc@11.2.0'
       all:
+        autoload: direct
+      hpctoolkit:
         autoload: none
       hierarchy:
         - mpi

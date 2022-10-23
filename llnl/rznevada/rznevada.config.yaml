@@ -18,7 +18,7 @@ config:
   concretizer: clingo
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
-  install_tree: /collab/usr/global/tools/hpctoolkit/toss_4_x86_64_ib_cray/.install/2022-05/packages
+  install_tree: /collab/usr/global/tools/hpctoolkit/toss_4_x86_64_ib_cray/.install/2022-10/packages
 
 
   # Locations where templates should be found
