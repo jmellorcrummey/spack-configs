@@ -21,9 +21,10 @@ To do a spack install and test for a machine <machine> at site <site>:
 	    The hpctoolkit sources may not be needed, but can be gotten by:
 		git clone https://gitlab.com/hpctoolkit/hpctoolkit
 		    See build.txt for more information
-	    The hpctest sources may not be needed, but can be gotten by
-		git clone https://github.com/scottkwarren/hpctest
-		    See test.txt for more information
+
+	    The minitest sources may not be needed, but can be gotten by
+		git clone https://gitlab.com/hpctoolkit/minitest.git
+		    See the README.md file in that repository for more information
 
 3. Set up your shell to use spack and the spacklink setup command:
 	for bash:
