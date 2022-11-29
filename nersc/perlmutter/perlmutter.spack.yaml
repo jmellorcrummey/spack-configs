@@ -8,5 +8,8 @@ spack:
     unify: when_possible
   specs:
   - matrix:
+    - [dyninst@12.2.1, dyninst@master]
+  - matrix:
     - [hpctoolkit +viewer ~mpi]
-    - [+cuda ~papi, ~cuda +papi]
+    - [+cuda ~papi, ~cuda +papi]]
+    - [^dyninst@12.2.1]

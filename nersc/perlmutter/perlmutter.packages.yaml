@@ -112,8 +112,12 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [12.2.0, master]
-    variants: +openmp build_type=RelWithDebInfo
+    require:
+      - matrix:
+        - one_of:
+          - '@12.2.1'
+          - '@master'
+        - '+openmp build_type=RelWithDebInfo'
 
 
   # elfutils -- used by dyninst for reading ELF sections.
