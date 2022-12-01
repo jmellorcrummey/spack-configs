@@ -14,6 +14,7 @@ modules:
         'hpctoolkit +cuda +rocm': '{name}/{version}-cuda{^cuda.version}-rocm{^hip.version}'
         'hpctoolkit +cuda': '{name}/{version}-cuda{^cuda.version}'
         'hpctoolkit +rocm': '{name}/{version}-rocm{^hip.version}'
+        'hpctoolkit +papi': '{name}/{version}-papi{^papi.version}'
       all:
         autoload: none
 
