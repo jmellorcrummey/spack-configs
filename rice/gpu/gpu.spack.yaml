@@ -1,0 +1,22 @@
+spack:
+  'compilers:':
+  - compiler:
+      spec: gcc@12.2.0
+      paths:
+        cc: /home/wp11/sw/spack/opt/spack/linux-rhel8-broadwell/gcc-8.5.0/gcc-12.2.0-xr4ku73yetom6aaiuno2jrkpsorcxgjl/bin/gcc
+        cxx: /home/wp11/sw/spack/opt/spack/linux-rhel8-broadwell/gcc-8.5.0/gcc-12.2.0-xr4ku73yetom6aaiuno2jrkpsorcxgjl/bin/g++
+        f77: /home/wp11/sw/spack/opt/spack/linux-rhel8-broadwell/gcc-8.5.0/gcc-12.2.0-xr4ku73yetom6aaiuno2jrkpsorcxgjl/bin/gfortran
+        fc: /home/wp11/sw/spack/opt/spack/linux-rhel8-broadwell/gcc-8.5.0/gcc-12.2.0-xr4ku73yetom6aaiuno2jrkpsorcxgjl/bin/gfortran
+      flags: {}
+      operating_system: rhel8
+      target: x86_64
+      modules: [gcc/12.2.0+nvptx]
+  concretizer:
+    unify: when_possible
+  view: false
+  specs:
+  - matrix:
+    - [hpctoolkit ~mpi ~viewer]
+    - - +papi ^papi@6.0.0.1
+      - ~papi +cuda
+    - ['@2022.10.01']

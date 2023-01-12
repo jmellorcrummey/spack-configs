@@ -1,0 +1,17 @@
+# -------------------------------------------------------------------------
+# This is the per-spack-instance module generator configuration customized
+# by wp11 for gpu.cs.rice.edu
+# Make sure to run bin/spacklink!
+# -------------------------------------------------------------------------
+modules:
+  default:
+    enable: [tcl]
+    roots:
+      tcl: /home/wp11/deploy/modulefiles-tcl
+    tcl:
+      projections:
+        all: '{name}/{version}'
+        'hpctoolkit +cuda': '{name}/{version}-cuda{^cuda.version}'
+        'hpctoolkit +papi': '{name}/{version}-papi{^papi.version}'
+      all:
+        autoload: none
