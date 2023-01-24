@@ -21,7 +21,3 @@ modules:
         'hpctoolkit +rocm': '{name}/{version}-rocm{^hip.version}'
       all:
         autoload: none
-      'hpctoolkit +rocm ^hip@5.1.0':
-        load: ['rocm/5.1.0']
-      'hpctoolkit +rocm ^hip@5.2.0':
-        load: ['rocm/5.2.0']

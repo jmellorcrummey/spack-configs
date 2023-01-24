@@ -100,7 +100,7 @@ packages:
   # 2-field numbers ending with "0".
   #
   hpcviewer:
-    version: ["2022.10"]
+    version: ["2023.01"]
 
 
   # binutils -- used by hpcprof and struct simple (for functions and
@@ -492,7 +492,7 @@ packages:
     buildable: False
     externals:
     - spec: cray-mpich@8.1.17
-      modules: [cray-mpich/8.1.17]
+      modules: [cray-mpich/8.1.17, libfabric]
 
 
   #------------------------------------------------------------
