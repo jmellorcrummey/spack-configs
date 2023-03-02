@@ -39,12 +39,12 @@ packages:
   all:
   #   target: [x86_64]
     compiler: [gcc@11.3.0]
-  #   providers:
-  #     mpi: [openmpi]
     variants:
     - cuda_arch=80
     - amdgpu_target=gfx906,gfx908,gfx90a
-
+  mpi:
+    require: 'openmpi'
+    buildable: False
 
   # Note: settings in this file are only preferences, not hard
   # requirements.  If spack chooses a different version or variant,
@@ -84,7 +84,13 @@ packages:
   # 2-field numbers ending with "0".
   #
   hpcviewer:
-    version: [ "2022.10" ]
+    externals:
+    - spec: hpcviewer@2022.10
+      modules: [hpcviewer/2022.10.03.13]
+    - spec: hpcviewer@2023.01
+      modules: [hpcviewer/2023.01]
+    - spec: hpcviewer@2023.02
+      modules: [hpcviewer/2023.02]
 
 
   # binutils -- used by hpcprof and struct simple (for functions and
@@ -122,7 +128,7 @@ packages:
   # interfere with another package's needs.
   #
   boost:
-    version:  [1.79.0]
+    version:  [1.80.0]
     variants: >
       +atomic +chrono +date_time +filesystem +system +thread +timer
       +graph +regex +shared +multithreaded
@@ -150,7 +156,7 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [12.2.1]
+    version:  [12.3.0]
     variants: +openmp build_type=RelWithDebInfo
 
 
@@ -165,7 +171,7 @@ packages:
   # ~nls is used to avoid building gettext.
   #
   elfutils:
-    version:  [0.186]
+    version:  [0.188]
     variants: +bzip2 +xz ~nls
 
 
@@ -177,8 +183,7 @@ packages:
   # support transactional memory (no-op on non-x86).
   #
   intel-tbb:
-    version:  [2020.3]
-    variants: +shared ~tm
+    require: '@2020.3 +shared ~tm'
 
 
   # intel-xed -- used in various places to parse x86 instructions
@@ -229,7 +234,7 @@ packages:
   # ~dlopen is needed for 2021.02 and later.
   #
   libmonitor:
-    version:  [2022.09.02]
+    version:  [2023.02.13]
     variants: +hpctoolkit ~dlopen
 
 
@@ -269,6 +274,12 @@ packages:
   #   variants: +pic
 
 
+  # memkind -- used in hpcrun
+  #
+  memkind:
+    version:  [1.13.0]
+
+
   # papi -- used in hpcrun for access to the hardware performance
   # counters.
   #
@@ -304,7 +315,7 @@ packages:
   # xz (lzma) -- used by elfutils and libunwind to read compressed
   # sections.
   #
-  # Any recent version is good.
+  # Currently, hpcrun won't link correctly with 5.2.7 and later.
   #
   # +pic is required for linking with hpcrun.
   #
@@ -333,7 +344,7 @@ packages:
   # +optimize is to add -O2.
   #
   zlib:
-    version:  [1.2.12]
+    version:  [1.2.13]
     variants: +optimize +shared
 
 
@@ -354,44 +365,106 @@ packages:
   #   version: [11.6.2]
   #
   cuda:
+    buildable: false
     externals:
     - spec: cuda@11.8
       prefix: /usr/local/cuda-11.8
+      modules: [cuda/11.8]
+    - spec: cuda@12.0
+      prefix: /usr/local/cuda-12.0
+      modules: [cuda/12.0]
 
   hip:
+    buildable: false
     externals:
-    - spec: hip@5.3.0
-      prefix: /opt/rocm-5.3.0
+    - spec: hip@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: hip@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: hip@5.3.3
+      prefix: /opt/rocm-5.3.3
+      modules: [rocm/5.3.3]
     - spec: hip@5.4.0
       prefix: /opt/rocm-5.4.0
+      modules: [rocm/5.4.0]
+    - spec: hip@5.5.0
+      prefix: /opt/rocm-5.5.0
+      modules: [rocm/5.5.0]
    
   hsa-rocr-dev:
+    buildable: false
     externals:
-    - spec: hsa-rocr-dev@5.3.0
-      prefix: /opt/rocm-5.3.0
-    - spec: hsa-rocr-dev@5.4.0
-      prefix: /opt/rocm-5.4.0
+    - spec: hsa-rocr-dev@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: hsa-rocr-dev@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: hsa-rocr-dev@5.3.3
+      prefix: /opt/rocm-5.3.3
+      modules: [rocm/5.3.3]
+    - spec: hsa-rocr-dev@5.5.0
+      prefix: /opt/rocm-5.5.0
+      modules: [rocm/5.5.0]
 
   roctracer-dev:
+    buildable: false
     externals:
-    - spec: roctracer-dev@5.3.0
-      prefix: /opt/rocm-5.3.0
+    - spec: roctracer-dev@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: roctracer-dev@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: roctracer-dev@5.3.3
+      prefix: /opt/rocm-5.3.3
+      modules: [rocm/5.3.3]
     - spec: roctracer-dev@5.4.0
       prefix: /opt/rocm-5.4.0
+      modules: [rocm/5.4.0]
+    - spec: roctracer-dev@5.5.0
+      prefix: /opt/rocm-5.5.0
+      modules: [rocm/5.5.0]
 
   rocprofiler-dev:
+    buildable: false
     externals:
-    - spec: rocprofiler-dev@5.3.0
-      prefix: /opt/rocm-5.3.0
+    - spec: rocprofiler-dev@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: rocprofiler-dev@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: rocprofiler-dev@5.3.3
+      prefix: /opt/rocm-5.3.3
+      modules: [rocm/5.3.3]
     - spec: rocprofiler-dev@5.4.0
       prefix: /opt/rocm-5.4.0
+      modules: [rocm/5.4.0]
+    - spec: rocprofiler-dev@5.5.0
+      prefix: /opt/rocm-5.5.0
+      modules: [rocm/5.5.0]
 
   llvm-amdgpu:
+    buildable: false
     externals:
-    - spec: llvm-amdgpu@5.3.0
-      prefix: /opt/rocm-5.3.0
+    - spec: llvm-amdgpu@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: llvm-amdgpu@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: llvm-amdgpu@5.3.3
+      prefix: /opt/rocm-5.3.3
+      modules: [rocm/5.3.3]
     - spec: llvm-amdgpu@5.4.0
       prefix: /opt/rocm-5.4.0
+      modules: [rocm/5.4.0]
+    - spec: llvm-amdgpu@5.5.0
+      prefix: /opt/rocm-5.5.0
+      modules: [rocm/5.5.0]
 
   # If ROCM is not already installed, then you can build it as part of 
   # hpctoolkit.  In either case, build hpctoolkit with:
@@ -412,13 +485,14 @@ packages:
   # gcc/g++ and the same version used to build hpctoolkit (to keep the
   # C++ libraries in sync).
   #
-  # openmpi:
+  openmpi:
   #   version:  [4.1.2]
-  #   externals:
-  #   - spec: openmpi@4.1.2
-  #     modules:
-  #     - OpenMPI/4.1.2
-  #   buildable: False
+    buildable: False
+    externals:
+    - spec: openmpi@4.1.4 +cuda cuda_arch=80 % gcc@11.3.0
+      modules: [openmpi/4.1.4-gcc11.3.0]
+    - spec: openmpi@4.1.4 +cuda cuda_arch=80 % gcc@12.2.0
+      modules: [openmpi/4.1.4-gcc12.2.0]
 
 
   #------------------------------------------------------------
