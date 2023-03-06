@@ -56,21 +56,6 @@ packages:
   zlib:
     version:  [1.2.13]
     variants: +optimize +shared
-  cmake:
-    buildable: False
-    externals:
-    - spec: cmake@3.23.2
-      modules: [cmake/3.23.2]
-  perl:
-    externals:
-    - spec: perl@5.26.3
-      prefix: /usr
-    buildable: False
-  python:
-    buildable: False
-    externals:
-    - spec: python@3.6.8
-      prefix: /usr
   mpi:
     require: 'spectrum-mpi'
     buildable: False
@@ -79,6 +64,31 @@ packages:
     externals:
     - spec: spectrum-mpi@10.4.0.03rtm4
       modules: [spectrum-mpi/10.4.0.3-20210112]
+  cmake:
+    buildable: False
+    externals:
+    - spec: cmake@3.23.2
+      modules: [cmake/3.23.2]
+  perl:
+    buildable: False
+    externals:
+    - spec: perl@5.26.3
+      prefix: /usr
+  python:
+    buildable: False
+    externals:
+    - spec: python@3.6.8
+      prefix: /usr
+  autoconf:
+    buildable: False
+    externals:
+    - spec: autoconf@2.69
+      modules: [autoconf/2.69]
+  automake:
+    buildable: False
+    externals:
+    - spec: automake@1.16.3
+      modules: [automake/1.16.3]
   curl:
     buildable: False
     externals:
