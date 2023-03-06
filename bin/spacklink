@@ -111,8 +111,8 @@ fi
 
 if test -f $spack_env_yaml; then
   echo "Found Spack environment file $spack_env_yaml"
-  if test ! -d "$spack_env_root"; then
-    echo "Creating Spack environment directory at $spack_env_root"
+  if test ! -d "$spack_env_root/hpctoolkit"; then
+    echo "Creating Spack environment directory at $spack_env_root/hpctoolkit"
     $echo mkdir -p "$spack_env_root/hpctoolkit"
   fi
   echo "Linking Spack environment yaml file"
