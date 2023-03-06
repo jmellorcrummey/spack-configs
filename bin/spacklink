@@ -117,7 +117,7 @@ if test -f $spack_env_yaml; then
   fi
   echo "Linking Spack environment yaml file"
   $echo /bin/rm -rf "$spack_env_root/spack.yaml"  
-  $echo ln -s $spack_env_yaml $spack_env_root/spack.yaml
+  $echo ln -s $spack_env_yaml $spack_env_root/hpctoolkit/spack.yaml
   echo "Linking Spack environments directory"
   $echo /bin/rm -rf "$spack_root/var/spack/environments"
   $echo ln -s $spack_env_root $spack_root/var/spack/environments
