@@ -1,23 +1,24 @@
 # -------------------------------------------------------------------------
 # This is the per-spack-instance module generator configuration customized
-# for Perlmutter.
+# for Crusher (OLCF).
 # Make sure to run bin/spacklink!
 # -------------------------------------------------------------------------
 modules:
   default:
     enable: [lmod]
     roots:
-      lmod: /gpfs/alpine/csc322/world-shared/.install/2022-10-crusher/modulefiles
+      lmod: /gpfs/alpine/csc322/world-shared/.install/crusher/modulefiles
     arch_folder: false
     lmod:
-      include: ['hpctoolkit', 'hpcviewer']
-      exclude: ['@:']
       hierarchy: [compiler]
       core_compilers:
         - 'gcc@7.5.0'
       hash_length: 0
       projections:
         all: '{name}/{version}'
-        'hpctoolkit +rocm': '{name}/{version}-rocm{^hip.version}'
       all:
         autoload: none
+      hpctoolkit:
+        environment:
+          set:
+            HPCTOOLKIT_ROOT: ${PREFIX}
