@@ -18,3 +18,7 @@ modules:
         all: '{name}/{version}'
       all:
         autoload: none
+      hpctoolkit:
+        environment:
+          set:
+            HPCTOOLKIT_ROOT: ${PREFIX}
