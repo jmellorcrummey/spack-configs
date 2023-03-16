@@ -7,7 +7,7 @@ modules:
   default:
     enable: [tcl]
     roots:
-      tcl: /home/wp11/deploy/modulefiles-tcl
+      tcl: /projects/deploy/modulefiles
     tcl:
       projections:
         all: '{name}/{version}'
