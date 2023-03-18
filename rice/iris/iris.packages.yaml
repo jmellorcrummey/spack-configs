@@ -1,0 +1,22 @@
+# -------------------------------------------------------------------------
+# This is the spack packages file, CONFIGURED by msi3 on iris.cs.rice.edu
+# it is configures to be minimalist.
+#  packages.yaml
+#  This file specifies the versions and variants for HPCToolkit's installation
+
+packages:
+  # hpctoolkit -- these settings can be specified here or else on the
+  # spack install command line.
+  #
+  # Use version 'master' for the latest snapshot from master.
+  # Version 'develop' is for pre-release features.
+  # 2019.12.28 is the last version that runs on Blue Gene.
+  #
+  # +mpi builds hpcprof-mpi (requires mpi).
+  # +papi uses papi instead of perfmon (now default).
+  # +viewer also installs hpcviewer (default).
+  # +cuda, +rocm for GPU support.
+  #
+  hpctoolkit:
+    version:  [2023.03.stable]
+    variants: +mpi +papi +viewer +level_zero +python +debug
