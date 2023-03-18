@@ -112,8 +112,12 @@ packages:
   # +openmp is to support openmp threads in parseapi.
   #
   dyninst:
-    version:  [12.2.0]
-    variants: +openmp build_type=RelWithDebInfo
+    require:
+      - matrix:
+        - one_of:
+          - '@12.2.1'
+          - '@master'
+        - '+openmp build_type=RelWithDebInfo'
 
 
   # elfutils -- used by dyninst for reading ELF sections.
@@ -241,8 +245,8 @@ packages:
   #
   papi:
     externals:
-    - spec: papi@6.0.0.15
-      modules: [papi/6.0.0.15]
+    - spec: papi@6.0.0.16
+      modules: [papi/6.0.0.16]
     buildable: False
 
 
@@ -316,8 +320,8 @@ packages:
   # available from module 'CMake/3.7.2'.
   cmake:
     externals:
-    - spec: cmake@3.22.0
-      modules: [cmake/3.22.0]
+    - spec: cmake@3.24.3
+      modules: [cmake/3.24.3]
     buildable: False
 
   # Example spec to build cmake from scratch.
@@ -350,8 +354,8 @@ packages:
   python:
     buildable: False
     externals:
-    - spec: python@3.9.12
-      modules: [cray-python/3.9.12.1]
+    - spec: python@3.9.13
+      modules: [cray-python/3.9.13.1]
 
   # Note: system Python is affected by issue #25354
   # https://github.com/spack/spack/issues/25354#issuecomment-958670411
@@ -380,8 +384,8 @@ packages:
 
   cray-mpich:
     externals:
-    - spec: cray-mpich@8.1.17
-      modules: [cray-mpich/8.1.17]
+    - spec: cray-mpich@8.1.22
+      modules: [cray-mpich/8.1.22]
     buildable: False
 
 

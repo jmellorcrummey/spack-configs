@@ -78,7 +78,8 @@ if test ! -d $spack_config_root/$site/$machine; then
 fi
 
 spack_etc=$spack_root/etc/spack
-spack_env_root="$(realpath $spack_root/../spack-env)"
+spack_env_root="$(realpath -m $spack_root/../envs)"
+spack_env_yaml="$spack_env_root/hpctoolkit/spack.yaml"
 
 echo Removing current spack configuration settings
 $echo /bin/rm -rf $spack_etc/*.yaml
@@ -110,13 +111,14 @@ fi
 
 if test -f $spack_env_yaml; then
   echo "Found Spack environment file $spack_env_yaml"
-  if test ! -d "$spack_env_root"; then
-    echo "Creating Spack environment directory at $spack_env_root"
-    $echo mkdir -p "$spack_env_root"
+  if test ! -d "$spack_env_root/hpctoolkit"; then
+    echo "Creating Spack environment directory at $spack_env_root/hpctoolkit"
+    $echo mkdir -p "$spack_env_root/hpctoolkit"
   fi
-  if test -h "$spack_env_root/spack.yaml"; then
-    echo "Note: remember to reconcretize the Spack environment"
-    $echo /bin/rm -rf "$spack_env_root/spack.yaml"
-  fi  
-  $echo ln -s $spack_env_yaml $spack_env_root/spack.yaml
+  echo "Linking Spack environment yaml file"
+  $echo /bin/rm -rf "$spack_env_root/spack.yaml"  
+  $echo ln -s $spack_env_yaml $spack_env_root/hpctoolkit/spack.yaml
+  echo "Linking Spack environments directory"
+  $echo /bin/rm -rf "$spack_root/var/spack/environments"
+  $echo ln -s $spack_env_root $spack_root/var/spack/environments
 fi
