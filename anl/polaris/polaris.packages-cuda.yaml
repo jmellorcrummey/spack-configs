@@ -1,0 +1,19 @@
+packages:
+  cuda:
+    buildable: False
+    externals:
+    - spec: cuda@11.4.4
+      prefix: /soft/compilers/cudatoolkit/cuda-11.4.4
+      modules: [cudatoolkit-standalone/11.4.4]
+    - spec: cuda@11.6.2
+      prefix: /soft/compilers/cudatoolkit/cuda-11.6.2
+      modules: [cudatoolkit-standalone/11.6.2]
+    - spec: cuda@11.7.1
+      prefix: /soft/compilers/cudatoolkit/cuda-11.7.1
+      modules: [cudatoolkit-standalone/11.7.1]
+    - spec: cuda@11.8.0
+      prefix: /soft/compilers/cudatoolkit/cuda-11.8.0
+      modules: [cudatoolkit-standalone/11.8.0]
+    - spec: cuda@12.0.0
+      prefix: /soft/compilers/cudatoolkit/cuda-12.0.0
+      modules: [cudatoolkit-standalone/12.0.0]

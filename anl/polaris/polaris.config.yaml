@@ -1,0 +1,22 @@
+# -------------------------------------------------------------------------
+# This is the per-spack-instance configuration file customized for
+# Polaris (ALCF)
+# Keys that are identical to the defaults have been omitted.
+# Make sure to run bin/spacklink!
+# -------------------------------------------------------------------------
+config:
+  # This is the path to the root of the Spack install tree.
+  install_tree:
+    root: /soft/perftools/hpctoolkit/.install/crusher/install
+
+
+  # Temporary locations Spack can try to use for builds.
+  build_stage:
+    - $tempdir/$user/spack-stage
+
+
+  # How long to wait to lock the Spack installation database. This lock is used
+  # when Spack needs to manage its own package metadata and all operations are
+  # expected to complete within the default time limit. The timeout should
+  # therefore generally be left untouched.
+  db_lock_timeout: 120

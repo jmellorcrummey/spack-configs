@@ -1,0 +1,81 @@
+# -------------------------------------------------------------------------
+# This is the per-spack-instance Spack packages file customized for
+# Polaris (ALCF).
+# Please refer to the main packages.yaml file in the main HPCToolkit repo
+# when editing this file. Make sure to run bin/spacklink!
+# Last updated: Mar 23, 2023 (WYP)
+# -------------------------------------------------------------------------
+packages:
+  all:
+    compiler: [gcc@11.2.0]
+  hpcviewer:
+    version: [2023.02]
+  boost:
+    version: [1.81.0]
+    variants: >
+      +atomic +chrono +date_time +filesystem +system +thread +timer
+      +graph +regex +shared +multithreaded ~debug
+      ~mpi ~python ~iostreams ~numpy
+      visibility=global
+  bzip2:
+    version: [1.0.8]
+    variants: +shared
+  dyninst:
+    version: [12.3.0]
+    variants: +openmp build_type=RelWithDebInfo
+  elfutils:
+    version: [0.189]
+    variants: +bzip2 +xz ~nls
+  intel-tbb:
+    require: '@2020.3 +shared ~tm'
+  libiberty:
+    version: ['2.40']
+    variants: +pic
+  libmonitor:
+    version: [2023.02.13]
+    variants: +hpctoolkit ~dlopen
+  libpfm4:
+    version: [4.12.0]
+  libunwind:
+    version: [1.6.2]
+    variants: +xz +pic
+  papi:
+    buildable: False
+    externals:
+    - spec: papi@6.0.0.14
+      modules: [papi/6.0.0.14]
+  xerces-c:
+    version: [3.2.3]
+    variants: transcoder=iconv netaccessor=none
+  xz:
+    version: [5.4.1]
+    variants: +pic
+  yaml-cpp:
+    version: [0.7.0]
+    variants: +shared build_type=RelWithDebInfo
+  zlib:
+    version: [1.2.13]
+    variants: +optimize +shared
+  mpi:
+    require: 'cray-mpich'
+    buildable: False
+  cray-mpich:
+    buildable: False
+    externals:
+    - spec: cray-mpich@8.1.16
+      modules: [cray-mpich/8.1.16, libfabric]
+  cmake:
+    buildable: False
+    externals:
+    - spec: cmake@3.23.2
+      modules: [cmake/3.23.2]
+  perl:
+    buildable: False
+    externals:
+    - spec: perl@5.26.1
+      prefix: /usr
+  python:
+    buildable: False
+    externals:
+    - spec: python@3.9.12
+      modules: [cray-python/3.9.12.1]
