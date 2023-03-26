@@ -16,6 +16,6 @@
 modules:
   default:
     roots:
-      tcl:  /home/msi3/my.install/2022-04-15/MODULES/modules
+      tcl:  /projects/.install/msi.2023.03.stable3/MODULES
     enable:
       - tcl
