@@ -7,7 +7,7 @@
 config:
   # This is the path to the root of the Spack install tree.
   install_tree:
-    root: /soft/perftools/hpctoolkit/.install/crusher/install
+    root: /soft/perftools/hpctoolkit/.install/polaris/install
 
 
   # Temporary locations Spack can try to use for builds.
