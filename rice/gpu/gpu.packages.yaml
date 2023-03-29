@@ -68,13 +68,15 @@ packages:
     - spec: cuda@12.1.0
       prefix: /usr/local/cuda-12.1
       modules: [cuda/12.1]
-#  mpi:
-#    require: 'openmpi'
-#    buildable: False
-#  openmpi:
-#    externals:
-#    - spec: openmpi@4.1.4 +cuda cuda_arch=70 % gcc@12.2.0
-#      modules: [openmpi/4.1.4-gcc12.2.0]
+  mpi:
+    require: 'openmpi'
+    buildable: False
+  openmpi:
+    buildable: False
+    externals:
+    - spec: openmpi@4.1.5 +cuda cuda_arch=60,70 ^cuda@11.8.0 %gcc@12.2.0
+      prefix: /projects/deploy/install/linux-rhel8-broadwell/gcc-12.2.0/openmpi-4.1.5-5wm5ysu7mkac6r5tt35v6f574nq6wfw6
+      modules: [openmpi/4.1.5-gcc12.2.0-cuda11.8.0]
   cmake:
     buildable: False
     externals:
