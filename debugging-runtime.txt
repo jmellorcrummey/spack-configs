@@ -1,9 +1,8 @@
 To debug the runtime under gdb, first set up a ~/.gdbinit file:
 
 
-I use one copied from John:
 ---------------------------------------------
-directory /home/msi3/gits/hpctoolkit/src/tool/hpcrun
+directory <repository where the hpctoolkit is located>/src/tool/hpcrun
 
 handle SIG36 nostop noprint pass
 handle SIG37 nostop noprint pass
@@ -40,12 +39,13 @@ define xi
 call x86_dump_ins($arg0)
 end
 ---------------------------------------------
-It is customized to point at my source tree.  The "handle" lines tell gdb to not do anything
-with those signals, other than pass them through.  After you have set your .gdbinit
-file:
+It should be customized to point at your source tree.
+The "handle" lines tell gdb to not do anything with those signals, other
+	than pass them through.
+After you have set your .gdbinit file:
 
-1.  Invoke hpcrun -d <other args> app <app-=args> &
-	That will start the execution, but hang in a loop in the hpc runtime
+1.  Invoke hpcrun -d <other-args> app <app-args> &
+	That will start the execution, but hang in a loop in hpcrun_wait()
 
 2.  Invoke gdb --pid $!
 	That will attach the debugger to the just-launched process
@@ -53,6 +53,34 @@ file:
 3.  Continue in gdb
 	Alias "hc" removes the flag causing the loop, and then does a "continue"
 	Alias "sm" removes the flag causing the loop, sets a breakpoint in main, and then does a "continue"
-	I don't know anything about the other aliases.
 
     You are now in gdb, attached to the process, and can use gdb's commands.
+
+---------------------------------------------
+
+You can also get there using minitest's dohpct binary on any of minitest TargetApp's,
+using the same .gdbinit file.  Make sure you have .../minitest/bin in your $PATH, as
+well as HPCToolkit.
+
+Then, a simple way to debug the runtime for any data collection options, is:
+
+    cd <dir>			<dir> is any of the minitest Target Directories
+	go to the directory in question and run:
+
+    make
+	Needed only If the desired target is not already there;
+	be sure to have the right compiler module loaded, then run:
+
+    dohpct “TargetApp target-args” <DataDescriptor, containing .d.>  &
+	Process will hang in the hpcrun runtime, eaxactly as in 1., above
+
+    ps
+	List processes; find the one corresponding to the “TargetApp”, note its <PID>
+
+    gdb -pid <PID> 
+	Attach the debugger, just as in #2., above
+
+
+    You are now in gdb, attached to the process, and can use gdb's commands.
+	You will want to issue "break" commands for wherever you are looking
+	then, use the aliases as in #3.,above to proceed with the debugging.
