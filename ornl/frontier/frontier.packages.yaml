@@ -1,0 +1,80 @@
+# -------------------------------------------------------------------------
+# This is the per-spack-instance Spack packages file customized for
+# Frontier (OLCF).
+# Please refer to the main packages.yaml file in the main HPCToolkit repo
+# when editing this file. Make sure to run bin/spacklink!
+# Last updated: May 11, 2023 (WYP)
+# -------------------------------------------------------------------------
+packages:
+  hpcviewer:
+    version: [2023.04]
+  boost:
+    version: [1.82.0]
+    variants: >
+      +atomic +chrono +date_time +filesystem +system +thread +timer
+      +graph +regex +shared +multithreaded ~debug
+      ~mpi ~python ~iostreams ~numpy
+      visibility=global
+  bzip2:
+    version:  [1.0.8]
+    variants: +shared
+  dyninst:
+    require:
+    - one_of: ['@=12.3.0', '@=master']
+    - '+openmp build_type=RelWithDebInfo'
+  elfutils:
+    version:  [0.189]
+    variants: +bzip2 +xz ~nls
+  intel-tbb:
+    require: "@2020.3 +shared ~tm"
+  intel-xed:
+    version:  [2022.10.11]
+    variants: +debug +pic
+  libiberty:
+    version:  [2.40]
+    variants: +pic
+  libmonitor:
+    version:  [2023.02.13]
+    variants: +hpctoolkit ~dlopen
+  libpfm4:
+    version:  [4.11.0]
+  libunwind:
+    version:  [1.6.2]
+    variants: +xz +pic
+  xerces-c:
+    version:  [3.2.4]
+    variants: transcoder=iconv netaccessor=none
+  xz:
+    version:  [5.4.1]
+    variants: +pic
+  yaml-cpp:
+    version:  [0.7.0]
+    variants: +shared build_type=RelWithDebInfo  
+  zlib:
+    version:  [1.2.13]
+    variants: +optimize +shared
+  cmake:
+    buildable: False
+    externals:
+    - spec: cmake@3.23.2
+      modules: [cmake/3.23.2]
+  perl:
+    buildable: False
+    externals:
+    - spec: perl@5.26.1
+      prefix: /usr
+  python:
+    buildable: False
+    externals:
+    - spec: python@3.9.13.1
+      modules: [cray-python/3.9.13.1]
+  autoconf:
+    buildable: False
+    externals:
+    - spec: autoconf@2.69
+      modules: [autoconf/2.69]
+  automake:
+    buildable: False
+    externals:
+    - spec: automake@1.16.5
+      modules: [automake/1.16.5]
