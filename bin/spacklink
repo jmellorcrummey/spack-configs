@@ -78,7 +78,7 @@ if test ! -d $spack_config_root/$site/$machine; then
 fi
 
 spack_etc=$spack_root/etc/spack
-spack_env_root="$(realpath -m $spack_root/../envs)"
+spack_env_root="$(realpath -m $spack_root/../envs/$machine)"
 spack_env_yaml="$spack_env_root/hpctoolkit/spack.yaml"
 
 echo Removing current spack configuration settings
