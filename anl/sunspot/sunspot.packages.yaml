@@ -1,0 +1,121 @@
+# -------------------------------------------------------------------------
+# This is the per-spack-instance Spack packages file customized for
+# Polaris (ALCF).
+# Please refer to the main packages.yaml file in the main HPCToolkit repo
+# when editing this file. Make sure to run bin/spacklink!
+# Last updated: Mar 23, 2023 (WYP)
+# -------------------------------------------------------------------------
+packages:
+  all:
+    compiler: [gcc@12.1.0]
+  hpcviewer:
+    externals:
+    - spec: hpcviewer@2023.05
+      prefix: /soft/perftools/hpctoolkit/.install/hpcviewer-install/2023.05
+    - spec: hpcviewer@2023.06
+      prefix: /soft/perftools/hpctoolkit/.install/hpcviewer-install/2023.06
+  boost:
+    version: [1.82.0]
+    variants: >
+      +atomic +date_time +filesystem +mpi +system +thread +timer +graph +regex +shared +multithreaded
+      ~debug ~python ~iostreams ~numpy
+      visibility=global
+  bzip2:
+    version: [1.0.8]
+    variants: +shared
+  dyninst:
+    version: [12.3.0]
+    variants: +openmp build_type=RelWithDebInfo
+  elfutils:
+    version: [0.189]
+    variants: ~nls
+  intel-tbb:
+    require: '@=2020.3 +shared +tm'
+  intel-xed:
+    version: [2023.04.16]
+    variants: +pic
+  libiberty:
+    version: ['2.40']
+    variants: +pic
+  libmonitor:
+    version: [2023.03.15]
+    variants: +hpctoolkit ~dlopen
+  libpfm4:
+    version: [4.13.0]
+  libunwind:
+    version: [1.6.2]
+    variants: +xz +pic
+  papi:
+    buildable: false
+    externals:
+    - spec: papi@6.0.0.16
+      modules: [papi/6.0.0.16]
+  xerces-c:
+    version: [3.2.4]
+    variants: transcoder=iconv netaccessor=none
+  xz:
+    version: [5.4.1]
+    variants: +pic
+  yaml-cpp:
+    version: [0.7.0]
+    variants: +shared build_type=RelWithDebInfo
+  zlib:
+    version: [1.2.13]
+    variants: +optimize +shared
+  intel-gtpin:
+    externals:
+    - spec: intel-gtpin@3.5
+      prefix: /soft/perftools/hpctoolkit/.install/external/gtpin-3.5
+  oneapi-level-zero:
+    externals:
+    - spec: oneapi-level-zero@1.8.8
+      prefix: /soft/libraries/intel-gpu-umd/20230126.1-agama-devel-551/driver
+      modules: [intel_compute_runtime/release/agama-devel-551]
+  oneapi-igc:
+    externals:
+    - spec: oneapi-igc@1.1.0
+      prefix: /soft/libraries/intel-gpu-umd/20230126.1-agama-devel-551/compiler
+      modules: [intel_compute_runtime/release/agama-devel-551]
+  mpi:
+    require: mpich
+  mpich:
+    buildable: false
+    externals:
+    - spec: mpich@4.1a1~hydra device=ch4 pmi=pmix % gcc
+      prefix: /soft/restricted/CNDA/updates/mpich/51.2/mpich-ofi-all-gnu-default-pmix-gpu-drop51
+      modules: [mpich/51.2/gnu-all-pmix-gpu, append-deps]
+  automake:
+    buildable: false
+    externals:
+    - spec: automake@1.15.1
+      prefix: /usr
+  autoconf:
+    buildable: false
+    externals:
+    - spec: autoconf@2.69
+      prefix: /usr
+  cmake:
+    version: [3.26.3]
+    variants: +ownlibs ~qt
+  libtool:
+    buildable: false
+    externals:
+    - spec: libtool@2.4.6
+      prefix: /usr
+  m4:
+    buildable: false
+    externals:
+    - spec: m4@1.4.18
+      prefix: /usr
+  perl:
+    buildable: false
+    externals:
+    - spec: perl@5.26.1
+      prefix: /usr
+  python:
+    externals:
+    - spec: python@3.9.13+bz2+crypt+ctypes+dbm+lzma+nis+pyexpat+pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+      prefix: /opt/cray/pe/python/3.9.13.1
+      modules: [cray-python/3.9.13.1]
+
+    
