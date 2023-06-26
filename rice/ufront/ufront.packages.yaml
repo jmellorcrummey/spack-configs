@@ -3,7 +3,7 @@
 # ufront.cs.rice.edu
 # Please refer to the main packages.yaml file in the main HPCToolkit repo
 # when editing this file. Make sure to run bin/spacklink!
-# Last updated: Mar 7, 2023 (WYP)
+# Last updated: Jun 26, 2023 (WYP)
 # -------------------------------------------------------------------------
 packages:
   all:
@@ -15,12 +15,22 @@ packages:
     externals:
     - spec: hpcviewer@2022.10
       modules: [hpcviewer/2022.10.03.13]
+    - spec: hpcviewer@2022.12
+      modules: [hpcviewer/2022.12]
     - spec: hpcviewer@2023.01
       modules: [hpcviewer/2023.01]
     - spec: hpcviewer@2023.02
       modules: [hpcviewer/2023.02]
+    - spec: hpcviewer@2023.03
+      modules: [hpcviewer/2023.03]
+    - spec: hpcviewer@2023.04
+      modules: [hpcviewer/2023.04]
+    - spec: hpcviewer@2023.05
+      modules: [hpcviewer/2023.05]
+    - spec: hpcviewer@2023.06
+      modules: [hpcviewer/2023.06]
   boost:
-    version:  [1.80.0]
+    version:  [1.82.0]
     variants: >
       +atomic +chrono +date_time +filesystem +system +thread +timer
       +graph +regex +shared +multithreaded
@@ -29,40 +39,36 @@ packages:
     version:  [1.0.8]
     variants: +shared
   dyninst:
-    version:  [12.3.0]
+    version:  [12.3.0, master]
     variants: +openmp build_type=RelWithDebInfo
   elfutils:
-    version:  [0.188]
-    variants: +bzip2 +xz ~nls
+    version:  [0.189]
+    variants: ~nls
   intel-tbb:
     require: '@2020.3 +shared ~tm'
   intel-xed:
-    version:  [2022.04.17]
+    version:  [2023.06.07]
     variants: +debug +pic
   libiberty:
-    version:  [2.37]
+    version:  ['2.40']
     variants: +pic
   libmonitor:
-    version:  [2023.02.13]
+    version:  [2023.03.15]
     variants: +hpctoolkit ~dlopen
   libpfm4:
-    version:  [4.11.0]
+    version:  [4.13.0]
   libunwind:
     version:  [1.6.2]
     variants: +xz +pic
   memkind:
     version:  [1.13.0]
   papi:
-    require:
-    - one_of:
-      - "@6.0.0.1"
-      - "@7.0,0 +cuda"
-      - "@7.0.0 +rocm"
+    version: [6.0.0.1]
   xerces-c:
-    version:  [3.2.3]
+    version:  [3.2.4]
     variants: transcoder=iconv netaccessor=none
   xz:
-    version:  [5.2.6]
+    version:  [5.4.1]
     variants: +pic
   yaml-cpp:
     version:  [0.7.0]
@@ -79,6 +85,9 @@ packages:
     - spec: cuda@12.0
       prefix: /usr/local/cuda-12.0
       modules: [cuda/12.0]
+    - spec: cuda@12.1
+      prefix: /usr/local/cuda-12.1
+      modules: [cuda/12.1]
   hip:
     buildable: false
     externals:
@@ -91,12 +100,15 @@ packages:
     - spec: hip@5.3.3
       prefix: /opt/rocm-5.3.3
       modules: [rocm/5.3.3]
-    - spec: hip@5.4.0
-      prefix: /opt/rocm-5.4.0
-      modules: [rocm/5.4.0]
-    - spec: hip@5.5.0
-      prefix: /opt/rocm-5.5.0
-      modules: [rocm/5.5.0]
+    - spec: hip@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
+    - spec: hip@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: hip@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
   hsa-rocr-dev:
     buildable: false
     externals:
@@ -109,9 +121,15 @@ packages:
     - spec: hsa-rocr-dev@5.3.3
       prefix: /opt/rocm-5.3.3
       modules: [rocm/5.3.3]
-    - spec: hsa-rocr-dev@5.5.0
-      prefix: /opt/rocm-5.5.0
-      modules: [rocm/5.5.0]
+    - spec: hsa-rocr-dev@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
+    - spec: hsa-rocr-dev@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: hsa-rocr-dev@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
   roctracer-dev:
     buildable: false
     externals:
@@ -124,12 +142,15 @@ packages:
     - spec: roctracer-dev@5.3.3
       prefix: /opt/rocm-5.3.3
       modules: [rocm/5.3.3]
-    - spec: roctracer-dev@5.4.0
-      prefix: /opt/rocm-5.4.0
-      modules: [rocm/5.4.0]
-    - spec: roctracer-dev@5.5.0
-      prefix: /opt/rocm-5.5.0
-      modules: [rocm/5.5.0]
+    - spec: roctracer-dev@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
+    - spec: roctracer-dev@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: roctracer-dev@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
   rocprofiler-dev:
     buildable: false
     externals:
@@ -142,12 +163,15 @@ packages:
     - spec: rocprofiler-dev@5.3.3
       prefix: /opt/rocm-5.3.3
       modules: [rocm/5.3.3]
-    - spec: rocprofiler-dev@5.4.0
-      prefix: /opt/rocm-5.4.0
-      modules: [rocm/5.4.0]
-    - spec: rocprofiler-dev@5.5.0
-      prefix: /opt/rocm-5.5.0
-      modules: [rocm/5.5.0]
+    - spec: rocprofiler-dev@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
+    - spec: rocprofiler-dev@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: rocprofiler-dev@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
   llvm-amdgpu:
     buildable: false
     externals:
@@ -163,9 +187,12 @@ packages:
     - spec: llvm-amdgpu@5.4.0
       prefix: /opt/rocm-5.4.0
       modules: [rocm/5.4.0]
-    - spec: llvm-amdgpu@5.5.0
-      prefix: /opt/rocm-5.5.0
-      modules: [rocm/5.5.0]
+    - spec: llvm-amdgpu@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: llvm-amdgpu@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
   mpi:
     require: 'openmpi'
     buildable: False
