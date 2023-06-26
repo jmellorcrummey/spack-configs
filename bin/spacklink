@@ -78,6 +78,7 @@ if test ! -d $spack_config_root/$site/$machine; then
 fi
 
 spack_etc=$spack_root/etc/spack
+spack_machcfg_root="$(realpath -m $spack_root/../cfg/$machine.system)"
 spack_env_root="$(realpath -m $spack_root/../envs/$machine)"
 spack_env_yaml="$spack_env_root/hpctoolkit/spack.yaml"
 
@@ -86,39 +87,82 @@ $echo /bin/rm -rf $spack_etc/*.yaml
 
 echo "Configuring $spack_root with spack configuration files for  site=$site machine=$machine"
 
+site_config=$spack_config_root/$site/$site.config.yaml
+site_modules=$spack_config_root/$site/$site.modules.yaml
+site_packages=$spack_config_root/$site/$site.packages.yaml
 config=$spack_config_root/$site/$machine/$machine.config.yaml
 modules=$spack_config_root/$site/$machine/$machine.modules.yaml
 packages=$spack_config_root/$site/$machine/$machine.packages.yaml
+compilers=$spack_config_root/$site/$machine/$machine.compilers.yaml
 spack_env_yaml=$spack_config_root/$site/$machine/$machine.spack.yaml
 
-if test ! -f $config; then
-	echo "No config file $config; skipping"
+if test ! -f $site_config; then
+  echo "No site-wide config file ${site_config}; skipping"
 else
-	$echo ln  -s $config $spack_etc/config.yaml
+  $echo ln -s $site_config $spack_etc/config.yaml
+fi
+
+if test ! -f $site_modules; then
+  echo "No site-wide modules file ${site_modules}; skipping"
+else
+  $echo ln -s $site_modules $spack_etc/modules.yaml
+fi
+
+if test ! -f $site_packages; then
+  echo "No site-wide packages file ${site_packages}; skipping"
+else
+  $echo ln -s $site_packages $spack_etc/packages.yaml
+fi
+
+if test ! -f $config; then
+  echo "No machine-specific config file $config; skipping"
+else
+  if test ! -d "$spack_machcfg_root"; then
+    echo "Creating Spack machine-specific config directory at $spack_machcfg_root"
+    $echo mkdir -p "$spack_machcfg_root"
+  fi
+  $echo ln -s $config $spack_machcfg_root/config.yaml
 fi
 
 if test ! -f $modules; then
-	echo "No modules file $modules; skipping"
+  echo "No machine-specific modules file $modules; skipping"
 else
-	$echo ln  -s $modules $spack_etc/modules.yaml
+  if test ! -d "$spack_machcfg_root"; then
+    echo "Creating Spack machine-specific config directory at $spack_machcfg_root"
+    $echo mkdir -p "$spack_machcfg_root"
+  fi
+  $echo ln -s $modules $spack_machcfg_root/modules.yaml
 fi
 
 if test ! -f $packages; then
-	$echo "No packages file $packages; skipping"
+  echo "No machine-specific packages file $packages; skipping"
 else
-	$echo ln  -s $packages $spack_etc/packages.yaml
+  if test ! -d "$spack_machcfg_root"; then
+    echo "Creating Spack machine-specific config directory at $spack_machcfg_root"
+    $echo mkdir -p "$spack_machcfg_root"
+  fi
+  $echo ln -s $packages $spack_machcfg_root/packages.yaml
 fi
 
-if test -f $spack_env_yaml; then
-  echo "Found Spack environment file $spack_env_yaml"
+if test ! -f $compilers; then
+  echo "No machine-specific compilers file $compilers; skipping"
+else
+  if test ! -d "$spack_machcfg_root"; then
+    echo "Creating Spack machine-specific config directory at $spack_machcfg_root"
+    $echo mkdir -p "$spack_machcfg_root"
+  fi
+  $echo ln -s $compilers $spack_machcfg_root/compilers.yaml
+fi
+
+if ! test -f $spack_env_yaml; then
+  echo "No environment file ${spack_env_yaml}; skipping" 
+else
   if test ! -d "$spack_env_root/hpctoolkit"; then
     echo "Creating Spack environment directory at $spack_env_root/hpctoolkit"
     $echo mkdir -p "$spack_env_root/hpctoolkit"
   fi
   echo "Linking Spack environment yaml file"
-  $echo /bin/rm -rf "$spack_env_root/spack.yaml"  
   $echo ln -s $spack_env_yaml $spack_env_root/hpctoolkit/spack.yaml
   echo "Linking Spack environments directory"
-  $echo /bin/rm -rf "$spack_root/var/spack/environments"
   $echo ln -s $spack_env_root $spack_root/var/spack/environments
 fi
