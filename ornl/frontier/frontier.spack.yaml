@@ -1,7 +1,4 @@
 spack:
-  upstreams:
-    hpctoolkit:
-      install_tree: /lustre/orion/proj-shared/csc322/spack/install/frontier
   concretizer:
     unify: when_possible
   view: false
@@ -13,4 +10,6 @@ spack:
   specs:
   - matrix:
     - [hpctoolkit +mpi ~papi +viewer +rocm]
-    - - '@2023.03.stable ^hip@5.4.3 ^hsa-rocr-dev@5.4.3 ^roctracer-dev@5.4.3 ^rocprofiler-dev@5.4.3'
+    - ['@2023.03.stable', '@develop ^dyninst@master']
+    - ['^hip@5.4.3 ^hsa-rocr-dev@5.4.3 ^roctracer-dev@5.4.3 ^rocprofiler-dev@5.4.3']
+  - hpcviewer

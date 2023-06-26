@@ -5,20 +5,8 @@
 # -------------------------------------------------------------------------
 modules:
   default:
-    enable: [lmod]
     roots:
-      lmod: /lustre/orion/csc322/world-shared/.install/frontier/modulefiles
-    arch_folder: false
+      lmod: /ccs/proj/ums023/.install/frontier/modulefiles
     lmod:
-      hierarchy: [compiler]
       core_compilers:
         - 'gcc@7.5.0'
-      hash_length: 0
-      projections:
-        all: '{name}/{version}'
-      all:
-        autoload: none
-      hpctoolkit:
-        environment:
-          set:
-            HPCTOOLKIT_ROOT: ${prefix}
