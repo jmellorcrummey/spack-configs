@@ -40,8 +40,8 @@ case "${LMOD_SYSTEM_NAME}" in
 esac
 
 # Detach from the user installation
-export SPACK_SYSTEM_CONFIG_PATH="${root}/../cfg/${LMOD_SYSTEM_NAME}.system"
-export SPACK_USER_CONFIG_PATH="${root}/../cfg/${LMOD_SYSTEM_NAME}.user"
+export SPACK_SYSTEM_CONFIG_PATH="$(realpath -m ${root}/../cfg/${LMOD_SYSTEM_NAME}.system)"
+export SPACK_USER_CONFIG_PATH="$(realpath -m ${root}/../cfg/${LMOD_SYSTEM_NAME}.user)"
 export SPACK_USER_CACHE_PATH="${root}/cache/${LMOD_SYSTEM_NAME}"
 
 # Load Spack
