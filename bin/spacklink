@@ -79,7 +79,7 @@ fi
 
 spack_etc=$spack_root/etc/spack
 spack_machcfg_root="$(realpath -m $spack_root/../cfg/$machine.system)"
-spack_env_root="$(realpath -m $spack_root/../envs/$machine)"
+spack_env_root="$(realpath -m $spack_root/../envs)"
 spack_env_yaml="$spack_env_root/hpctoolkit/spack.yaml"
 
 echo Removing current spack configuration settings
@@ -159,10 +159,10 @@ if ! test -f $spack_env_yaml; then
 else
   if test ! -d "$spack_env_root/hpctoolkit"; then
     echo "Creating Spack environment directory at $spack_env_root/hpctoolkit"
-    $echo mkdir -p "$spack_env_root/hpctoolkit"
+    $echo mkdir -p "$spack_env_root/hpctoolkit-$machine"
   fi
   echo "Linking Spack environment yaml file"
-  $echo ln -s $spack_env_yaml $spack_env_root/hpctoolkit/spack.yaml
+  $echo ln -s $spack_env_yaml $spack_env_root/hpctoolkit-$machine/spack.yaml
   echo "Linking Spack environments directory"
   $echo ln -s $spack_env_root $spack_root/var/spack/environments
 fi
