@@ -3,74 +3,34 @@
 # Crusher (OLCF).
 # Please refer to the main packages.yaml file in the main HPCToolkit repo
 # when editing this file. Make sure to run bin/spacklink!
-# Last updated: Mar 6, 2023 (WYP)
+# Last updated: Jun 27, 2023 (WYP)
 # -------------------------------------------------------------------------
 packages:
-  all:
-    compiler: [gcc@11.2.0]
-  hpcviewer:
-    version: [2023.02]
-  boost:
-    version: [1.79.0]
-    variants: >
-      +atomic +chrono +date_time +filesystem +system +thread +timer
-      +graph +regex +shared +multithreaded ~debug
-      ~mpi ~python ~iostreams ~numpy
-      visibility=global
-  bzip2:
-    version:  [1.0.8]
-    variants: +shared
-  dyninst:
-    require:
-      - matrix:
-        - one_of:
-          - '@12.3.0'
-          - '@master'
-        - '+openmp build_type=RelWithDebInfo'
-  elfutils:
-    version:  [0.186]
-    variants: +bzip2 +xz ~nls
   intel-tbb:
     require: "@2020.3 +shared ~tm"
   intel-xed:
-    version:  [2022.04.17]
+    version:  [2023.06.07]
     variants: +debug +pic
-  libiberty:
-    version:  [2.37]
-    variants: +pic
-  libmonitor:
-    version:  [2023.02.13]
-    variants: +hpctoolkit ~dlopen
-  libpfm4:
-    version:  [4.11.0]
-  libunwind:
-    version:  [1.6.2]
-    variants: +xz +pic
   papi:
     buildable: False
     externals:
-    - spec: papi@6.0.0.15
-      modules: [papi/6.0.0.15]
-  xerces-c:
-    version:  [3.2.3]
-    variants: transcoder=iconv netaccessor=none
-  xz:
-    version:  [5.2.6]
-    variants: +pic
-  yaml-cpp:
-    version:  [0.7.0]
-    variants: +shared build_type=RelWithDebInfo  
-  zlib:
-    version:  [1.2.13]
-    variants: +optimize +shared
+    - spec: papi@6.0.0.17
+      modules: [papi/6.0.0.17]
+    - spec: papi@7.0.0.1
+      modules: [papi/7.0.0.1]
   mpi:
     buildable: False
     require: "cray-mpich"
   cray-mpich:
     buildable: False
     externals:
-    - spec: cray-mpich@8.1.17
-      modules: [cray-mpich/8.1.17, libfabric]
+    - spec: cray-mpich@8.1.23
+      modules: [cray-mpich/8.1.23, libfabric]
+      extra_attributes:
+        compilers:
+          c: cc
+          c++: CC
+          fortran: ftn
   cmake:
     buildable: False
     externals:
@@ -84,8 +44,8 @@ packages:
   python:
     buildable: False
     externals:
-    - spec: python@3.9.12.1
-      modules: [cray-python/3.9.12.1]
+    - spec: python@3.9.13
+      modules: [cray-python/3.9.13.1]
   autoconf:
     buildable: False
     externals:
@@ -96,3 +56,93 @@ packages:
     externals:
     - spec: automake@1.16.3
       modules: [automake/1.16.3]
+  hip:
+    buildable: false
+    externals:
+    - spec: hip@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: hip@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: hip@5.3.0
+      prefix: /opt/rocm-5.3.0
+      modules: [rocm/5.3.0]
+    - spec: hip@5.4.0
+      prefix: /opt/rocm-5.4.0
+      modules: [rocm/5.4.0]
+    - spec: hip@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
+  hsa-rocr-dev:
+    buildable: false
+    externals:
+    - spec: hsa-rocr-dev@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: hsa-rocr-dev@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: hsa-rocr-dev@5.3.0
+      prefix: /opt/rocm-5.3.0
+      modules: [rocm/5.3.0]
+    - spec: hsa-rocr-dev@5.4.0
+      prefix: /opt/rocm-5.4.0
+      modules: [rocm/5.4.0]
+    - spec: hsa-rocr-dev@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
+  roctracer-dev:
+    buildable: false
+    externals:
+    - spec: roctracer-dev@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: roctracer-dev@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: roctracer-dev@5.3.0
+      prefix: /opt/rocm-5.3.0
+      modules: [rocm/5.3.0]
+    - spec: roctracer-dev@5.4.0
+      prefix: /opt/rocm-5.4.0
+      modules: [rocm/5.4.0]
+    - spec: roctracer-dev@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
+  rocprofiler-dev:
+    buildable: false
+    externals:
+    - spec: rocprofiler-dev@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: rocprofiler-dev@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: rocprofiler-dev@5.3.0
+      prefix: /opt/rocm-5.3.0
+      modules: [rocm/5.3.0]
+    - spec: rocprofiler-dev@5.4.0
+      prefix: /opt/rocm-5.4.0
+      modules: [rocm/5.4.0]
+    - spec: rocprofiler-dev@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
+  llvm-amdgpu:
+    buildable: false
+    externals:
+    - spec: llvm-amdgpu@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: llvm-amdgpu@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: llvm-amdgpu@5.3.0
+      prefix: /opt/rocm-5.3.0
+      modules: [rocm/5.3.0]
+    - spec: llvm-amdgpu@5.4.0
+      prefix: /opt/rocm-5.4.0
+      modules: [rocm/5.4.0]
+    - spec: llvm-amdgpu@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
