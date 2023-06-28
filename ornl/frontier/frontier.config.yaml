@@ -7,4 +7,4 @@
 config:
   # This is the path to the root of the Spack install tree.
   install_tree:
-    root: /ccs/proj/ums023/.install/frontier/install
+    root: /sw/frontier/ums/ums023/.install/spack-root

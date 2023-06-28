@@ -6,7 +6,7 @@
 modules:
   default:
     roots:
-      lmod: /ccs/proj/ums023/.install/frontier/modulefiles
+      lmod: /sw/frontier/ums/ums023/.install/modulefiles
     lmod:
       core_compilers:
         - 'gcc@7.5.0'

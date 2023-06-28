@@ -11,6 +11,25 @@ packages:
   intel-xed:
     version:  [2023.06.07]
     variants: +debug +pic
+  papi:
+    buildable: False
+    externals:
+    - spec: papi@6.0.0.17
+      modules: [papi/6.0.0.17]
+    - spec: papi@7.0.0.1
+      modules: [papi/7.0.0.1]
+  mpi:
+    require: 'cray-mpich'
+  cray-mpich:
+    buildable: False
+    externals:
+    - spec: cray-mpich@8.1.23
+      modules: [cray-mpich/8.1.23 libfabric]
+      extra_attributes:
+        compilers:
+          c: cc
+          c++: CC
+          fortran: ftn
   cmake:
     buildable: False
     externals:
@@ -36,16 +55,6 @@ packages:
     externals:
     - spec: automake@1.16.5
       modules: [automake/1.16.5]
-  cray-mpich:
-    buildable: False
-    externals:
-    - spec: cray-mpich@8.1.23
-      modules: [cray-mpich/8.1.23 libfabric]
-      extra_attributes:
-        compilers:
-          c: cc
-          c++: CC
-          fortran: ftn
   hip:
     buildable: false
     externals:
