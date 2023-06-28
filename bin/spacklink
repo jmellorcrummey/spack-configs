@@ -80,7 +80,6 @@ fi
 spack_etc=$spack_root/etc/spack
 spack_machcfg_root="$(realpath -m $spack_root/../cfg/$machine.system)"
 spack_env_root="$(realpath -m $spack_root/../envs)"
-spack_env_yaml="$spack_env_root/hpctoolkit/spack.yaml"
 
 echo Removing current spack configuration settings
 $echo /bin/rm -rf $spack_etc/*.yaml
