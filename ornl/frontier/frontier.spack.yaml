@@ -9,5 +9,7 @@ spack:
   - matrix:
     - [hpctoolkit +mpi ~papi +viewer +rocm]
     - ['@2023.03.stable ^dyninst@12.3.0', '@develop ^dyninst@master']
-    - ['^hip@5.4.3 ^hsa-rocr-dev@5.4.3 ^roctracer-dev@5.4.3 ^rocprofiler-dev@5.4.3']
-  - hpcviewer
+    - [^hip@5.4.3 ^hsa-rocr-dev@5.4.3 ^roctracer-dev@5.4.3 ^rocprofiler-dev@5.4.3]
+  - matrix:
+    - [hpcviewer]
+    - ['@2023.04', '@2023.05']
