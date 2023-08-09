@@ -6,13 +6,13 @@
 config:
   # This is the path to the root of the Spack install tree.
   install_tree:
-    root: /global/cfs/cdirs/m3977/2022.10.01/perlmutter/spack
+    root: /global/common/software/m3977/.install/perlmutter/spack
 
 
   # Temporary locations Spack can try to use for builds.
   # Use PSCRATCH on Perlmutter for best performance.
   build_stage:
-    - /pscratch/sd/w/wyphan/spack/stage
+    - ${PSCRATCH}/spack/stage
 
 
   # How long to wait to lock the Spack installation database. This lock is used
