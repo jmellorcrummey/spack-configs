@@ -156,12 +156,16 @@ fi
 if ! test -f $spack_env_yaml; then
   echo "No environment file ${spack_env_yaml}; skipping" 
 else
-  if test ! -d "$spack_env_root/hpctoolkit"; then
-    echo "Creating Spack environment directory at $spack_env_root/hpctoolkit"
+  if test ! -d "$spack_env_root/hpctoolkit-$machine"; then
+    echo "Creating Spack environment directory at $spack_env_root/hpctoolkit-$machine"
     $echo mkdir -p "$spack_env_root/hpctoolkit-$machine"
   fi
   echo "Linking Spack environment yaml file"
   $echo ln -s $spack_env_yaml $spack_env_root/hpctoolkit-$machine/spack.yaml
-  echo "Linking Spack environments directory"
-  $echo ln -s $spack_env_root $spack_root/var/spack/environments
+  if ! test -h $spack_root/var/spack/environments; then
+    echo "Removing old Spack environments directory"
+    $echo rm -rf $spack_root/var/spack/environments
+    echo "Linking Spack environments directory to $spack_env_root"
+    $echo ln -s $spack_env_root $spack_root/var/spack/environments
+  fi
 fi
