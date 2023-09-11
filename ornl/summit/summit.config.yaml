@@ -7,17 +7,4 @@
 config:
   # This is the path to the root of the Spack install tree.
   install_tree:
-    root: /gpfs/alpine/csc322/world-shared/.install/summit/install
-
-
-  # Temporary locations Spack can try to use for builds.
-  # Use MEMBERWORK on Summit for best performance.
-  build_stage:
-    - ${MEMBERWORK}/csc322/spack/stage
-
-
-  # How long to wait to lock the Spack installation database. This lock is used
-  # when Spack needs to manage its own package metadata and all operations are
-  # expected to complete within the default time limit. The timeout should
-  # therefore generally be left untouched.
-  db_lock_timeout: 120
+    root: /sw/summit/ums/ums023/.install/spack-root

@@ -5,20 +5,8 @@
 # -------------------------------------------------------------------------
 modules:
   default:
-    enable: [lmod]
     roots:
-      lmod: /gpfs/alpine/csc322/world-shared/.install/summit/modulefiles
-    arch_folder: false
+      lmod: /sw/summit/ums/ums023/.install/modulefiles
     lmod:
-      hierarchy: [compiler]
       core_compilers:
         - 'gcc@8.3.1'
-      hash_length: 0
-      projections:
-        all: '{name}/{version}'
-      all:
-        autoload: none
-      hpctoolkit:
-        environment:
-          set:
-            HPCTOOLKIT_ROOT: ${PREFIX}
