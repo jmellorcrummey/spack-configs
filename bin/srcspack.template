@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# This script must be sourced
+sourced=0
+if [ -n "$ZSH_VERSION" ]; then
+  case ${ZSH_EVAL_CONTEXT} in *:file) sourced=1 ;; esac
+elif [ -n "$KSH_VERSION" ]; then
+  [ "$(cd -- "$(dirname -- "$0")" && \
+    pwd -P)/$(basename -- "$0")" != "$(cd -- "$(dirname -- "${.sh.file}")" && \
+    pwd -P)/$(basename -- "${.sh.file}")" ] && \
+  sourced=1
+elif [ -n "$BASH_VERSION" ]; then
+  (return 0 2>/dev/null) && sourced=1
+else
+  # All other shells: examine $0 for known shell binary filenames.
+  # Detects `sh` and `dash`; add additional shell filenames as needed.
+  case ${0##*/} in
+    csh|-csh|tcsh|-tcsh) echo "csh/tcsh is unsupported" ; exit 1 ;;
+    sh|-sh|dash|-dash) sourced=1 ;;
+  esac
+fi
+if [ ${sourced} = 0 ]; then
+  echo "This script must be sourced!" >&2
+  exit 1
+fi
+
+# Check for Spack root and config repo directories
+cwd=$(pwd)
+if ! [ -f ${cwd}/spack/share/spack/setup-env.sh ]; then
+  echo "Cannot find Spack directory at ${cwd}/spack" >&2
+  return 2
+fi
+if ! [ -d ${cwd}/spack-configs ]; then
+  echo "Cannot find Spack configs repo directory at ${cwd}/spack-configs"
+  return 3
+fi
+
+# Detect current site and system
+# TODO: Adjust for Sunspot
+pushd ${cwd}/spack-configs &> /dev/null
+  if [ "${NERSC_HOST}" = "perlmutter" ]; then
+    site=nersc
+    machine=perlmutter
+  else
+    host="$(hostname -f)"
+    domain=$(echo ${host} | awk -F '.' '{print $(NF-1)}')
+    site=$(ls -d */ | cut -d '/' -f 1 | grep ${domain})
+    if [ -z "${site}" ]; then
+      echo "Cannot find Spack config for site=${domain}" >&2
+      return 4
+    else
+      machines=$(ls -d ${site}/*/ | cut -d '/' -f 2)
+      parts=$(echo ${host} | sed -e 's/[[:punct:]]/\n/g')
+      machine=$(echo -e "${machines}\n${parts}" | sort | uniq -c | \grep '2 ' | sed 's/[[:space:]]*2[[:space:]]//')
+      if [ -z "${machine}" ]; then
+	echo "Cannot find Spack config for this machine in site=${domain}" >&2
+	return 5	
+      fi
+    fi
+  fi
+popd &> /dev/null
+  
+# Set up Spack config dirs
+export SPACK_SYSTEM_CONFIG_PATH="$(realpath -m ${cwd}/cfg/${machine}.system)"
+export SPACK_USER_CONFIG_PATH="$(realpath -m ${cwd}/cfg/${machine}.user)"
+export SPACK_USER_CACHE_PATH="${cwd}/cache/${match}"
+
+# Load Spack
+. "${cwd}/spack/share/spack/setup-env.sh"
+echo "Spack loaded at ${SPACK_ROOT}" >&2
+
+# Set the umask to make things group-writable by default
+umask u=rwx,g=rwx,o=rx
