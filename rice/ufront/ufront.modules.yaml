@@ -10,6 +10,7 @@ modules:
       tcl: /projects/modulefiles
     arch_folder: false
     tcl:
+      hash_length: 0
       projections:
         all: '{name}/{version}'
         'hpctoolkit +cuda +rocm': '{name}/{version}/cuda{^cuda.version}-rocm{^hip.version}'
