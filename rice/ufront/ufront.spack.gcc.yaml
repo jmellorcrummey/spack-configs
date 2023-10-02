@@ -1,0 +1,30 @@
+spack:
+  concretizer:
+    unify: when_possible
+  view: false
+  packages:
+    gawk:
+      externals: []
+    all:
+      compiler: [gcc@8.5.0]
+      variants: [cuda_arch=80]
+    cuda:
+      variants: [+allow-unsupported-compilers]
+  specs:
+  - matrix:
+    - ['gcc@11.4.0', 'gcc@12.3.0 +nvptx']
+    - ['~bootstrap languages=c,c++,fortran']
+    - ['+nvptx ^cuda@11.8']
+  modules:
+    default:
+      enable: [tcl]
+      roots:
+        tcl: /projects/modulefiles
+      arch_folder: false
+      tcl:
+        include: [gcc]
+        exclude: ['@:']
+        hash_length: 0
+        projections:
+          gcc +nvptx: '{name}/{version}+nvptx'
+          gcc +amdgcn: '{name}/{version}+amdgcn'

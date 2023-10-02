@@ -1,0 +1,21 @@
+spack:
+  concretizer:
+    unify: when_possible
+  view: false
+  packages:
+    all:
+      compiler: ['gcc@=8.5.0']
+  specs:
+  - 'python +optimizations'
+  - 'py-pip'
+  modules:
+    default:
+      enable: [tcl]
+      roots:
+        tcl: /projects/modulefiles
+      arch_folder: false
+      tcl:
+        include: [python, py-pip]
+        exclude: ['@:']
+        hash_length: 0
+          
