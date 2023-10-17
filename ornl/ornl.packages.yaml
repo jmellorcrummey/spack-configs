@@ -5,8 +5,9 @@
 # Last updated: Jun 23, 2023 (WYP)
 # -------------------------------------------------------------------------
 packages:
-  hpcviewer:
-    version: [2023.05]
+  all:
+    providers:
+      zlib-api:: [zlib]
   boost:
     version: [1.82.0]
     variants: >
