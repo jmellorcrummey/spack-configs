@@ -9,163 +9,159 @@
 #------------------------------------------------------------
 
 #------------------------------------------------------------
-# usage message
+# Usage message
 #------------------------------------------------------------
 
 usage()
 {
-	    cat <<EOF 1>&2
+  cat <<EOF 1>&2
 
 Usage:
   spacklink [-n] <spack directory> <site> <machine name>
 EOF
-    exit 1
+  exit 1
 }
 
-
 #------------------------------------------------------------
-# the script
+# Parse arguments
 #------------------------------------------------------------
 
-spack_config_root_relative=`dirname $0`/..
-spack_config_root=`realpath $spack_config_root_relative`
-
+# Dry run flag
 if [ "$1" == "-n" ]; then
-	echo=echo
-	shift
+  echo=echo
+  shift
 else
-	echo=
+  echo=
 fi
 
 # $1 spack directory
 if [ "$1" == "" ]; then
-	usage
+  usage
 else
-	spack_root=$1
-
+  spack_root=$1
 fi
 
 # $2 site 
 if [ "$2" == "" ]; then
-	usage
+  usage
 else
-	site=$2
+  site=$2
 fi
 
 # $3 machine 
 if [ "$3" == "" ]; then
-	usage
+  usage
 else
-	machine=$3
+  machine=$3
 fi
 
-#check for valid spack root 
-if test ! -d $spack_root/etc/spack; then
-	echo "spacklink: Invalid spack directory $spack_root"
-	usage
+#------------------------------------------------------------
+# Check paths
+#------------------------------------------------------------
+
+# Check for valid spack root
+spack_etc=${spack_root}/etc/spack
+if test ! -d ${spack_etc}; then
+  echo "spacklink: Invalid spack directory ${spack_root}"
+  usage
 fi
 
-#check for valid site
-if test ! -d $spack_config_root/$site; then
-	echo "spacklink: Invalid site directory $spack_config_root/$site"
-	usage
+spack_config_root_relative=$(dirname $0)/..
+spack_config_root=$(realpath ${spack_config_root_relative})
+
+# Check for valid site
+if test ! -d ${spack_config_root}/${site}; then
+  echo "spacklink: Invalid site directory ${spack_config_root}/${site}"
+  usage
 fi
 
-#check for valid machine
-if test ! -d $spack_config_root/$site/$machine; then
-	echo "spacklink: Invalid machine directory $spack_config_root/$site/$machine"
-	usage
+# Check for valid machine
+if test ! -d ${spack_config_root}/${site}/${machine}; then
+  echo "spacklink: Invalid machine directory ${spack_config_root}/${site}/${machine}"
+  usage
 fi
 
-spack_etc=$spack_root/etc/spack
-spack_machcfg_root="$(realpath -m $spack_root/../cfg/$machine.system)"
-spack_env_root="$(realpath -m $spack_root/../envs)"
+#------------------------------------------------------------
+# Helper functions
+#------------------------------------------------------------
 
-echo Removing current spack configuration settings
-$echo /bin/rm -rf $spack_etc/*.yaml
-
-echo "Configuring $spack_root with spack configuration files for  site=$site machine=$machine"
-
-site_config=$spack_config_root/$site/$site.config.yaml
-site_modules=$spack_config_root/$site/$site.modules.yaml
-site_packages=$spack_config_root/$site/$site.packages.yaml
-config=$spack_config_root/$site/$machine/$machine.config.yaml
-modules=$spack_config_root/$site/$machine/$machine.modules.yaml
-packages=$spack_config_root/$site/$machine/$machine.packages.yaml
-compilers=$spack_config_root/$site/$machine/$machine.compilers.yaml
-spack_env_yaml=$spack_config_root/$site/$machine/$machine.spack.yaml
-
-if test ! -f $site_config; then
-  echo "No site-wide config file ${site_config}; skipping"
-else
-  $echo ln -s $site_config $spack_etc/config.yaml
-fi
-
-if test ! -f $site_modules; then
-  echo "No site-wide modules file ${site_modules}; skipping"
-else
-  $echo ln -s $site_modules $spack_etc/modules.yaml
-fi
-
-if test ! -f $site_packages; then
-  echo "No site-wide packages file ${site_packages}; skipping"
-else
-  $echo ln -s $site_packages $spack_etc/packages.yaml
-fi
-
-if test ! -f $config; then
-  echo "No machine-specific config file $config; skipping"
-else
-  if test ! -d "$spack_machcfg_root"; then
-    echo "Creating Spack machine-specific config directory at $spack_machcfg_root"
-    $echo mkdir -p "$spack_machcfg_root"
+link_site()
+{
+  kind=$1
+  target=${spack_config_root}/${site}/${site}.${kind}.yaml
+  if ! test -f ${target}; then
+    echo "No site-wide ${kind} file ${target}; skipping"
+  else
+    $echo ln -s ${target} ${spack_etc}/${kind}.yaml
   fi
-  $echo ln -s $config $spack_machcfg_root/config.yaml
-fi
+}
 
-if test ! -f $modules; then
-  echo "No machine-specific modules file $modules; skipping"
-else
-  if test ! -d "$spack_machcfg_root"; then
-    echo "Creating Spack machine-specific config directory at $spack_machcfg_root"
-    $echo mkdir -p "$spack_machcfg_root"
+cwd=$(realpath ${spack_root}/..)
+spack_machcfg_root=${cwd}/cfg/${machine}.system
+link_machine()
+{
+  kind=$1
+  target=${spack_config_root}/${site}/${machine}/${machine}.${kind}.yaml
+  if ! test -f ${target}; then
+    echo "No machine-specific ${kind} file ${target}; skipping"
+  else
+    if test ! -d ${spack_machcfg_root}; then
+      echo "Creating Spack machine-specific config directory at ${spack_machcfg_root}"
+      $echo mkdir -p ${spack_machcfg_root}
+    fi
+    $echo rm ${spack_machcfg_root}/${kind}.yaml
+    $echo ln -s ${target} ${spack_machcfg_root}/${kind}.yaml
   fi
-  $echo ln -s $modules $spack_machcfg_root/modules.yaml
-fi
+}
 
-if test ! -f $packages; then
-  echo "No machine-specific packages file $packages; skipping"
-else
-  if test ! -d "$spack_machcfg_root"; then
-    echo "Creating Spack machine-specific config directory at $spack_machcfg_root"
-    $echo mkdir -p "$spack_machcfg_root"
+spack_env_root=${cwd}/envs
+spack_env_link=${spack_root}/var/spack/environments
+link_env()
+{
+  targets=${spack_config_root}/${site}/${machine}/${machine}.spack.*.yaml
+  if test -z "${targets}"; then
+    echo "No Spack environment files; skipping"
+  else
+    if test ! -d ${spack_env_root}; then
+      echo "Creating Spack environments directory at ${spack_env_root}"
+    fi
+    if ! test -h ${spack_env_link}; then
+      echo "Removing current Spack environments directory"
+      $echo rm -rf ${spack_env_link}
+      $echo ln -s ${spack_env_root} ${spack_env_link}
+    fi
+    for f in $targets; do
+      name=$(basename $f | sed -e "s/${machine}\.spack\.//; s/\.yaml//")
+      envdir=${spack_env_root}/${name}-${machine}
+      if test ! -d ${envdir}; then
+	$echo mkdir -p ${envdir}
+      fi
+      echo "Linking Spack environment ${envdir}/spack.yaml -> $f"
+      $echo rm -f ${envdir}/spack.yaml
+      $echo ln -s $f ${envdir}/spack.yaml
+    done
   fi
-  $echo ln -s $packages $spack_machcfg_root/packages.yaml
-fi
+}
 
-if test ! -f $compilers; then
-  echo "No machine-specific compilers file $compilers; skipping"
-else
-  if test ! -d "$spack_machcfg_root"; then
-    echo "Creating Spack machine-specific config directory at $spack_machcfg_root"
-    $echo mkdir -p "$spack_machcfg_root"
-  fi
-  $echo ln -s $compilers $spack_machcfg_root/compilers.yaml
-fi
+#------------------------------------------------------------
+# The script
+#------------------------------------------------------------
 
-if ! test -f $spack_env_yaml; then
-  echo "No environment file ${spack_env_yaml}; skipping" 
-else
-  if test ! -d "$spack_env_root/hpctoolkit-$machine"; then
-    echo "Creating Spack environment directory at $spack_env_root/hpctoolkit-$machine"
-    $echo mkdir -p "$spack_env_root/hpctoolkit-$machine"
-  fi
-  echo "Linking Spack environment yaml file"
-  $echo ln -s $spack_env_yaml $spack_env_root/hpctoolkit-$machine/spack.yaml
-  if ! test -h $spack_root/var/spack/environments; then
-    echo "Removing old Spack environments directory"
-    $echo rm -rf $spack_root/var/spack/environments
-    echo "Linking Spack environments directory to $spack_env_root"
-    $echo ln -s $spack_env_root $spack_root/var/spack/environments
-  fi
-fi
+echo "Removing current spack configuration settings"
+$echo /bin/rm -rf ${spack_etc}/*.yaml
+
+echo "Configuring $spack_root with spack configuration files for site=$site machine=$machine"
+
+link_site config
+link_site modules
+link_site packages
+link_machine config
+link_machine modules
+link_machine packages
+link_machine compilers
+link_env
+
+echo "Copying template script for sourcing Spack"
+$echo cp ${spack_config_root}/bin/srcspack.template ${cwd}/srcspack
+
+echo "Done! Please source the 'srcspack' script to continue..."
