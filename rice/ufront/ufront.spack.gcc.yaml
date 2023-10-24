@@ -3,19 +3,27 @@ spack:
     unify: when_possible
   view: false
   packages:
-    gawk:
-      externals: []
+    gcc:
+      externals:
+      - spec: gcc@8.5.0 languages=c,c++,fortran
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
     all:
-      compiler: [gcc@8.5.0]
-      variants: [cuda_arch=80]
-    cuda:
-      variants: [+allow-unsupported-compilers]
+      compiler: [gcc@=8.5.0]
   specs:
+  - 'gcc@8.5.0'
   - matrix:
-    - ['gcc@11.4.0', 'gcc@12.3.0 +nvptx']
-    - ['~bootstrap languages=c,c++,fortran']
-    - ['+nvptx ^cuda@11.8']
+    - [gcc]
+    - ['@11.4.0', '@12.3.0', '@13.2.0']
+    - ['+bootstrap +profiled languages=c,c++,fortran build_type=Release']
   modules:
+    prefix_inspections:
+      ./lib: [LD_LIBRARY_PATH]
+      ./lib64: [LD_LIBRARY_PATH]
     default:
       enable: [tcl]
       roots:
@@ -25,6 +33,7 @@ spack:
         include: [gcc]
         exclude: ['@:']
         hash_length: 0
-        projections:
-          gcc +nvptx: '{name}/{version}+nvptx'
-          gcc +amdgcn: '{name}/{version}+amdgcn'
+        gcc:
+          environment:
+            prepend_path:
+              MODULEPATH: /projects/deploy/moduleroot/gcc-{version}

@@ -2,9 +2,16 @@ spack:
   concretizer:
     unify: when_possible
   view: false
+  packages:
+    mpi:
+      buildable: False
+      require: openmpi
+    python:
+      buildable: False
   specs:
   - matrix:
     - ['hpctoolkit ~viewer ~papi +mpi']
-    - ['@2023.08.stable ^dyninst@12.3.0 ^libmonitor@2023.03.15']
+    - ['@2023.08.1 ^dyninst@12.3.0 ^libmonitor@2023.03.15']
     - ['+rocm ^hip@5.4.3 ^hsa-rocr-dev@5.4.3 ^roctracer-dev@5.4.3 ^rocprofiler-dev@5.4.3']
     - ['+cuda ^cuda@11.8']
+    - ['%gcc@8.5.0']

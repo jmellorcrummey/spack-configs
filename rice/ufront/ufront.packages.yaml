@@ -1,12 +1,10 @@
 packages:
   all:
-    compiler: [gcc@=11.4.0]
     variants:
     - cuda_arch=80
     - amdgpu_target=gfx908,gfx90a
-    providers:
-      mpi: [openmpi, mpich]
   hpcviewer:
+    buildable: false
     externals:
     - spec: hpcviewer@2022.12
       modules: [hpcviewer/2022.12]
@@ -98,9 +96,9 @@ packages:
     - spec: hip@5.6.1
       prefix: /opt/rocm-5.6.1
       modules: [rocm/5.6.1]
-    - spec: hip@5.7.0
-      prefix: /opt/rocm-5.7.0
-      modules: [rocm/5.7.0]
+    - spec: hip@5.7.1
+      prefix: /opt/rocm-5.7.1
+      modules: [rocm/5.7.1]
   hsa-rocr-dev:
     buildable: false
     externals:
@@ -122,9 +120,9 @@ packages:
     - spec: hsa-rocr-dev@5.6.1
       prefix: /opt/rocm-5.6.1
       modules: [rocm/5.6.1]
-    - spec: hsa-rocr-dev@5.7.0
-      prefix: /opt/rocm-5.7.0
-      modules: [rocm/5.7.0]
+    - spec: hsa-rocr-dev@5.7.1
+      prefix: /opt/rocm-5.7.1
+      modules: [rocm/5.7.1]
   roctracer-dev:
     buildable: false
     externals:
@@ -146,9 +144,9 @@ packages:
     - spec: roctracer-dev@5.6.1
       prefix: /opt/rocm-5.6.1
       modules: [rocm/5.6.1]
-    - spec: roctracer-dev@5.7.0
-      prefix: /opt/rocm-5.7.0
-      modules: [rocm/5.7.0]
+    - spec: roctracer-dev@5.7.1
+      prefix: /opt/rocm-5.7.1
+      modules: [rocm/5.7.1]
   rocprofiler-dev:
     buildable: false
     externals:
@@ -170,9 +168,9 @@ packages:
     - spec: rocprofiler-dev@5.6.1
       prefix: /opt/rocm-5.6.1
       modules: [rocm/5.6.1]
-    - spec: rocprofiler-dev@5.7.0
-      prefix: /opt/rocm-5.7.0
-      modules: [rocm/5.7.0]
+    - spec: rocprofiler-dev@5.7.1
+      prefix: /opt/rocm-5.7.1
+      modules: [rocm/5.7.1]
   llvm-amdgpu:
     buildable: false
     externals:
@@ -194,66 +192,59 @@ packages:
     - spec: llvm-amdgpu@5.6.1
       prefix: /opt/rocm-5.6.1
       modules: [rocm/5.6.1]
-    - spec: llvm-amdgpu@5.7.0
-      prefix: /opt/rocm-5.7.0
-      modules: [rocm/5.7.0]
-  mpi:
-    buildable: False
-  openmpi:
-    buildable: False
-    externals:
-    - spec: openmpi@4.1.5~atomics+cuda~cxx~cxx_exceptions~gpfs~internal-hwloc~internal-pmix~java~legacylaunchers~lustre~memchecker~openshmem~orterunprefix+romio+rsh~singularity+static+vt+wrapper-rpath build_system=autotools cuda_arch=80 fabrics=ucx schedulers=none %gcc@=11.4.0 ^cuda@11.8
-      modules: [openmpi/4.1.5/gcc-11.4.0/cuda-11.8]
-      prefix: /projects/deploy/install/linux-rhel8-zen2/gcc-11.4.0/openmpi-4.1.5-xnguzn3a7joneekc2qzrad667lexuuph
-    - spec: openmpi@4.1.5~atomics+cuda~cxx~cxx_exceptions~gpfs~internal-hwloc~internal-pmix~java~legacylaunchers~lustre~memchecker~openshmem~orterunprefix+romio+rsh~singularity+static+vt+wrapper-rpath build_system=autotools cuda_arch=80 fabrics=ucx schedulers=none %gcc@=12.3.0 ^cuda@11.8
-      modules: [openmpi/4.1.5/gcc-12.3.0/cuda-11.8]
-      prefix: /projects/deploy/install/linux-rhel8-zen2/gcc-12.3.0/openmpi-4.1.5-ggbnfg3rrg2qxsmujmpvgjzzdidtupkg
-  mpich:
-    buildable: False
-    externals:
-    - spec: mpich@4.1.2~argobots+cuda+fortran~hcoll+hwloc~hydra+libxml2+pci~rocm+romio~slurm~vci~verbs+wrapperrpath build_system=autotools cuda_arch=80 datatype-engine=auto device=ch4 netmod=ucx pmi=pmix %gcc@=11.4.0 ^cuda@11.8
-      modules: [mpich/4.1.2/gcc-11.4.0/cuda-11.8]
-      prefix: /projects/deploy/install/linux-rhel8-zen2/gcc-11.4.0/mpich-4.1.2-ajpnwask3przijisylneonoiyjtllljj
+    - spec: llvm-amdgpu@5.7.1
+      prefix: /opt/rocm-5.7.1
+      modules: [rocm/5.7.1]
   autoconf:
+    buildable: false
     externals:
     - spec: autoconf@2.69
       prefix: /projects/pkgs/autotools/
       modules: [autotools]
   automake:
+    buildable: false
     externals:
     - spec: automake@1.16.1
       prefix: /projects/pkgs/autotools/
       modules: [autotools]
   libtool:
+    buildable: false
     externals:
     - spec: libtool@2.4.6
       prefix: /projects/pkgs/autotools/
       modules: [autotools]
   gawk:
+    buildable: false
     externals:
     - spec: gawk@4.2.1
       prefix: /usr
   pkgconf:
+    buildable: false
     externals:
     - spec: pkgconf@1.4.2
       prefix: /usr
   bison:
+    buildable: false
     externals:
     - spec: bison@3.0.4
       prefix: /usr
   flex:
+    buildable: false
     externals:
     - spec: flex@2.6.1+lex
       prefix: /usr
   m4:
+    buildable: false
     externals:
     - spec: m4@1.4.18
       prefix: /usr
   texinfo:
+    buildable: false
     externals:
     - spec: texinfo@6.5
       prefix: /usr
   gmake:
+    buildable: false
     externals:
     - spec: gmake@4.2.1
       prefix: /usr
@@ -268,11 +259,8 @@ packages:
     - spec: perl@5.26.3
       prefix: /usr
   curl:
+    buildable: false
     externals:
     - spec: curl@7.61.1+gssapi+ldap+nghttp2
       prefix: /usr
-  python:
-    externals:
-    - spec: python@3.11.4+bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3+ssl~tkinter+uuid+zlib build_system=generic patches=13fa8bf,b0615b2,f2fd060
-      prefix: /projects/deploy/install/linux-rhel8-zen/gcc-8.5.0/python-3.11.4-2vcg45sf5w6skav4hnerl2xnwlxlkof6
-      modules: [python/3.11.4]
+
