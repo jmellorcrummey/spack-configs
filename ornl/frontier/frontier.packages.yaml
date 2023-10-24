@@ -3,28 +3,28 @@
 # Frontier (OLCF).
 # Please refer to the main packages.yaml file in the main HPCToolkit repo
 # when editing this file. Make sure to run bin/spacklink!
-# Last updated: Jun 23, 2023 (WYP)
+# Last updated: Oct 24, 2023 (WYP)
 # -------------------------------------------------------------------------
 packages:
   intel-tbb:
     require: "@2020.3 +shared ~tm"
   intel-xed:
-    version:  [2023.06.07]
+    version:  [2023.07.09]
     variants: +debug +pic
   papi:
     buildable: False
     externals:
     - spec: papi@6.0.0.17
       modules: [papi/6.0.0.17]
-    - spec: papi@7.0.0.1
-      modules: [papi/7.0.0.1]
+    - spec: papi@7.0.1.1
+      modules: [papi/7.0.1.1]
   mpi:
     require: 'cray-mpich'
   cray-mpich:
     buildable: False
     externals:
     - spec: cray-mpich@8.1.23
-      modules: [cray-mpich/8.1.23 libfabric]
+      modules: [cray-mpich/8.1.23, libfabric]
       extra_attributes:
         compilers:
           c: cc
@@ -45,6 +45,8 @@ packages:
     externals:
     - spec: python@3.9.13
       modules: [cray-python/3.9.13.1]
+    - spec: python@3.10.10
+      modules: [cray-python/3.10.10]
   autoconf:
     buildable: False
     externals:
@@ -73,6 +75,15 @@ packages:
     - spec: hip@5.4.3
       prefix: /opt/rocm-5.4.3
       modules: [rocm/5.4.3]
+    - spec: hip@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: hip@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
+    - spec: hip@5.7.0
+      prefix: /opt/rocm-5.7.0
+      modules: [rocm/5.7.0]
   hsa-rocr-dev:
     buildable: false
     externals:
@@ -91,6 +102,15 @@ packages:
     - spec: hsa-rocr-dev@5.4.3
       prefix: /opt/rocm-5.4.3
       modules: [rocm/5.4.3]
+    - spec: hsa-rocr-dev@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: hsa-rocr-dev@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
+    - spec: hsa-rocr-dev@5.7.0
+      prefix: /opt/rocm-5.7.0
+      modules: [rocm/5.7.0]
   roctracer-dev:
     buildable: false
     externals:
@@ -109,6 +129,15 @@ packages:
     - spec: roctracer-dev@5.4.3
       prefix: /opt/rocm-5.4.3
       modules: [rocm/5.4.3]
+    - spec: roctracer-dev@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: roctracer-dev@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
+    - spec: roctracer-dev@5.7.0
+      prefix: /opt/rocm-5.7.0
+      modules: [rocm/5.7.0]
   rocprofiler-dev:
     buildable: false
     externals:
@@ -127,6 +156,15 @@ packages:
     - spec: rocprofiler-dev@5.4.3
       prefix: /opt/rocm-5.4.3
       modules: [rocm/5.4.3]
+    - spec: rocprofiler-dev@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: rocprofiler-dev@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
+    - spec: rocprofiler-dev@5.7.0
+      prefix: /opt/rocm-5.7.0
+      modules: [rocm/5.7.0]
   llvm-amdgpu:
     buildable: false
     externals:
@@ -145,3 +183,12 @@ packages:
     - spec: llvm-amdgpu@5.4.3
       prefix: /opt/rocm-5.4.3
       modules: [rocm/5.4.3]
+    - spec: llvm-amdgpu@5.5.1
+      prefix: /opt/rocm-5.5.1
+      modules: [rocm/5.5.1]
+    - spec: llvm-amdgpu@5.6.0
+      prefix: /opt/rocm-5.6.0
+      modules: [rocm/5.6.0]
+    - spec: llvm-amdgpu@5.7.0
+      prefix: /opt/rocm-5.7.0
+      modules: [rocm/5.7.0]
