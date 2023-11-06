@@ -1,10 +1,10 @@
 # -------------------------------------------------------------------------
 # This is the per-spack-instance configuration file customized for
-# Summit (OLCF).
+# Frontier (OLCF)
 # Keys that are identical to the defaults have been omitted.
 # Make sure to run bin/spacklink!
 # -------------------------------------------------------------------------
 config:
   # This is the path to the root of the Spack install tree.
   install_tree:
-    root: /sw/summit/ums/ums023/.install/spack-root
+    root: /sw/frontier/ums/ums023/.install/spack-root
