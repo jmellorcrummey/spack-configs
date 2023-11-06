@@ -2,14 +2,14 @@
 # This is the per-site-instance Spack packages file customized for OLCF.
 # Please refer to the main packages.yaml file in the main HPCToolkit repo
 # when editing this file. Make sure to run bin/spacklink!
-# Last updated: Jun 23, 2023 (WYP)
+# Last updated: Oct 24, 2023 (WYP)
 # -------------------------------------------------------------------------
 packages:
   all:
     providers:
       zlib-api:: [zlib]
   boost:
-    version: [1.82.0]
+    version: [1.83.0]
     variants: >
       +atomic +chrono +date_time +filesystem +system +thread +timer
       +graph +regex +shared +multithreaded ~debug
@@ -26,7 +26,7 @@ packages:
     version:  [0.189]
     variants: ~nls
   libiberty:
-    version:  ['2.40']
+    version:  [2.41]
     variants: +pic
   libmonitor:
     version:  [2023.03.15]
