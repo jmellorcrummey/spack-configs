@@ -44,7 +44,7 @@ pushd ${cwd}/spack-configs &> /dev/null
   else
     host="$(hostname -f)"
     domain=$(echo ${host} | awk -F '.' '{print $(NF-1)}')
-    site=$(ls -d */ | cut -d '/' -f 1 | grep ${domain})
+    site=$(ls -d */ | cut -d '/' -f 1 | \grep ${domain})
     if [ -z "${site}" ]; then
       echo "Cannot find Spack config for site=${domain}" >&2
       return 4
