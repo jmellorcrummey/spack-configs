@@ -109,7 +109,9 @@ link_machine()
       echo "Creating Spack machine-specific config directory at ${spack_machcfg_root}"
       $echo mkdir -p ${spack_machcfg_root}
     fi
-    $echo rm ${spack_machcfg_root}/${kind}.yaml
+    if test -f ${spack_machcfg_root}/${kind}.yaml; then
+      $echo rm -f ${spack_machcfg_root}/${kind}.yaml
+    fi
     $echo ln -s ${target} ${spack_machcfg_root}/${kind}.yaml
   fi
 }
@@ -125,7 +127,7 @@ link_env()
     if test ! -d ${spack_env_root}; then
       echo "Creating Spack environments directory at ${spack_env_root}"
     fi
-    if ! test -h ${spack_env_link}; then
+    if test ! -h ${spack_env_link}; then
       echo "Removing current Spack environments directory"
       $echo rm -rf ${spack_env_link}
       $echo ln -s ${spack_env_root} ${spack_env_link}
@@ -137,7 +139,9 @@ link_env()
 	$echo mkdir -p ${envdir}
       fi
       echo "Linking Spack environment ${envdir}/spack.yaml -> $f"
-      $echo rm -f ${envdir}/spack.yaml
+      if test -f ${envdir}/spack.yaml; then
+        $echo rm -f ${envdir}/spack.yaml
+      fi  
       $echo ln -s $f ${envdir}/spack.yaml
     done
   fi
@@ -147,18 +151,21 @@ link_env()
 # The script
 #------------------------------------------------------------
 
-echo "Removing current spack configuration settings"
-$echo /bin/rm -rf ${spack_etc}/*.yaml
-
 echo "Configuring $spack_root with spack configuration files for site=$site machine=$machine"
 
+echo "Setting up Spack site-level configuration settings"
+$echo /bin/rm -rf ${spack_etc}/*.yaml
 link_site config
 link_site modules
 link_site packages
+
+echo "Setting up Spack machine-level configuration settings"
 link_machine config
 link_machine modules
 link_machine packages
 link_machine compilers
+
+echo "Setting up Spack environments"
 link_env
 
 echo "Copying template script for sourcing Spack"
