@@ -121,30 +121,32 @@ spack_env_link=${spack_root}/var/spack/environments
 link_env()
 {
   targets=${spack_config_root}/${site}/${machine}/${machine}.spack.*.yaml
-  if test -z "${targets}"; then
-    echo "No Spack environment files; skipping"
-  else
-    if test ! -d ${spack_env_root}; then
-      echo "Creating Spack environments directory at ${spack_env_root}"
+  for f in $targets; do
+    if test ! -f $f; then
+      echo "No Spack environment files; skipping"
+      return
     fi
-    if test ! -h ${spack_env_link}; then
-      echo "Removing current Spack environments directory"
-      $echo rm -rf ${spack_env_link}
-      $echo ln -s ${spack_env_root} ${spack_env_link}
-    fi
-    for f in $targets; do
-      name=$(basename $f | sed -e "s/${machine}\.spack\.//; s/\.yaml//")
-      envdir=${spack_env_root}/${name}-${machine}
-      if test ! -d ${envdir}; then
-	$echo mkdir -p ${envdir}
-      fi
-      echo "Linking Spack environment ${envdir}/spack.yaml -> $f"
-      if test -f ${envdir}/spack.yaml; then
-        $echo rm -f ${envdir}/spack.yaml
-      fi  
-      $echo ln -s $f ${envdir}/spack.yaml
-    done
+  done
+  if test ! -d ${spack_env_root}; then
+    echo "Creating Spack environments directory at ${spack_env_root}"
   fi
+  if test ! -h ${spack_env_link}; then
+    echo "Removing current Spack environments directory"
+    $echo rm -rf ${spack_env_link}
+    $echo ln -s ${spack_env_root} ${spack_env_link}
+  fi
+  for f in $targets; do
+    name=$(basename $f | sed -e "s/${machine}\.spack\.//; s/\.yaml//")
+    envdir=${spack_env_root}/${name}-${machine}
+    if test ! -d ${envdir}; then
+      $echo mkdir -p ${envdir}
+    fi
+    echo "Linking Spack environment ${envdir}/spack.yaml -> $f"
+    if test -f ${envdir}/spack.yaml; then
+      $echo rm -f ${envdir}/spack.yaml
+    fi
+    $echo ln -s $f ${envdir}/spack.yaml
+  done
 }
 
 #------------------------------------------------------------
