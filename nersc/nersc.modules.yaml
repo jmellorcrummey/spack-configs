@@ -1,0 +1,26 @@
+# -------------------------------------------------------------------------
+# This is the per-site-instance module generator configuration customized
+# for NERSC.
+# Make sure to run bin/spacklink!
+# -------------------------------------------------------------------------
+modules:
+  default:
+    enable: [lmod]
+    arch_folder: false
+    lmod:
+      hierarchy: [compiler]
+      hash_length: 0
+      projections:
+        all: '{name}/{version}'
+        'hpctoolkit+cuda': '{name}/{version}-gpu'
+        'hpctoolkit~cuda': '{name}/{version}-cpu'
+      all:
+        autoload: none
+      hpctoolkit:
+        environment:
+          set:
+            '{name}_ROOT': '{prefix}'
+      'hpctoolkit+cuda':
+        load: ['gpu']
+      'hpctoolkit~cuda':
+        load: ['cpu']

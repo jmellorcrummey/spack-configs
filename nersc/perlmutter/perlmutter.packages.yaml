@@ -3,63 +3,19 @@
 # Perlmutter (NERSC).
 # Please refer to the main packages.yaml file in the main HPCToolkit repo
 # when editing this file. Make sure to run bin/spacklink!
-# Last updated: Aug 8, 2023 (WYP)
+# Last updated: Dec 5, 2023 (WYP)
 # -------------------------------------------------------------------------
 packages:
-  all:
-    compiler: [gcc@11.2.0]
-  hpcviewer:
-    version: [2023.07]
-  boost:
-    version:  [1.82.0]
-    variants: >
-      +atomic +chrono +date_time +filesystem +system +thread +timer
-      +graph +regex +shared +multithreaded ~debug
-      ~mpi ~python ~iostreams ~numpy
-      visibility=global
-  bzip2:
-    version:  [1.0.8]
-    variants: +shared
-  dyninst:
-    require:
-    - one_of: ['@=12.3.0', '@=master']
-    - '+openmp build_type=RelWithDebInfo'
-  elfutils:
-    version: [0.189]
-    variants: ~nls
   intel-tbb:
     require: '@2020.3 +shared ~tm'
   intel-xed:
     version:  [2023.06.07]
     variants: +debug +pic
-  libiberty:
-    version:  ['2.40']
-    variants: +pic
-  libmonitor:
-    version:  [2023.03.15]
-    variants: +hpctoolkit ~dlopen
-  libpfm4:
-    version:  [4.13.0]
-  libunwind:
-    version:  [1.6.2]
-    variants: +xz +pic
   papi:
-    externals:
-    - spec: papi@7.0.0.1
-      modules: [papi/7.0.0.1]
     buildable: False
-  xerces-c:
-    version:  [3.2.4]
-    variants: transcoder=iconv netaccessor=none
-  xz:
-    version:  [5.4.1]
-    variants: +pic
-  yaml-cpp:
-    version:  [0.7.0]
-    variants: +shared build_type=RelWithDebInfo  
-  zlib:
-    version:  [1.2.13]
-    variants: +optimize +shared
+    externals:
+    - spec: papi@7.0.1.1
+      modules: [papi/7.0.1.1]
   mpi:
     buildable: False
     require: "cray-mpich"
@@ -78,6 +34,8 @@ packages:
     externals:
     - spec: cuda@11.7.0
       modules: [cudatoolkit/11.7]
+    - spec: cuda@12.2.0
+      modules: [cudatoolkit/12.2]
   cmake:
     buildable: False
     externals:
@@ -108,4 +66,3 @@ packages:
     externals:
     - spec: gcc@11.2.0 languages=c,c++,fortran
       modules: [craype, PrgEnv-gnu, gcc/11.2.0]
-

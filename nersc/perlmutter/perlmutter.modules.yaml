@@ -5,21 +5,8 @@
 # -------------------------------------------------------------------------
 modules:
   default:
-    enable: [lmod]
     roots:
       lmod: /global/common/software/m3977/.install/perlmutter/modulefiles
-    arch_folder: false
     lmod:
-      include: ['hpctoolkit', 'hpcviewer']
-      exclude: ['@:']
-      hierarchy: [compiler]
       core_compilers:
         - 'gcc@7.5.0'
-      hash_length: 7
-      projections:
-        all: '{name}/{version}'
-        'hpctoolkit+cuda': '{name}/{version}-gpu'
-      all:
-        autoload: none
-      'hpctoolkit+cuda':
-        load: ['gpu']

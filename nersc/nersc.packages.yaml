@@ -1,0 +1,50 @@
+# -------------------------------------------------------------------------
+# This is the per-site-instance Spack packages file customized for NERSC.
+# Please refer to the main packages.yaml file in the main HPCToolkit repo
+# when editing this file. Make sure to run bin/spacklink!
+# Last updated: Dec 5, 2023 (WYP)
+# -------------------------------------------------------------------------
+packages:
+  all:
+    providers:
+      zlib-api:: [zlib]
+  boost:
+    version: [1.82.0]
+    variants: >
+      +atomic +chrono +date_time +filesystem +system +thread +timer
+      +graph +regex +shared +multithreaded ~debug
+      ~mpi ~python ~iostreams ~numpy
+      visibility=global
+  bzip2:
+    version:  [1.0.8]
+    variants: +shared
+  dyninst:
+    require:
+    - one_of: ['@=12.3.0', '@=master']
+    - '+openmp build_type=RelWithDebInfo'
+  elfutils:
+    version:  [0.189]
+    variants: ~nls
+  libiberty:
+    version:  ['2.40']
+    variants: +pic
+  libmonitor:
+    version:  [2023.03.15]
+    variants: +hpctoolkit ~dlopen
+  libpfm4:
+    version:  [4.13.0]
+  libunwind:
+    version:  [1.6.2]
+    variants: +xz +pic
+  xerces-c:
+    version:  [3.2.4]
+    variants: transcoder=iconv netaccessor=none
+  xz:
+    version:  [5.4.1]
+    variants: +pic
+  yaml-cpp:
+    version:  [0.7.0]
+    variants: +shared build_type=RelWithDebInfo  
+  zlib:
+    version:  [1.2.13]
+    variants: +optimize +shared
