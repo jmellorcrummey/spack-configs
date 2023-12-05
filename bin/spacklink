@@ -130,11 +130,11 @@ link_env()
   if test ! -d ${spack_env_root}; then
     echo "Creating Spack environments directory at ${spack_env_root}"
   fi
-  if test ! -h ${spack_env_link}; then
+  if test -e ${spack_env_link}; then
     echo "Removing current Spack environments directory"
     $echo rm -rf ${spack_env_link}
-    $echo ln -s ${spack_env_root} ${spack_env_link}
   fi
+  $echo ln -s ${spack_env_root} ${spack_env_link}
   for f in $targets; do
     name=$(basename $f | sed -e "s/${machine}\.spack\.//; s/\.yaml//")
     envdir=${spack_env_root}/${name}-${machine}
