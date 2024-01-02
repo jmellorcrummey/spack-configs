@@ -1,0 +1,5 @@
+hide_version("hpctoolkit/2023.03.stable-cpu")
+hide_version("hpctoolkit/2023.03.stable-gpu")
+hide_version("hpctoolkit/2023.08.1-cpu")
+hide_version("hpctoolkit/2023.08.1-gpu")
+module_version("2023.08.1", "default")

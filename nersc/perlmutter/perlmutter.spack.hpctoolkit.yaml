@@ -5,10 +5,11 @@ spack:
   specs:
   - matrix:
     - [hpctoolkit +mpi +viewer]
-    - - '@2023.03.stable ^dyninst@12.3.0 ~papi +cuda ^cuda@11.7'
-      - '@2023.08.1 ^dyninst@12.3.0 ~papi +cuda ^cuda@11.7'
-      - '@2023.08.1 ^dyninst@12.3.0 +papi ~cuda'
-      - '@develop ^dyninst@master +cuda ^cuda@12.2'
+    - - '@2023.03.stable ~papi +cuda ^cuda@11.7 ^dyninst@12.3.0'
+      - '@2023.03.stable +papi ~cuda ^dyninst@12.3.0'
+      - '@2023.08.1 ~papi +cuda ^cuda@11.7 ^dyninst@12.3.0'
+      - '@2023.08.1 +papi ~cuda ^dyninst@12.3.0'
+      - '@develop +cuda ^cuda@12.2 ^dyninst@master'
   - matrix:
     - [hpcviewer]
     - ['@2023.07']
