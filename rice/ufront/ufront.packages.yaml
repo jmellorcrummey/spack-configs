@@ -22,6 +22,16 @@ packages:
       modules: [hpcviewer/2023.06]
     - spec: hpcviewer@2023.07
       modules: [hpcviewer/2023.07]
+    - spec: hpcviewer@2023.10
+      modules: [hpcviewer/2023.10]
+    - spec: hpcviewer@2023.11
+      modules: [hpcviewer/2023.11]
+    - spec: hpcviewer@2023.12
+      modules: [hpcviewer/2023.12]
+    - spec: hpcviewer@2024.01
+      modules: [hpcviewer/2024.01]
+    - spec: hpcviewer@2024.02
+      modules: [hpcviewer/2024.02]
   boost:
     version: [1.83.0]
     variants: "+atomic +chrono +date_time +filesystem +system +thread +timer +graph +regex +shared +multithreaded visibility=global"
@@ -69,10 +79,10 @@ packages:
   cuda:
     buildable: false
     externals:
-    - spec: cuda@11.8
+    - spec: cuda@11.8.0 +allow-unsupported-compilers
       prefix: /usr/local/cuda-11.8
       modules: [cuda/11.8]
-    - spec: cuda@12.2
+    - spec: cuda@12.2.1 +allow-unsupported-compilers
       prefix: /usr/local/cuda-12.2
       modules: [cuda/12.2]
   hip:
@@ -123,6 +133,9 @@ packages:
     - spec: hsa-rocr-dev@5.7.1
       prefix: /opt/rocm-5.7.1
       modules: [rocm/5.7.1]
+    - spec: hsa-rocr-dev@6.0.0
+      prefix: /opt/rocm-6.0.0
+      modules: [rocm/6.0.0]
   roctracer-dev:
     buildable: false
     externals:
@@ -147,6 +160,9 @@ packages:
     - spec: roctracer-dev@5.7.1
       prefix: /opt/rocm-5.7.1
       modules: [rocm/5.7.1]
+    - spec: roctracer-dev@6.0.0
+      prefix: /opt/rocm-6.0.0
+      modules: [rocm/6.0.0]
   rocprofiler-dev:
     buildable: false
     externals:
@@ -171,6 +187,9 @@ packages:
     - spec: rocprofiler-dev@5.7.1
       prefix: /opt/rocm-5.7.1
       modules: [rocm/5.7.1]
+    - spec: rocprofiler-dev@6.0.0
+      prefix: /opt/rocm-6.0.0
+      modules: [rocm/6.0.0]
   llvm-amdgpu:
     buildable: false
     externals:
@@ -195,6 +214,36 @@ packages:
     - spec: llvm-amdgpu@5.7.1
       prefix: /opt/rocm-5.7.1
       modules: [rocm/5.7.1]
+    - spec: llvm-amdgpu@6.0.0
+      prefix: /opt/rocm-6.0.0
+      modules: [rocm/6.0.0]
+  rocm-smi-lib:
+    buildable: false
+    externals:
+    - spec: rocm-smi-lib@5.1.0
+      prefix: /opt/rocm-5.1.0
+      modules: [rocm/5.1.0]
+    - spec: rocm-smi-lib@5.2.0
+      prefix: /opt/rocm-5.2.0
+      modules: [rocm/5.2.0]
+    - spec: rocm-smi-lib@5.3.3
+      prefix: /opt/rocm-5.3.3
+      modules: [rocm/5.3.3]
+    - spec: rocm-smi-lib@5.4.3
+      prefix: /opt/rocm-5.4.3
+      modules: [rocm/5.4.3]
+    - spec: rocm-smi-lib@5.5.3
+      prefix: /opt/rocm-5.5.3
+      modules: [rocm/5.5.3]
+    - spec: rocm-smi-lib@5.6.1
+      prefix: /opt/rocm-5.6.1
+      modules: [rocm/5.6.1]
+    - spec: rocm-smi-lib@5.7.1
+      prefix: /opt/rocm-5.7.1
+      modules: [rocm/5.7.1]
+    - spec: rocm-smi-lib@6.0.0
+      prefix: /opt/rocm-6.0.0
+      modules: [rocm/6.0.0]
   autoconf:
     buildable: false
     externals:
@@ -257,10 +306,5 @@ packages:
     buildable: false
     externals:
     - spec: perl@5.26.3
-      prefix: /usr
-  curl:
-    buildable: false
-    externals:
-    - spec: curl@7.61.1+gssapi+ldap+nghttp2
       prefix: /usr
 

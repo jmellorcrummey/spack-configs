@@ -7,8 +7,6 @@ spack:
       compiler: [gcc]
     python:
       buildable: false
-#    cuda:
-#      variants: [+allow-unsupported-compilers]
     openmpi:
       version: [4.1.5]
     mpich:
@@ -17,11 +15,15 @@ spack:
   - matrix:
     - [openmpi fabrics=ucx]
     - ['%gcc@8.5.0', '%gcc@11.4.0', '%gcc@12.3.0', '%gcc@13.2.0']
-    - [~cuda]
+    - - '~cuda'
+      - '+cuda ^cuda@11.8.0 +allow-unsupported-compilers'
+      - '+cuda ^cuda@12.2.1 +allow-unsupported-compilers'
   - matrix:
     - [mpich pmi=pmix netmod=ucx datatype-engine=yaksa]
     - ['%gcc@8.5.0', '%gcc@11.4.0', '%gcc@12.3.0', '%gcc@13.2.0']
-    - [~cuda ~rocm]
+    - - '~cuda ~rocm'
+      - '+cuda ~rocm ^cuda@11.8.0'
+      - '+cuda ~rocm ^cuda@12.2.1'
   modules:
     prefix_inspections:
       ./lib: [LD_LIBRARY_PATH]
@@ -39,7 +41,9 @@ spack:
           all: '{compiler.name}-{compiler.version}/{name}/{version}/cpu'
           ^cuda: '{compiler.name}-{compiler.version}/{name}/{version}/cuda-{^cuda.version}'
           ^hip: '{compiler.name}-{compiler.version}/{name}/{version}/rocm-{^hip.version}'
-        ^cuda:
-          load: ['cuda/{^cuda.version}']
+        '^cuda@11.8.0':
+          load: ['cuda/11.8']
+        '^cuda@12.2.1':
+          load: ['cuda/12.2']
         ^hip:
           load: ['rocm/{^hip.version}']

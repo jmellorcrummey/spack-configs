@@ -34,6 +34,9 @@ spack:
         exclude: ['@:']
         hash_length: 0
         gcc:
+#          conflict:
+#            - {name}
+#            - nvhpc
           environment:
             prepend_path:
               MODULEPATH: /projects/deploy/moduleroot/gcc-{version}
