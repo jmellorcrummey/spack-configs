@@ -1,0 +1,22 @@
+# -------------------------------------------------------------------------
+# This is the Spack environment file customized for
+# Summit (OLCF).
+# Last updated: Oct 31, 2023 (WYP)
+# -------------------------------------------------------------------------
+spack:
+  concretizer:
+    unify: when_possible
+  view: false
+  packages:
+    all:
+      compiler: [gcc@=9.1.0]
+  specs:
+  - matrix:
+    - [hpctoolkit +mpi ~papi +viewer +cuda]
+    - - '@2023.03.stable ^dyninst@12.3.0 ^hpcviewer@2023.07'
+      - '@2023.08.1 ^dyninst@12.3.0 ^hpcviewer@2023.07'
+      - '@develop ^dyninst@12.3.0 ^hpcviewer@2023.07'
+    - ['^cuda@11.7.1']
+  - matrix:
+    - [hpcviewer]
+    - ['@2023.07']

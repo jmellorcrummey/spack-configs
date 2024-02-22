@@ -1,12 +1,12 @@
 # -------------------------------------------------------------------------
 # This is the per-spack-instance module generator configuration customized
-# for Summit (OLCF).
+# for Frontier (OLCF).
 # Make sure to run bin/spacklink!
 # -------------------------------------------------------------------------
 modules:
   default:
     roots:
-      lmod: /sw/summit/ums/ums023/.install/modulefiles
+      lmod: /sw/frontier/ums/ums023/.install/modulefiles
     lmod:
       core_compilers:
-        - 'gcc@8.3.1'
+        - 'gcc@7.5.0'

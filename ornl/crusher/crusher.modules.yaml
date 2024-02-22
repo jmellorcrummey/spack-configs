@@ -5,20 +5,8 @@
 # -------------------------------------------------------------------------
 modules:
   default:
-    enable: [lmod]
     roots:
-      lmod: /gpfs/alpine/csc322/world-shared/.install/crusher/modulefiles
-    arch_folder: false
+      lmod: /sw/crusher/ums/ums023/.install/modulefiles
     lmod:
-      hierarchy: [compiler]
       core_compilers:
         - 'gcc@7.5.0'
-      hash_length: 0
-      projections:
-        all: '{name}/{version}'
-      all:
-        autoload: none
-      hpctoolkit:
-        environment:
-          set:
-            HPCTOOLKIT_ROOT: ${PREFIX}

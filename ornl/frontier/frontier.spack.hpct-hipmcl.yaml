@@ -1,0 +1,37 @@
+spack:
+  upstreams:
+    ums:
+      install_tree: /sw/frontier/ums/ums023/.install/spack-root
+      modules:
+        lmod: /sw/frontier/ums/ums023/.install/modulefiles
+  config:
+    build_stage:
+    - ${MEMBERWORK}/csc322/spack/stage
+    install_tree:
+      root: /lustre/orion/csc322/world-shared/.install/frontier/install
+  modules:
+    default:
+      roots:
+        lmod: /lustre/orion/csc322/world-shared/.install/frontier/modulefiles
+      lmod:
+        projections:
+          'hpctoolkit +python +opencl': '{name}/{version}-hipmcl'
+  packages:
+    all:
+      compiler: [gcc@=12.2.0]
+    python::
+      buildable: false
+      externals:
+      - spec: python@3.10.12
+        prefix: /lustre/orion/world-shared/syb111/frontier_hack/hp_gin_gen_env
+  concretizer:
+    unify: when_possible
+  view: false
+  specs:
+  - matrix:
+    - ['hpctoolkit +mpi ~papi']
+    - ['@2023.08.1 ^dyninst@12.3.0', '@develop ^dyninst@12.3.0']
+    - ['+rocm ^hip@5.6.0 ^hsa-rocr-dev@5.6.0 ^roctracer-dev@5.6.0 ^rocprofiler-dev@5.6.0']
+    - ['+viewer ^hpcviewer@2023.07']
+    - ['+python ^python@3.10.12']
+    - ['+opencl']

@@ -1,0 +1,16 @@
+spack:
+  concretizer:
+    unify: when_possible
+  view: false
+  packages:
+    all:
+      compiler: [gcc@=12.2.0]
+  specs:
+  - matrix:
+    - [hpctoolkit +mpi ~papi +viewer +rocm]
+    - - '@2023.08.1 ^dyninst@12.3.0 ^hpcviewer@2023.07 ^hip@5.4.3 ^hsa-rocr-dev@5.4.3 ^roctracer-dev@5.4.3 ^rocprofiler-dev@5.4.3'
+      - '@2024.01.stable ^dyninst@12.3.0 ^hpcviewer@2024.02 ^hip@5.7.1 ^hsa-rocr-dev@5.7.1 ^roctracer-dev@5.7.1 ^rocprofiler-dev@5.7.1'
+      - '@develop ^dyninst@master ^hpcviewer@2024.02 ^hip@6.0.0 ^hsa-rocr-dev@6.0.0 ^roctracer-dev@6.0.0 ^rocprofiler-dev@6.0.0'
+  - matrix:
+    - [hpcviewer]
+    - ['@2023.07', '@2024.02']
