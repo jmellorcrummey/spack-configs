@@ -20,7 +20,8 @@ config:
   # This is the path to the root of the Spack install tree.
   # You can use $spack here to refer to the root of the spack instance.
   # install_tree: $spack/opt/spack
-  install_tree: /projects/.install/msi.2023.03.stable3
+  install_tree:
+    root: /projects/.install/msi.2023.08
 
 
   # Locations where templates should be found
@@ -29,7 +30,7 @@ config:
 
 
   # Default directory layout
-  install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
+  # install_path_scheme: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
 
 
   # Temporary locations Spack can try to use for builds.
@@ -117,5 +118,5 @@ config:
   # Whether to set the terminal title to display status information during
   # building and installing packages. This gives information about Spack's 
   # current progress as well as the current and total number of packages.
-  terminal_title: true
+  install_status: true
 

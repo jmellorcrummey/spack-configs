@@ -56,7 +56,7 @@ packages:
   # +cuda, +rocm for GPU support.
   #
   hpctoolkit:
-    version:  [2023.03.stable]
+    version:  [develop]
     variants: +mpi ~papi +viewer +cuda +rocm +debug +python
 
   cuda:

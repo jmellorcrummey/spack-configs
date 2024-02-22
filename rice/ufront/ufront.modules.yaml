@@ -16,6 +16,11 @@
 modules:
   default:
     roots:
-      tcl:  /projects/.install/msi.2023.03.stable3/MODULES
+      tcl:  /projects/.install/msi.2023.08/MODULES
     enable:
       - tcl
+    tcl:
+      hpctoolkit:
+        autoload: none
+      all:
+        autoload: direct

@@ -1,0 +1,39 @@
+# -------------------------------------------------------------------------
+# This is the spack packages for installing kokkos, CONFIGURED for msi3 on ufront.cs.rice.edu
+#
+#
+#  packages.yaml
+packages:
+
+  # If you want to specify a generic target or a specific compiler for
+  # all builds, then you can set those here.  For example, a generic
+  # target might be useful for a shared install acrosss multiple
+  # machine types.
+  #
+  # generic families: aarch64, ppc64, ppc64le, x86_64
+  #
+  # Selecting a specific provider for a virtual package (eg, openmpi
+  # for mpi) also goes here under 'all'.
+  #
+  # all:
+  #   target: ['x86_64','ppc64','ppc64le','aarch64']
+  #   compiler: [gcc@8.3.1]
+  #   providers:
+  #     mpi: [openmpi]
+
+  kokkos:
+    variants: +cuda +openmp +cuda_lambda +wrapper cuda_arch=80
+    compiler: [gcc@13.2.0]
+
+  cuda:
+    buidable: false
+    externals:
+    - spec: cuda@12.2
+      prefix: /usr/local/cuda-12.2
+
+  cmake:
+    buidable: false
+    externals:
+    - spec: cmake@3.15.7
+      prefix: /projects/pkgs/cmake/bin/cmake
+
