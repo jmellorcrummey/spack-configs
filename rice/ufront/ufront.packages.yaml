@@ -1,8 +1,9 @@
 # -------------------------------------------------------------------------
-# This is the spack packages file, CONFIGURED for msi3 on ufront.cs.rice.edu
+# This is the per-spack-instance configuration file customized
+# by wp11 for ufront.cs.rice.edu
+# Make sure to run bin/spacklink!
+# -------------------------------------------------------------------------
 #
-#
-#  packages.yaml
 #
 #  This file specifies the versions and variants for HPCToolkit's
 #  dependency packages and serves as a common reference point for how
@@ -12,17 +13,16 @@
 #  Put this file in one of spack's configuration scope directories:
 #    1. <spack-root>/etc/spack -- applies to this spack repo
 #    2. <home-dir>/.spack -- applies to any spack on this machine
+#           for this user
 #    3. any dir -- applies with 'spack -C dir' argument
 #
 #  There are three sections: (1) regular hpctoolkit dependency specs,
-#  (2) gpu and MPI specs, and (3) system build tools: cmake, perl,
+#  (2) GPU and MPI specs, and (3) system build tools: cmake, perl,
 #  python and GCC.
 #
 #  See also:
 #    https://spack.readthedocs.io/en/latest/configuration.html
 #    https://spack.readthedocs.io/en/latest/build_settings.html
-#
-#  Last revised: April 14, 2022.
 #
 packages:
 
@@ -36,19 +36,31 @@ packages:
   # Selecting a specific provider for a virtual package (eg, openmpi
   # for mpi) also goes here under 'all'.
   #
-  # all:
-  #   target: ['x86_64','ppc64','ppc64le','aarch64']
-  #   compiler: [gcc@8.3.1]
+  all:
+  #   target: [x86_64]
+    compiler: [gcc@11.3.0]
   #   providers:
   #     mpi: [openmpi]
+    variants:
+    - cuda_arch=80
+    - amdgpu_target=gfx906,gfx908,gfx90a
+
+
+  # Note: settings in this file are only preferences, not hard
+  # requirements.  If spack chooses a different version or variant,
+  # you can force spack to use your version with the new 'require:'
+  # field.  Require takes a single, full spec and supersedes both
+  # version and variant and should always be quoted.
+  #
+  # dyninst:
+  #   require: "@12.2.0 +openmp"
 
 
   # hpctoolkit -- these settings can be specified here or else on the
   # spack install command line.
   #
-  # Use version 'master' for the latest snapshot from master.
-  # Version 'develop' is for pre-release features.
-  # 2019.12.28 is the last version that runs on Blue Gene.
+  # Version 'develop' is now the main line of development for
+  # recommended versions.
   #
   # +mpi builds hpcprof-mpi (requires mpi).
   # +papi uses papi instead of perfmon (now default).
