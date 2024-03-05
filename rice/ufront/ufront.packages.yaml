@@ -42,12 +42,12 @@ packages:
     version: [12.3.0, master]
     variants: +openmp build_type=RelWithDebInfo
   elfutils:
-    version: ['0.189']
+    version: ['0.190']
     variants: ~nls
   intel-tbb:
     require: '@2020.3 +shared ~tm'
   intel-xed:
-    version: [2023.07.09]
+    version: [2023.10.11]
     variants: +debug +pic
   libiberty:
     version: ['2.41']
@@ -67,14 +67,19 @@ packages:
   xerces-c:
     version: [3.2.4]
     variants: transcoder=iconv netaccessor=none
+  xxhash:
+    version: [0.8.1]
   xz:
-    version: [5.4.1]
+    version: [5.4.6]
     variants: +pic
   yaml-cpp:
     version: [0.7.0]
     variants: +shared build_type=RelWithDebInfo
+  zlib:
+    version: [1.3]
+    variants: +pic +optimize
   zlib-ng:
-    version: [2.1.3]
+    version: [2.1.5]
     variants: +opt build_system=cmake
   cuda:
     buildable: false
@@ -85,6 +90,9 @@ packages:
     - spec: cuda@12.2.1 +allow-unsupported-compilers
       prefix: /usr/local/cuda-12.2
       modules: [cuda/12.2]
+    - spec: cuda@12.3.0 +allow-unsupported-compilers
+      prefix: /usr/local/cuda-12.3
+      modules: [cuda/12.3]
   hip:
     buildable: false
     externals:
@@ -109,6 +117,9 @@ packages:
     - spec: hip@5.7.1
       prefix: /opt/rocm-5.7.1
       modules: [rocm/5.7.1]
+    - spec: hip@6.0.0
+      prefix: /opt/rocm-6.0.0
+      modules: [rocm/6.0.0]
   hsa-rocr-dev:
     buildable: false
     externals:

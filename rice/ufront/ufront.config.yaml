@@ -6,7 +6,7 @@
 # -------------------------------------------------------------------------
 config:
   # This is the path to the root of the Spack install tree.
-  install_tree: /home/wp11/deploy/install
+  install_tree: /projects/deploy/install
 
 
   # Temporary locations Spack can try to use for builds.
