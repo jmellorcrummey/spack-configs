@@ -93,6 +93,9 @@ packages:
     - spec: cuda@12.3.0 +allow-unsupported-compilers
       prefix: /usr/local/cuda-12.3
       modules: [cuda/12.3]
+    - spec: cuda@12.4.0 +allow-unsupported-compilers
+      prefix: /usr/local/cuda-12.4
+      modules: [cuda/12.4]
   hip:
     buildable: false
     externals:

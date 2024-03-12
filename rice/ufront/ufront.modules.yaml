@@ -16,7 +16,9 @@ modules:
         'hpctoolkit +cuda +rocm': '{name}/{version}/cuda{^cuda.version}-rocm{^hip.version}'
         'hpctoolkit +cuda': '{name}/{version}/cuda{^cuda.version}'
         'hpctoolkit +rocm': '{name}/{version}/rocm{^hip.version}'
+        'hpctoolkit +python ~cuda ~rocm': '{name}/{version}/py{^python.version}'
+        'hpctoolkit +python +cuda': '{name}/{version}/py{^python.version}-cuda{^cuda.version}'
+        'hpctoolkit +python +rocm': '{name}/{version}/py{^python.version}-rocm{^hip.version}'
         'hpctoolkit +papi': '{name}/{version}/papi{^papi.version}'
       all:
         autoload: none
-
