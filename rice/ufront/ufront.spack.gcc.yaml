@@ -1,0 +1,42 @@
+spack:
+  concretizer:
+    unify: when_possible
+  view: false
+  packages:
+    gcc:
+      externals:
+      - spec: gcc@8.5.0 languages=c,c++,fortran
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
+    all:
+      compiler: [gcc@=8.5.0]
+  specs:
+  - 'gcc@8.5.0'
+  - matrix:
+    - [gcc]
+    - ['@11.4.0', '@12.3.0', '@13.2.0']
+    - ['+bootstrap +profiled languages=c,c++,fortran build_type=Release']
+  modules:
+    prefix_inspections:
+      ./lib: [LD_LIBRARY_PATH]
+      ./lib64: [LD_LIBRARY_PATH]
+    default:
+      enable: [tcl]
+      roots:
+        tcl: /projects/modulefiles
+      arch_folder: false
+      tcl:
+        include: [gcc]
+        exclude: ['@:']
+        hash_length: 0
+        gcc:
+#          conflict:
+#            - {name}
+#            - nvhpc
+          environment:
+            prepend_path:
+              MODULEPATH: /projects/deploy/moduleroot/gcc-{version}
