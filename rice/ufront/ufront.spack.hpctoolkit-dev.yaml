@@ -1,0 +1,31 @@
+spack:
+  concretizer:
+    unify: false
+  view: /scratch/wp11/rocm6-ompt/spack-view
+  packages:
+    all:
+      compiler: [gcc@=8.5.0]
+    python:
+      buildable: false
+      externals:
+      - spec: python@=3.11.6 +optimizations %gcc@=8.5.0
+        prefix: /projects/deploy/install/linux-rhel8-zen/gcc-8.5.0/python-3.11.6-6znfrf2mwevr2jijq5eqfnjh53k3rxrj
+        modules: [gcc/8.5.0, python/3.11.6]
+    meson:
+      externals:
+      - spec: meson@=1.3.2
+        prefix: /projects/deploy/venvs/meson-1.3.2
+        modules: [meson/1.3.2]
+    ninja:
+      externals:
+      - spec: ninja@=1.11.1 %gcc@=8.5.0
+        prefix: /projects/deploy/install/linux-rhel8-zen/gcc-8.5.0/ninja-1.11.1-sxwv36j2ms6n74rjxe24n4c5agikhqul
+        modules: [gcc/8.5.0, ninja/1.11.1]
+  specs:
+  - matrix:
+    - - hpctoolkit ~viewer ~papi ~mpi ~cuda +rocm +opencl
+        build_system=meson buildtype=debug @develop
+        ^dyninst@master ^libmonitor@master
+    - - ^hip@6.0.0 ^hsa-rocr-dev@6.0.0 ^roctracer-dev@6.0.0 ^rocprofiler-dev@6.0.0 %gcc@8.5.0
+      - ^hip@5.7.1 ^hsa-rocr-dev@5.7.1 ^roctracer-dev@5.7.1 ^rocprofiler-dev@5.7.1 %gcc@8.5.0
+      - ^hip@5.4.3 ^hsa-rocr-dev@5.4.3 ^roctracer-dev@5.4.3 ^rocprofiler-dev@5.4.3 %gcc@8.5.0

@@ -1,26 +1,24 @@
 # -------------------------------------------------------------------------
-# This is the spack configuration file, CONFIGURED for msi3 on ufront.cs.rice.edu
-#
-# Settings here are versioned with Spack and are intended to provide
-# sensible defaults out of the box. Spack maintainers should edit this
-# file to keep it current.
-#
-# Users can override these settings by editing the following files.
-#
-# Per-spack-instance settings (overrides defaults):
-#   $SPACK_ROOT/etc/spack/config.yaml
-#
-# Per-user settings (overrides default and site settings):
-#   ~/.spack/config.yaml
+# This is the per-spack-instance module generator configuration customized
+# by wp11 for ufront.cs.rice.edu
+# Make sure to run bin/spacklink!
 # -------------------------------------------------------------------------
 modules:
   default:
+    enable: [tcl]
     roots:
-      tcl:  /projects/.install/msi.2023.08/MODULES
-    enable:
-      - tcl
+      tcl: /projects/modulefiles
+    arch_folder: false
     tcl:
-      hpctoolkit:
-        autoload: none
+      hash_length: 0
+      projections:
+        all: '{name}/{version}'
+        'hpctoolkit +cuda +rocm': '{name}/{version}/cuda{^cuda.version}-rocm{^hip.version}'
+        'hpctoolkit +cuda': '{name}/{version}/cuda{^cuda.version}'
+        'hpctoolkit +rocm': '{name}/{version}/rocm{^hip.version}'
+        'hpctoolkit +python ~cuda ~rocm': '{name}/{version}/py{^python.version}'
+        'hpctoolkit +python +cuda': '{name}/{version}/py{^python.version}-cuda{^cuda.version}'
+        'hpctoolkit +python +rocm': '{name}/{version}/py{^python.version}-rocm{^hip.version}'
+        'hpctoolkit +papi': '{name}/{version}/papi{^papi.version}'
       all:
-        autoload: direct
+        autoload: none

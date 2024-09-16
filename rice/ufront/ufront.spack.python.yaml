@@ -1,0 +1,27 @@
+spack:
+  view: false
+  concretizer:
+    unify: when_possible
+  packages:
+    all:
+      compiler: [gcc]
+    python:
+      require: +optimizations
+  specs:
+  - matrix:
+    - [python, py-pip, meson]
+    - ['%gcc@8.5.0', '%gcc@11.4.0', '%gcc@12.3.0', '%gcc@13.2.0']
+  modules:
+    default:
+      enable: [tcl]
+      roots:
+        tcl: /projects/deploy/moduleroot
+      arch_folder: false
+      tcl:
+        include: [python, py-pip, meson]
+        exclude: ['@:']
+        hash_length: 0
+        projections:
+          all: '{compiler.name}-{compiler.version}/{name}/{version}'
+        python:
+          load: [py-pip, meson]

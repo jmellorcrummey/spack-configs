@@ -1,0 +1,23 @@
+spack:
+  concretizer:
+    unify: when_possible
+  view: false
+  modules:
+    default:
+      lmod:
+        hash_length: 7
+  packages:
+    all:
+      compiler: [gcc@=12.2.0]
+    python:
+      externals:
+      - spec: python@3.10.11
+        prefix: /lustre/orion/stf006/world-shared/irl1/env_flash
+  specs:
+  - matrix:
+    - [hpctoolkit +mpi ~papi +viewer +rocm +python ^python@3.10]
+    - ['@develop ^dyninst@master']
+    - [^hip@5.4.3 ^hsa-rocr-dev@5.4.3 ^roctracer-dev@5.4.3 ^rocprofiler-dev@5.4.3]
+  - matrix:
+    - [hpcviewer]
+    - ['@2023.07']

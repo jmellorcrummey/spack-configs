@@ -1,23 +1,18 @@
 # -------------------------------------------------------------------------
-# This is the per-spack-instance configuration file customized
-# by wp11 for ufront.cs.rice.edu
+# This is the per-spack-instance configuration file customized for
+# Sunspot (ALCF)
 # Keys that are identical to the defaults have been omitted.
 # Make sure to run bin/spacklink!
 # -------------------------------------------------------------------------
 config:
   # This is the path to the root of the Spack install tree.
-  install_tree: /projects/deploy/install
+  install_tree:
+    root: /soft/perftools/hpctoolkit/.install/sunspot/install
 
 
   # Temporary locations Spack can try to use for builds.
   build_stage:
-    - /scratch/wp11/spack/stage
-
-
-  # The default number of jobs to use when running `make` in parallel.
-  # If set to 4, for example, `spack install` will run `make -j4`.
-  # If not set, all available cores are used by default.
-  build_jobs: 40
+    - $tempdir/$user/spack-stage
 
 
   # How long to wait to lock the Spack installation database. This lock is used

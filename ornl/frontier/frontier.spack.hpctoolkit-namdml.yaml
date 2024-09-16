@@ -1,0 +1,26 @@
+spack:
+  modules:
+    default:
+      lmod:
+        projections:
+          'hpctoolkit +python': '{name}/{version}-namdml'
+  packages:
+    all:
+      compiler: [gcc@=12.2.0]
+    python::
+      buildable: false
+      externals:
+      - spec: python@3.9.7
+        prefix: /lustre/orion/bie119/world-shared/jmiratsky/miniconda/envs/torchmd
+  concretizer:
+    unify: when_possible
+  view: false
+  specs:
+  - matrix:
+    - ['hpctoolkit +mpi ~papi']
+    - ['@develop ^dyninst@12.3.0']
+    - ['+rocm ^hip@5.4.3 ^hsa-rocr-dev@5.4.3 ^roctracer-dev@5.4.3 ^rocprofiler-dev@5.4.3']
+    - ['+viewer ^hpcviewer@2024.02']
+    - ['+python ^python@3.9.7']
+    - ['+opencl']
+

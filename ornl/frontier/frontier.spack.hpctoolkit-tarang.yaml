@@ -1,0 +1,26 @@
+spack:
+  modules:
+    default:
+      lmod:
+        projections:
+          'hpctoolkit +python': '{name}/{version}-tarang'
+  packages:
+    all:
+      compiler: [gcc@=12.2.0]
+    python::
+      buildable: false
+      externals:
+      - spec: python@3.10.8
+        prefix: /lustre/orion/tur143/world-shared/dhara_fixed_clone
+  concretizer:
+    unify: when_possible
+  view: false
+  specs:
+  - matrix:
+    - ['hpctoolkit +mpi ~papi']
+    - ['@develop ^dyninst@12.3.0']
+    - ['+rocm ^hip@5.3.0 ^hsa-rocr-dev@5.3.0 ^roctracer-dev@5.3.0 ^rocprofiler-dev@5.3.0']
+    - ['+viewer ^hpcviewer@2024.02']
+    - ['+python ^python@3.10.8']
+    - ['+opencl']
+
